@@ -17,7 +17,7 @@ const Shop = observer(() => {
                             <div key={product.id} className="group relative">
                                 <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
                                     <img
-                                        src={process.env.REACT_APP_API_URL + product.img}
+                                        src={product.img}
                                         className="h-full w-full object-cover object-center lg:h-full lg:w-full"
                                     />
                                 </div>
