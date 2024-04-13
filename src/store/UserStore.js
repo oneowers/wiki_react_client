@@ -4,6 +4,7 @@ export default class UserStore {
   constructor() {
     this._isAuth = false;
     this._user = {};
+    this._timerSms = 120;
     makeAutoObservable(this); // Call makeAutoObservable in the constructor
   }
 
@@ -22,5 +23,8 @@ export default class UserStore {
 
   get user() {
     return this._user;
+  }
+  get timerSms() {
+    return this._timerSms;
   }
 }

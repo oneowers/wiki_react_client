@@ -1,10 +1,11 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE } from "../utils/consts";
 import { login, registration } from "../http/userApi";
 import { observer } from "mobx-react-lite";
 import { useNavigate } from 'react-router-dom';
 import { Context } from "..";
+import axios from 'axios';
 
 const Auth = observer(() => {
     const {user} = useContext(Context)
@@ -13,26 +14,105 @@ const Auth = observer(() => {
     const isLogin = location.pathname === LOGIN_ROUTE
     const [phoneNumber, setPhoneNumber] = useState('')
     const [password, setPassword] = useState('')
+    const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(true);
+    const [code, setCode] = useState('');
+    const [timer, setTimer] = useState(0);
+    const [timeLeft, setTimeLeft] = useState(0);
+    const [codeSended, setCodeSended] = useState(false)
+
+    useEffect(() => {
+      const interval = setInterval(() => {
+        setTimeLeft(Math.ceil((Date.now()-timer  ) / 1000));
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }, [timer]);
+
+    const resendVerificationCode = async () => {
+      try {
+        console.log('Код успешно отправлен повторно.');
+
+        const currentTime = new Date();
+        setTimer(currentTime.getTime());
+        await sendCode();
+      } catch (error) {
+        console.error('Ошибка при повторной отправке кода:', error);
+      }
+    };
+
+    const handleCodeChange = (e) => {
+      // Добавляем ограничение, чтобы код состоял из 5 цифр
+      const newCode = e.target.value.replace(/\D/g, '').slice(0, 4);
+      setCode(newCode);
+    };
+
+    const formatPhoneNumber = (input) => {
+      const cleanedInput = input.replace(/\D/g, '');
+      let formattedNumber = '';
+      for (let i = 0; i < cleanedInput.length; i++) {
+        if (i === 2 || i === 5 || i === 7) {
+          formattedNumber += '-';
+        }
+        formattedNumber += cleanedInput[i];
+      }
+      return formattedNumber;
+    };
+  
+    const handlePhoneNumberChange = (event) => {
+      const input = event.target.value;
+      const formattedNumber = formatPhoneNumber(input);
+      setPhoneNumber(formattedNumber);
+      setIsValidPhoneNumber(/^\d{2}-\d{3}-\d{2}-\d{2}$/.test(formattedNumber));
+    };
+
+    const sendCode = async () => {
+      try {
+        await axios.post(`${process.env.REACT_APP_API_URL}api/user/send-verification-sms`, { phoneNumber: "+998905391575" });
+        console.log("Код успешно отправлен.");
+        setCodeSended(true);
+      } catch (error) {
+        console.error("Ошибка при отправке кода:", error);
+      }
+    };
     
     const click = async () => {
-      try {
-        let data;
-        if(isLogin){
-          data = await login(phoneNumber, password)
-  
-        }else{
-          data = await registration(phoneNumber, password)
+      const formatedPhoneNumber = "+998" + phoneNumber.replace(/-/g, '');
+      if (!codeSended) {
+        try {
+          let data;
+          if (isLogin) {
+            data = await login(formatedPhoneNumber, password);
+          } else {
+            data = await registration(formatedPhoneNumber, password);
+          }
+          user.setUser(user);
+          user.setIsAuth(true);
+          await sendCode();
+          // navigate(SHOP_ROUTE)
+        } catch (e) {
+          alert(e.response.data.message);
         }
-        user.setUser(user)
-        user.setIsAuth(true)
-        navigate(SHOP_ROUTE)
-      }catch(e){
-        alert(e.response.data.message)
+      } else {
+        try {
+          const response = await axios.post(`${process.env.REACT_APP_API_URL}api/user/verify-code`, {
+            phoneNumber: formatedPhoneNumber,
+            code: code
+          });
+          const responseData = response.data;
+          if (responseData.success) {
+            navigate(SHOP_ROUTE)
+          } else {
+            alert(responseData.message);
+          }
+        } catch (error) {
+          console.error("Ошибка при верификации кода:", error);
+        }
       }
-    }
+    };
     
+    const inputBorderColor = isValidPhoneNumber ? 'border-indigo-300' : 'border-red-500';
     return (
-        <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img
             className="mx-auto h-10 w-auto"
@@ -47,20 +127,37 @@ const Auth = observer(() => {
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form className="space-y-6" action="#" method="POST">
             <div>
-              <label htmlFor="phone-number" className="block text-sm font-medium leading-6 text-gray-900">
-                Телефон номер
+              <label htmlFor="text" className="block text-sm font-medium leading-6 text-gray-900">
+                  Phone number
               </label>
-              <div className="mt-2">
-                <input
-                  id="phone-number"
-                  name="phone-number"
-                  type="text"
-                  autoComplete="phone-number"
-                  required
-                  value={phoneNumber}
-                  onChange={e => setPhoneNumber(e.target.value)}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
+              <div className={`relative mt-2 rounded-md shadow-sm ${inputBorderColor}`}>
+                  <div className="absolute inset-y-0 left-0 flex items-center">
+                      <label htmlFor="country" className="sr-only">
+                          Country
+                      </label>
+                      <select id="country" name="country" autoComplete="country"
+                          className="h-full rounded-md border-0 bg-transparent py-0 pl-3 pr-1 text-gray-500 focus:outline-none sm:text-sm">
+                          <option>+998</option>
+                      </select>
+                  </div>
+                  <input id="text" name="text" type="text" autoComplete="text" required
+                      value={phoneNumber} onChange={handlePhoneNumberChange}
+                      className={`focus:outline-none focus:ring block w-full rounded-md border-0
+                      py-1.5 pl-20 text-gray-900 ring-1 ${ isValidPhoneNumber
+                      ? 'focus:ring-indigo-500 ring-indigo-500' : 'focus:ring-red-500 ring-red-500' }
+                      text-sm leading-6`} />
+                  {!isValidPhoneNumber && (
+                  <div
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                      <svg className="h-6 w-6 text-red-500" fill="currentColor" viewBox="0 0 30 20">
+                          <g>
+                              <path fill="none" d="M0 0h24v24H0z" />
+                              <path
+                                  d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1-7v2h2v-2h-2zm0-8v6h2V7h-2z" />
+                          </g>
+                      </svg>
+                  </div>
+                  )}
               </div>
             </div>
 
@@ -84,10 +181,48 @@ const Auth = observer(() => {
                   required
                   value={password}
                   onChange={e => setPassword(e.target.value)}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
+            
+            {codeSended &&
+            <div>
+              <div className="flex items-center justify-between">
+                <label htmlFor="code" className="block text-sm font-medium leading-6 text-gray-900">
+                  Введите код, который пришел вам на номер
+                </label>
+              </div>
+              <div className="mt-2">
+                <input
+                  id="code"
+                  name="code"
+                  type="text"
+                  autoComplete="off"
+                  required
+                  value={code}
+                  onChange={handleCodeChange}
+                  maxLength={5} // Устанавливаем максимальную длину вводимого кода
+                  className="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                />
+              </div>
+              <div className="text-sm">
+              {}
+              {timeLeft < user.timerSms ? (
+                <p className="font-semibold text-sm text-gray-500">
+                  Можете отправить код повторно через {user.timerSms - timeLeft} секунд
+                </p>
+              ) : (
+                <p className="font-semibold text-sm text-gray-500">
+                  Не пришел код?{' '}
+                  <button type="button" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500" onClick={resendVerificationCode}>
+                    Отправить повторно
+                  </button>
+                </p>
+              )}
+
+              </div>
+            </div>}
 
             <div>
               <div
