@@ -104,57 +104,26 @@ const DevicePage = observer(() => {
         {/* Product image */}
         <div className="mt-10 lg:col-start-2 lg:row-span-2 lg:mt-0 lg:self-center">
           <div className="aspect-h-1 aspect-w-1 overflow-hidden rounded-lg">
-            <img src={process.env.REACT_APP_API_URL + device.img} className="h-full w-full object-cover object-center" />
+            <img src={device.img} className="h-full w-full object-cover object-center" />
           </div>
         </div>
 
         {/* Product form */}
         <div className="mt-10 lg:col-start-1 lg:row-start-2 lg:max-w-lg lg:self-start">
           <section aria-labelledby="options-heading">
-            <h2 id="options-heading" className="sr-only">
+            <h2 id="options-heading">
               Product options
             </h2>
 
             <form>
               <div className="sm:flex sm:justify-between"> 
                 {/* Size selector */}
-                {/* <RadioGroup value={selectedSize} onChange={setSelectedSize}>
-                  <RadioGroup.Label className="block text-sm font-medium text-gray-700">Size</RadioGroup.Label>
-                  <div className="mt-1 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    {device.sizes.map((size) => (
-                      <RadioGroup.Option
-                        as="div"
-                        key={size.name}
-                        value={size}
-                        className={({ active }) =>
-                          classNames(
-                            active ? 'ring-2 ring-indigo-500' : '',
-                            'relative block cursor-pointer rounded-lg border border-gray-300 p-4 focus:outline-none'
-                          )
-                        }
-                      >
-                        {({ active, checked }) => (
-                          <>
-                            <RadioGroup.Label as="p" className="text-base font-medium text-gray-900">
-                              {size.name}
-                            </RadioGroup.Label>
-                            <RadioGroup.Description as="p" className="mt-1 text-sm text-gray-500">
-                              {size.description}
-                            </RadioGroup.Description>
-                            <div
-                              className={classNames(
-                                active ? 'border' : 'border-2',
-                                checked ? 'border-indigo-500' : 'border-transparent',
-                                'pointer-events-none absolute -inset-px rounded-lg'
-                              )}
-                              aria-hidden="true"
-                            />
-                          </>
-                        )}
-                      </RadioGroup.Option>
-                    ))}
-                  </div>
-                </RadioGroup> */}
+                  {device.info.map((info) => (
+                      <>
+                          {info.title}
+                          {info.description}
+                      </>
+                  ))}
               </div>
 
               <div className="mt-4">

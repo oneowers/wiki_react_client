@@ -17,7 +17,7 @@ export const createBrand = async (brand) => {
 };
 
 export const fetchBrands = async () => {
-  const { data } = await $authHost.get('/api/brand');
+  const { data } = await $authHost.get('/api/brand', );
   return data
 };
  
@@ -26,8 +26,8 @@ export const createDevice = async (device) => {
   return data 
 };
 
-export const fetchDevices = async () => {
-  const { data } = await $authHost.get('/api/device');
+export const fetchDevices = async (typeId, brandId, page, limit = 5) => {
+  const { data } = await $authHost.get('/api/device', {params: {typeId, brandId, page, limit}});
   return data
 };
  

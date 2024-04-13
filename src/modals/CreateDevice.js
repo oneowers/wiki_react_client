@@ -27,15 +27,12 @@ const CreateDevice = ({show, onHide}) => {
         setInfo([...info, { title: '', description: '', number: Date.now() }]);
     };
 
-    const handleInputChange = (event, index) => {
-        const { name, value } = event.target;
-        setInfo((prevState) =>
-        prevState.map((item, i) => (i === index ? { ...item, [name]: value } : item))
-        );
+    const handleInputChange = (key, value, number) => {
+        setInfo(info.map(i => i.number === number ? {...i, [key]: value} : i))
     };
 
-    const handleDelete = (index) => {
-        setInfo((prevState) => prevState.filter((item, i) => i !== index));
+    const handleDelete = (number) => {
+        setInfo(info.filter(i => i.number !== number));
     };
 
     const selectFile = e  => {
@@ -213,7 +210,7 @@ const CreateDevice = ({show, onHide}) => {
                                                 placeholder="Name"
                                                 value={item.title}
                                                 name="title"
-                                                onChange={(event) => handleInputChange(event, index)}
+                                                onChange={(e) => handleInputChange('title', e.target.value, item.number)}
                                                 className="mr-2 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm rounded-md border border-gray-300 px-3 py-2"
                                             />
                                             <input
@@ -221,11 +218,11 @@ const CreateDevice = ({show, onHide}) => {
                                                 placeholder="Value"
                                                 value={item.description}
                                                 name="description"
-                                                onChange={(event) => handleInputChange(event, index)}
+                                                onChange={(e) => handleInputChange('description', e.target.value, item.number)}
                                                 className="focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm rounded-md border border-gray-300 px-3 py-2"
                                             />
                                             <button
-                                                onClick={() => handleDelete(index)}
+                                                onClick={() => handleDelete(item.number)}
                                                 className="ml-2 py-1text-sm font-medium inline-flex items-center px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
                                             >
                                                 Delete
