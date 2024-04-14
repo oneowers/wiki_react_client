@@ -71,7 +71,7 @@ const NavBar = observer(() => {
                   to={ADMIN_ROUTE}
                   className="text-sm font-medium relative rounded-md bg-gray-950 p-2 text-gray-400 hover:text-white hover:bg-gray-900 focus:outline-none"
                 >
-                    Админ
+                    SUKKKA
                 </Link>} 
                 
                 <button
