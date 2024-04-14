@@ -84,13 +84,12 @@ const Auth = observer(() => {
           let authData;
           if (isLogin) {
             authData = await login(formatedPhoneNumber, password);
+            user.setUser(authData);
+            user.setIsAuth(true);
           } else {
             authData = await registration(formatedPhoneNumber, password);
+            await sendCode(formatedPhoneNumber);
           }
-          user.setUser(authData);
-          user.setIsAuth(true);
-          await sendCode(formatedPhoneNumber);
-          // navigate(SHOP_ROUTE)
         } catch (e) {
           toast.error(e.response.data.message);
         }
@@ -102,6 +101,8 @@ const Auth = observer(() => {
           });
           const responseData = response.data;
           if (responseData.success) {
+            user.setUser(authData);
+            user.setIsAuth(true);
             navigate(SHOP_ROUTE)
           } else {
             toast.error(responseData.message);
