@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE } from "../utils/consts";
-import { login, registration } from "../http/userApi";
+import { login, registration, sendVerificationSms, verifyCodeSms } from "../http/userApi";
 import { observer } from "mobx-react-lite";
 import { useNavigate } from 'react-router-dom';
 import { Context } from "..";
@@ -31,15 +31,13 @@ const Auth = observer(() => {
 
     const resendVerificationCode = async () => {
       const formatedPhoneNumber = "+998" + phoneNumber.replace(/-/g, '');
-      try {
-        toast.warning('Код успешно отправлен повторно.');
-
+      const request_sms = await sendVerificationSms(formatedPhoneNumber);
+      if(request_sms.success){
+        setCodeSended(true);
         const currentTime = new Date();
         setTimer(currentTime.getTime());
-        await sendCode(formatedPhoneNumber);
-      } catch (error) {
-        toast.error('Ошибка при повторной отправке кода:', error);
       }
+      toast(request_sms.message)
     };
 
     const handleCodeChange = (e) => {
@@ -66,50 +64,30 @@ const Auth = observer(() => {
       setPhoneNumber(formattedNumber);
       setIsValidPhoneNumber(/^\d{2}-\d{3}-\d{2}-\d{2}$/.test(formattedNumber));
     };
-
-    const sendCode = async (phone_number) => {
-      try {
-        await axios.post(`${process.env.REACT_APP_API_URL}api/user/send-verification-sms`, { phoneNumber: phone_number });
-        toast.success("Код успешно отправлен.");
-        setCodeSended(true);
-      } catch (error) {
-        toast.error("Ошибка при отправке кода:", error);
-      }
-    };
     
     const click = async () => {
       const formatedPhoneNumber = "+998" + phoneNumber.replace(/-/g, '');
       if (!codeSended) {
-        try {
-          let authData;
-          if (isLogin) {
-            authData = await login(formatedPhoneNumber, password);
-            user.setUser(authData);
-            user.setIsAuth(true);
-          } else {
-            authData = await registration(formatedPhoneNumber, password);
-            await sendCode(formatedPhoneNumber);
+        let request_get_token;
+        if (isLogin) {
+          request_get_token = await login(formatedPhoneNumber, password, user);
+          toast(request_get_token.message)
+          if (request_get_token.success) navigate(SHOP_ROUTE)
+        } else {
+          request_get_token = await registration(formatedPhoneNumber, password);
+          const request_sms = await sendVerificationSms(formatedPhoneNumber);
+          if(request_sms.success){
+            setCodeSended(true);
+            const currentTime = new Date();
+            setTimer(currentTime.getTime());
           }
-        } catch (e) {
-          toast.error(e.response.data.message);
+          console.log(request_sms)
+          toast(request_sms.message)
         }
       } else {
-        try {
-          const response = await axios.post(`${process.env.REACT_APP_API_URL}api/user/verify-code`, {
-            phoneNumber: formatedPhoneNumber,
-            code: code
-          });
-          const responseData = response.data;
-          if (responseData.success) {
-            user.setUser(response.data.token);
-            user.setIsAuth(true);
-            navigate(SHOP_ROUTE)
-          } else {
-            toast.error(responseData.message);
-          }
-        } catch (error) {
-          toast.error("Ошибка при верификации кода:", error);
-        }
+          const response = await verifyCodeSms(formatedPhoneNumber, code, user);
+          toast(response.message);
+          if (response.success) navigate(SHOP_ROUTE)
       }
     };
     

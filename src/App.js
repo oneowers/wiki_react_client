@@ -7,6 +7,7 @@ import { observer } from 'mobx-react-lite';
 import { useContext, useEffect, useState } from 'react';
 import { Context } from '.';
 import { check } from './http/userApi';
+import { toast } from 'react-toastify';
 
 const App = observer (() =>{
   const {user} = useContext(Context)
@@ -15,8 +16,11 @@ const App = observer (() =>{
   useEffect(() => {
     setTimeout(() => {
       check().then(data =>{
-        user.setUser(data)
-        user.setIsAuth(true)
+        if(data.success){
+          user.setUser(data)
+          user.setIsAuth(true)
+        }
+        toast(data.message)
       }).finally(()=>setLoading(false))
     }, 0)
   }, [])

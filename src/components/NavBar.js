@@ -7,6 +7,7 @@ import { observer } from "mobx-react-lite";
 import { Link } from "react-router-dom";
 import { ADMIN_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE } from "../utils/consts";
 import { fetchTypes } from "../http/deviceApi";
+import { logout } from "../http/userApi";
 
 
 
@@ -15,12 +16,7 @@ function classNames(...classes) {
 }
 
 const NavBar = observer(() => {
-    const {user, device} = useContext(Context)
-
-    const logOut = () => {
-      user.setUser({})
-      user.setIsAuth(false)
-    }
+  const {user, device} = useContext(Context)
 
   useEffect(() =>{
     fetchTypes().then(data => device.setTypes(data))
@@ -71,7 +67,7 @@ const NavBar = observer(() => {
                   to={ADMIN_ROUTE}
                   className="text-sm font-medium relative rounded-md bg-gray-950 p-2 text-gray-400 hover:text-white hover:bg-gray-900 focus:outline-none"
                 >
-                    SUKKKA
+                    Admin
                 </Link>} 
                 
                 <button
@@ -123,7 +119,7 @@ const NavBar = observer(() => {
                       </Menu.Item>
                       <Menu.Item>
                           <button
-                            onClick={() => logOut()}
+                            onClick={() => logout(user)}
                             className={classNames('block px-4 py-2 text-sm text-gray-900 w-full ')}
                           >
                             Выйти

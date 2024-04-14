@@ -1,5 +1,4 @@
 import { $authHost, $host } from ".";
-import {jwtDecode as jwt_decode} from "jwt-decode"; 
 
 export const createType = async (type) => {
   const { data } = await $authHost.post('/api/type', type);
