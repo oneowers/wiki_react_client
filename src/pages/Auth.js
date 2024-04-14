@@ -30,12 +30,13 @@ const Auth = observer(() => {
     }, [timer]);
 
     const resendVerificationCode = async () => {
+      const formatedPhoneNumber = "+998" + phoneNumber.replace(/-/g, '');
       try {
         console.log('Код успешно отправлен повторно.');
 
         const currentTime = new Date();
         setTimer(currentTime.getTime());
-        await sendCode();
+        await sendCode(formatedPhoneNumber);
       } catch (error) {
         console.error('Ошибка при повторной отправке кода:', error);
       }
