@@ -101,7 +101,8 @@ const Auth = observer(() => {
           });
           const responseData = response.data;
           if (responseData.success) {
-            user.setUser(authData);
+            console.log(response.token)
+            user.setUser(response.token);
             user.setIsAuth(true);
             navigate(SHOP_ROUTE)
           } else {
