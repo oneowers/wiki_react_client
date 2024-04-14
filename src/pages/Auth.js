@@ -6,6 +6,7 @@ import { observer } from "mobx-react-lite";
 import { useNavigate } from 'react-router-dom';
 import { Context } from "..";
 import axios from 'axios';
+import { ToastContainer, toast } from "react-toastify";
 
 const Auth = observer(() => {
     const {user} = useContext(Context)
@@ -65,9 +66,9 @@ const Auth = observer(() => {
       setIsValidPhoneNumber(/^\d{2}-\d{3}-\d{2}-\d{2}$/.test(formattedNumber));
     };
 
-    const sendCode = async () => {
+    const sendCode = async (phone_number) => {
       try {
-        await axios.post(`${process.env.REACT_APP_API_URL}api/user/send-verification-sms`, { phoneNumber: "+998905391575" });
+        await axios.post(`${process.env.REACT_APP_API_URL}api/user/send-verification-sms`, { phoneNumber: phone_number });
         console.log("Код успешно отправлен.");
         setCodeSended(true);
       } catch (error) {
@@ -79,18 +80,19 @@ const Auth = observer(() => {
       const formatedPhoneNumber = "+998" + phoneNumber.replace(/-/g, '');
       if (!codeSended) {
         try {
-          let data;
+          let authData;
           if (isLogin) {
-            data = await login(formatedPhoneNumber, password);
+            authData = await login(formatedPhoneNumber, password);
           } else {
-            data = await registration(formatedPhoneNumber, password);
+            authData = await registration(formatedPhoneNumber, password);
           }
           user.setUser(user);
           user.setIsAuth(true);
-          await sendCode();
+          await sendCode(formatedPhoneNumber);
           // navigate(SHOP_ROUTE)
         } catch (e) {
-          alert(e.response.data.message);
+          
+          alert(e.response.authData.message);
         }
       } else {
         try {
@@ -102,7 +104,7 @@ const Auth = observer(() => {
           if (responseData.success) {
             navigate(SHOP_ROUTE)
           } else {
-            alert(responseData.message);
+            toast(responseData.message);
           }
         } catch (error) {
           console.error("Ошибка при верификации кода:", error);
@@ -126,6 +128,7 @@ const Auth = observer(() => {
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form className="space-y-6" action="#" method="POST">
+            <fieldset disabled={codeSended}>
             <div>
               <label htmlFor="text" className="block text-sm font-medium leading-6 text-gray-900">
                   Phone number
@@ -185,7 +188,7 @@ const Auth = observer(() => {
                 />
               </div>
             </div>
-            
+            </fieldset>
             {codeSended &&
             <div>
               <div className="flex items-center justify-between">

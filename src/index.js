@@ -5,6 +5,8 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import UserStore from './store/UserStore';
 import DeviceStore from './store/DeviceStore';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const Context = createContext(null)
 
@@ -15,6 +17,7 @@ root.render(
     device: new DeviceStore(),
   }}>
     <App />
+    <ToastContainer />
   </Context.Provider>
 );
 
