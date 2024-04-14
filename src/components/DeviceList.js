@@ -26,7 +26,7 @@ const Shop = observer(() => {
                                 <h3 className="text-sm text-gray-700">
                                 <a href={product.href}>
                                     <span aria-hidden="true" className="absolute inset-0" />
-                                    {device.brands[product.brandId-1].name}
+                                    {device.brands[product.brandId-1] && device.brands[product.brandId-1].name}
                                 </a>
                                 </h3>
                                 <p className="mt-1 text-sm text-gray-500">{product.name}</p>

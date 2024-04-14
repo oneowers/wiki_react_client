@@ -32,13 +32,13 @@ const Auth = observer(() => {
     const resendVerificationCode = async () => {
       const formatedPhoneNumber = "+998" + phoneNumber.replace(/-/g, '');
       try {
-        console.log('Код успешно отправлен повторно.');
+        toast.warning('Код успешно отправлен повторно.');
 
         const currentTime = new Date();
         setTimer(currentTime.getTime());
         await sendCode(formatedPhoneNumber);
       } catch (error) {
-        console.error('Ошибка при повторной отправке кода:', error);
+        toast.error('Ошибка при повторной отправке кода:', error);
       }
     };
 
@@ -70,10 +70,10 @@ const Auth = observer(() => {
     const sendCode = async (phone_number) => {
       try {
         await axios.post(`${process.env.REACT_APP_API_URL}api/user/send-verification-sms`, { phoneNumber: phone_number });
-        console.log("Код успешно отправлен.");
+        toast.success("Код успешно отправлен.");
         setCodeSended(true);
       } catch (error) {
-        console.error("Ошибка при отправке кода:", error);
+        toast.error("Ошибка при отправке кода:", error);
       }
     };
     
@@ -87,13 +87,12 @@ const Auth = observer(() => {
           } else {
             authData = await registration(formatedPhoneNumber, password);
           }
-          user.setUser(user);
+          user.setUser(authData);
           user.setIsAuth(true);
           await sendCode(formatedPhoneNumber);
           // navigate(SHOP_ROUTE)
         } catch (e) {
-          
-          alert(e.response.authData.message);
+          toast.error(e.response.data.message);
         }
       } else {
         try {
@@ -105,10 +104,10 @@ const Auth = observer(() => {
           if (responseData.success) {
             navigate(SHOP_ROUTE)
           } else {
-            toast(responseData.message);
+            toast.error(responseData.message);
           }
         } catch (error) {
-          console.error("Ошибка при верификации кода:", error);
+          toast.error("Ошибка при верификации кода:", error);
         }
       }
     };
@@ -123,7 +122,7 @@ const Auth = observer(() => {
             alt="Your Company"
           />
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            {isLogin ? <>Sign in to your account</> : <>Autorization</>}
+            {isLogin ? <>Войдите в свою учетную запись</> : <>Авторизация</>}
           </h2>
         </div>
 
@@ -132,7 +131,7 @@ const Auth = observer(() => {
             <fieldset disabled={codeSended}>
             <div>
               <label htmlFor="text" className="block text-sm font-medium leading-6 text-gray-900">
-                  Phone number
+                Номер телефона
               </label>
               <div className={`relative mt-2 rounded-md shadow-sm ${inputBorderColor}`}>
                   <div className="absolute inset-y-0 left-0 flex items-center">
@@ -172,7 +171,7 @@ const Auth = observer(() => {
                 </label>
                 <div className="text-sm">
                   <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
-                    Forgot password?
+                    Забыли пароль?
                   </a>
                 </div>
               </div>
