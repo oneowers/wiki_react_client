@@ -75,14 +75,18 @@ const Auth = observer(() => {
           if (request_get_token.success) navigate(SHOP_ROUTE)
         } else {
           request_get_token = await registration(formatedPhoneNumber, password);
-          const request_sms = await sendVerificationSms(formatedPhoneNumber);
-          if(request_sms.success){
-            setCodeSended(true);
-            const currentTime = new Date();
-            setTimer(currentTime.getTime());
+          if(request_get_token.success){
+            const request_sms = await sendVerificationSms(formatedPhoneNumber);
+            if(request_sms.success){
+              setCodeSended(true);
+              const currentTime = new Date();
+              setTimer(currentTime.getTime());
+            }
+            console.log(request_sms)
+            toast(request_sms.message)
+          }else{
+            toast.error(request_get_token.message)
           }
-          console.log(request_sms)
-          toast(request_sms.message)
         }
       } else {
           const response = await verifyCodeSms(formatedPhoneNumber, code, user);

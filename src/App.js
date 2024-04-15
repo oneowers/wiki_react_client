@@ -15,7 +15,7 @@ const App = observer (() =>{
 
   useEffect(() => {
     setTimeout(() => {
-      check().then(data =>{
+      check().then(data => {
         if(data.success){
           user.setUser(data)
           user.setIsAuth(true)
