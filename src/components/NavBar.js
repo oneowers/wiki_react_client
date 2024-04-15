@@ -24,12 +24,12 @@ const NavBar = observer(() => {
 
 
     return (
-        <Disclosure as="nav" className="bg-gray-950">
+        <Disclosure as="nav" className="bg-white">
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
             <div className="relative flex h-16 items-center justify-between">
               <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
                 {/* Mobile menu button*/}
-                <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                   <span className="absolute -inset-0.5" />
                   <span className="sr-only">Open main menu</span>
                     <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
@@ -50,7 +50,7 @@ const NavBar = observer(() => {
                         key={item.id}
                         onClick={() => device.setSelectedType(item)}
                         className={classNames(
-                          item.id === device.selectedType.id ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-900 hover:text-white',
+                          item.id === device.selectedType.id ? 'text-gray-900' : 'text-gray-800 hover:text-gray-700',
                           'rounded-md px-3 py-2 text-sm font-medium'
                         )}
                         aria-current={item.current ? 'page' : undefined}
@@ -65,13 +65,13 @@ const NavBar = observer(() => {
               <div className="space-x-3 absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 {user.user.role == "ADMIN" && <Link
                   to={ADMIN_ROUTE}
-                  className="text-sm font-medium relative rounded-md bg-gray-950 p-2 text-gray-400 hover:text-white hover:bg-gray-900 focus:outline-none"
+                  className="text-sm font-medium relative rounded-md bg-gray-600 p-2 text-gray-400 hover:text-gray-700 focus:outline-none"
                 >
                     Admin
                 </Link>} 
                 
                 <button
-                  className="relative rounded-full bg-gray-950 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                  className="relative rounded-full p-1 text-gray-600 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                 >
                   <span className="absolute -inset-1.5" />
                   <span className="sr-only">View notifications</span>
@@ -81,7 +81,7 @@ const NavBar = observer(() => {
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-3">
                   <div>
-                    <Menu.Button className="relative flex rounded-full bg-gray-950 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                    <Menu.Button className="relative flex rounded-full bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                       <span className="absolute -inset-1.5" />
                       <span className="sr-only">Open user menu</span>
                       <img
@@ -133,13 +133,13 @@ const NavBar = observer(() => {
               <div className="absolute inset-y-0 right-0 flex space-x-4 items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 <Link
                   to={REGISTRATION_ROUTE}
-                  className="text-sm font-medium relative rounded-md bg-gray-950 p-2 text-gray-400 hover:text-white hover:bg-gray-900 focus:outline-none"
+                  className="text-sm font-medium relative rounded-md bg-gray-600 p-2 text-gray-400 hover:text-gray-700 focus:outline-none"
                 >
                     Зарегистрироватся
                 </Link>
                 <Link
                   to={LOGIN_ROUTE}
-                  className="text-sm font-medium relative rounded-md bg-gray-950 p-2 text-gray-400 hover:text-white hover:bg-gray-900 focus:outline-none"
+                  className="text-sm font-medium relative rounded-md bg-gray-600 p-2 text-gray-400 hover:text-gray-700 focus:outline-none"
                 >
                     Войти
                 </Link>
@@ -157,7 +157,7 @@ const NavBar = observer(() => {
                   as="button"
                   onClick={() => device.setSelectedType(item)}
                   className={classNames(
-                    item.id === device.selectedType.id ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-900 hover:text-white',
+                    item.id === device.selectedType.id ? 'text-gray-900' : 'text-gray-800 hover:text-gray-700',
                     'block rounded-md px-3 py-2 text-base font-medium'
                   )}
                   aria-current={item.current ? 'page' : undefined}

@@ -21,11 +21,17 @@ const Shop = observer(() => {
   }, [device.page, device.selectedType.id, device.selectedBrand.id, ])
 
     return (
-      <>
-        <TypeBar/>
-        <DeviceList />
-        <Pages/>
-      </>
+      <div className="flex flex-row">
+        <div class="basis-1/4">
+          <TypeBar/>
+        </div>
+        <div class="basis-3/4">
+          <div className="bg-white m-5 rounded-lg  mt-6  h-full">
+            <DeviceList />
+            <Pages/>
+          </div>
+        </div>
+      </ div>
     )
   })
 

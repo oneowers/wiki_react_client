@@ -53,7 +53,7 @@ export const sendVerificationSms = async (phone_number) => {
 export const verifyCodeSms = async (phoneNumber, code, user) => {
   try {
     const { data } = await $host.post('api/user/verify-code', { phoneNumber: phoneNumber, code: code });
-    user.setUser(data.data.token);
+    user.setUser(data.token);
     user.setIsAuth(true);
     return {success: true, message: "Код успешно отправлен.", data: data};
   } catch (error) {

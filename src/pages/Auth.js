@@ -38,7 +38,7 @@ const Auth = observer(() => {
         setTimer(currentTime.getTime());
       }
       toast(request_sms.message)
-    };
+    }
 
     const handleCodeChange = (e) => {
       // Добавляем ограничение, чтобы код состоял из 5 цифр
@@ -90,6 +90,7 @@ const Auth = observer(() => {
         }
       } else {
           const response = await verifyCodeSms(formatedPhoneNumber, code, user);
+          console.log(response)
           toast(response.message);
           if (response.success) navigate(SHOP_ROUTE)
       }

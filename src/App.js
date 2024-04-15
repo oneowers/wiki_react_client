@@ -32,10 +32,12 @@ const App = observer (() =>{
   }
 
   return (
+  <div className="bg-gray-100 pb-20">
     <BrowserRouter>
       <NavBar/>
       <AppRouter />
     </BrowserRouter>
+  </div>
   );
 })
 
