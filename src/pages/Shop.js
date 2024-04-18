@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import TypeBar from "../components/TypeBar";
 import DeviceList from "../components/DeviceList";
+import PreviewDeviceList from "../components/PreviewDeviceList";
 import { observer } from "mobx-react-lite";
 import { Context } from "..";
 import { fetchBrands, fetchTypes, fetchDevices } from "../http/deviceApi";
@@ -22,13 +23,17 @@ const Shop = observer(() => {
 
     return (
       <div className="flex flex-row">
-        <div class="basis-1/4">
+        <div class="basis-1/6 hidden lg:block">
           <TypeBar/>
         </div>
-        <div class="basis-3/4">
+        <div class="basis-6/6 lg:basis-3/6">
           <div className="bg-white m-5 rounded-lg  mt-6  h-full">
+            <PreviewDeviceList />
+          </div>
+        </div>
+        <div class="basis-2/6 hidden lg:block">
+          <div className=" m-5 rounded-lg  mt-6 h-full">
             <DeviceList />
-            <Pages/>
           </div>
         </div>
       </ div>

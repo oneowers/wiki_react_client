@@ -63,12 +63,14 @@ const NavBar = observer(() => {
               </div>
             {user.isAuth && user.user.role != "GHOST" ?
               <div className="space-x-3 absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                {user.user.role == "ADMIN" && <Link
+                {/* {console.log(user.user.role)} */}
+                {/* {user.user.role == "ADMIN" &&  */}
+                <Link
                   to={ADMIN_ROUTE}
-                  className="text-sm font-medium relative rounded-md bg-gray-600 p-2 text-gray-400 hover:text-gray-700 focus:outline-none"
+                  className="text-sm font-medium relative rounded-md bg-gray-100 p-2 text-black hover:text-gray-700 focus:outline-none"
                 >
                     Admin
-                </Link>} 
+                </Link>
                 
                 <button
                   className="relative rounded-full p-1 text-gray-600 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"

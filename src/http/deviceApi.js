@@ -31,7 +31,27 @@ export const fetchDevices = async (typeId, brandId, page, limit = 5) => {
 };
  
 export const fetchOneDevices = async (id) => {
-  const { data } = await $authHost.get('/api/device' + "/" + id);
+  const { data } = await $authHost.get('/api/device/' + id);
   return data
 };
+
+export const fetchManyDevices = async (typeId, brandId, page, limit = 5) => {
+  const { data } = await $authHost.get('/api/devices', { params: { typeId, brandId, page, limit } });
+  return data;
+};
+
+export const fetchDeviceComments = async (deviceId) => {
+  const { data } = await $authHost.get(`/api/device/comments/${deviceId}`);
+  return data;
+};
+
+export const fetchLatestDevices = async (count) => {
+  const { data } = await $authHost.get(`/api/device/latest/${count}`);
+  return data;
+};
+
+
+
  
+
+
