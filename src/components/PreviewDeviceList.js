@@ -37,6 +37,15 @@ const Shop = observer(() => {
     }
   }, [lastDevice]);
 
+  function decodeHTML(html) {
+    // Create a temporary DOM element
+    var tempElement = document.createElement('div');
+    // Set the HTML content of the temporary element
+    tempElement.innerHTML = html;
+    // Return the text content of the temporary element
+    return tempElement.textContent || tempElement.innerText || '';
+  }
+
   const navigate = useNavigate();
 
   const sendComment = async (deviceId) => {
@@ -124,7 +133,7 @@ const Shop = observer(() => {
             </div>
             <div className=" p-3 mt-2">
               <p className="text-sm text-gray-500 line-clamp-3">
-                {product.description}
+                {decodeHTML(product.description)}
               </p>
               <div className="mt-4 border-t border-gray-300 divide-y divide-gray-300">
                 {comments[product.id] &&

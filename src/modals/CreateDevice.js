@@ -285,17 +285,6 @@ const addDevice = () => {
                             />
                           </div>
 
-                          {/* <div className="mt-5">
-                            Preview:{" "}
-                            <div
-                              dangerouslySetInnerHTML={{
-                                __html: draftToHtml(
-                                  convertToRaw(editorState.getCurrentContent())
-                                ),
-                              }}
-                            />
-                          </div> */}
-
                           <button
                             onClick={addInfo}
                             className="text-sm font-medium inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"

@@ -22,7 +22,7 @@ const Shop = observer(() => {
   }, [device.page, device.selectedType.id, device.selectedBrand.id, ])
 
     return (
-      <div className="flex flex-row">
+      <div className="flex flex-row mx-auto max-w-7xl">
         <div class="basis-1/6 hidden lg:block">
           <TypeBar/>
         </div>

@@ -32,7 +32,7 @@ const App = observer (() =>{
   }
 
   return (
-  <div className="bg-gray-100 pb-20">
+  <div className="bg-gray-100">
     <BrowserRouter>
       <NavBar/>
       <AppRouter />
