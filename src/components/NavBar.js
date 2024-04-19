@@ -135,13 +135,13 @@ const NavBar = observer(() => {
               <div className="absolute inset-y-0 right-0 flex space-x-4 items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 <Link
                   to={REGISTRATION_ROUTE}
-                  className="text-sm font-medium relative rounded-md bg-gray-600 p-2 text-gray-400 hover:text-gray-700 focus:outline-none"
+                  className="text-sm font-medium relative rounded-md bg-gray-100 p-2 text-gray-500 hover:text-gray-700 focus:outline-none"
                 >
                     Зарегистрироватся
                 </Link>
                 <Link
                   to={LOGIN_ROUTE}
-                  className="text-sm font-medium relative rounded-md bg-gray-600 p-2 text-gray-400 hover:text-gray-700 focus:outline-none"
+                  className="text-sm font-medium relative rounded-md bg-gray-100 p-2 text-gray-500 hover:text-gray-700 focus:outline-none"
                 >
                     Войти
                 </Link>
