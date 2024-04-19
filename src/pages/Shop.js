@@ -27,7 +27,7 @@ const Shop = observer(() => {
           <TypeBar/>
         </div>
         <div class="basis-6/6 lg:basis-3/6">
-          <div className="bg-white m-5 rounded-lg  mt-6  h-full">
+          <div className="mt-6 h-full">
             <PreviewDeviceList />
           </div>
         </div>
