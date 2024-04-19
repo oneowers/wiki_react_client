@@ -50,6 +50,15 @@ export const fetchLatestDevices = async (count) => {
   return data;
 };
 
+export const createDeviceComment = async (deviceId, text) => {
+  try {
+    const { data } = await $authHost.post('/api/device/create-comment', { device_id: deviceId, text });
+    return data;
+  } catch (error) {
+    throw new Error("Error creating comment: " + error.message);
+  }
+};
+
 
 
  
