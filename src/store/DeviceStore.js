@@ -5,10 +5,10 @@ export default class DeviceStore {
     this._types = []
     this._brands = []
     this._devices = []
+    this._popularDevices = []
     this._selectedBrand = {}
     this._selectedType = {}
     this._page = 1
-    this._totalCount = 0
     this._limit = 9
     makeAutoObservable(this); // Call makeAutoObservable in the constructor
   }
@@ -16,15 +16,15 @@ export default class DeviceStore {
   setTypes(types) {
     this._types = types;
   }
-
   setBrands(brands) {
     this._brands = brands;
   }
-
+  setPopularDevices(devices) {
+    this._devices = devices;
+  }
   setDevices(devices) {
     this._devices = devices;
   }
-
   setSelectedBrand(brand){
     this.setPage(1)
     this._selectedBrand = brand
@@ -35,9 +35,6 @@ export default class DeviceStore {
   }
   setPage(page){
     this._page = page
-  }
-  setTotalCount(count){
-    this._totalCount = count
   }
 
   get isAuth() {
@@ -52,14 +49,14 @@ export default class DeviceStore {
   get devices() {
     return this._devices;
   }
+  get popularDevices() {
+    return this._popularDevices;
+  }
   get selectedBrand() {
     return this._selectedBrand;
   }
   get selectedType() {
     return this._selectedType;
-  }
-  get totalCount() {
-    return this._totalCount;
   }
   get selectedType() {
     return this._selectedType;

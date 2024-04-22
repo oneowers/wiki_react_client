@@ -11,22 +11,21 @@ import {
 import {
   createDeviceComment,
   fetchDeviceComments,
-  fetchLatestDevices,
 } from "../http/deviceApi";
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
 
 const Shop = observer(() => {
   const { device } = useContext(Context);
-  const [lastDevice, setLastDevice] = useState([]);
   const [comments, setComments] = useState({});
   const [commentText, setCommentText] = useState(""); // State to hold the text of the comment
 
-  useEffect(() => {
-    fetchLatestDevices(5).then((data) => setLastDevice(data));
-  }, []);
 
   useEffect(() => {
-    if (lastDevice) {
-      lastDevice.forEach((product) => {
+    if (device.devices.count) {
+      device.devices.rows.forEach((product) => {
         fetchDeviceComments(product.id).then((comments) => {
           setComments((prevComments) => ({
             ...prevComments,
@@ -35,7 +34,7 @@ const Shop = observer(() => {
         });
       });
     }
-  }, [lastDevice]);
+  }, [device.devices]);
 
   function decodeHTML(html) {
     // Create a temporary DOM element
@@ -83,8 +82,7 @@ const Shop = observer(() => {
 
   return (
     <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-1 xl:gap-x-8">
-      {lastDevice &&
-        lastDevice.map((product) => (
+      {device.devices.count && device.devices.rows.map((product) => (
           <div className="">
             <div
               key={product.id}
@@ -101,13 +99,10 @@ const Shop = observer(() => {
               <div className="flex flex-col justify-between">
                 <div className="flex justify-between w-full">
                   <div>
-                    <span className="text-sm font-bold uppercase text-center text-pink-500 bg-pink-50 px-4 py-0.5 rounded-full">
-                      <a href={product.href}>
-                        <span aria-hidden="true" className="absolute inset-0" />
+                      <span aria-hidden="true" className={classNames(`text-sm font-bold uppercase text-center ${device.brands[product.brandId] && device.brands[product.brandId].color} px-4 py-0.5 rounded-full`)} >
                         {device.brands[product.brandId] &&
                           device.brands[product.brandId].name}
-                      </a>
-                    </span>
+                      </span>
                     <p className="mt-1 font-bold text-lg text-black">
                       {product.name}
                     </p>

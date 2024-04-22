@@ -1,17 +1,23 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Context } from "..";
 import { useNavigate } from "react-router-dom";
 import { DEVICE_ROUTE } from "../utils/consts";
 import { observer } from "mobx-react-lite";
+import { fetchDevices } from "../http/deviceApi";
 
 const Shop = observer(() => {
   const { device } = useContext(Context);
   const navigate = useNavigate();
+  const [popularDevices, setPopularDevices] = useState({});
+
+
+  useEffect(() =>{
+    fetchDevices(undefined, undefined, undefined, undefined, "views").then(data => setPopularDevices(data));
+  }, []);
 
   return (
     <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-1 xl:gap-x-8">
-      {device &&
-        device.devices.map((product) => (
+      {popularDevices.count && popularDevices.rows.map((product) => (
           <div
             onClick={() => navigate(DEVICE_ROUTE + "/" + product.id)}
             key={product.id}
