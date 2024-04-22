@@ -5,6 +5,10 @@ import { DEVICE_ROUTE } from "../utils/consts";
 import { observer } from "mobx-react-lite";
 import { fetchDevices } from "../http/deviceApi";
 
+function classNames(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
+
 const Shop = observer(() => {
   const { device } = useContext(Context);
   const navigate = useNavigate();
