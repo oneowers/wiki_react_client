@@ -12,7 +12,7 @@ const Shop = observer(() => {
 
 
   useEffect(() =>{
-    fetchDevices(undefined, undefined, undefined, undefined, "views").then(data => setPopularDevices(data));
+    fetchDevices(undefined, undefined, undefined, 12, "views").then(data => setPopularDevices(data));
   }, []);
 
   return (

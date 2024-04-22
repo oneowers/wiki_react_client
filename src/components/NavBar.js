@@ -8,6 +8,8 @@ import { Link } from "react-router-dom";
 import { ADMIN_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE } from "../utils/consts";
 import { fetchTypes } from "../http/deviceApi";
 import { logout } from "../http/userApi";
+import logo from "./uzexpo.png";
+
 
 
 
@@ -38,8 +40,8 @@ const NavBar = observer(() => {
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                 <Link to={SHOP_ROUTE} className="flex flex-shrink-0 items-center">
                   <img
-                    className="h-8 w-auto"
-                    src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                    className="h-10 w-auto"
+                    src={logo}
                     alt="Your Company"
                   />
                 </Link>
