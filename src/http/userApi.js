@@ -41,6 +41,15 @@ export const check = async () => {
   }
 };
 
+export const user = async () => {
+  try {
+    const { data } = await $authHost.get('/api/user/user');
+    return {success: true, message: "С возврашением!", data: data};
+  }catch (error) {
+    return {success: false, message: error.response.data.message, error: error};
+  }
+};
+
 export const sendVerificationSms = async (phone_number) => {
   try {
     const { data } = await $host.post('api/user/send-verification-sms', { phoneNumber: phone_number });

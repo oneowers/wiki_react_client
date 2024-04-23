@@ -5,7 +5,7 @@ import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { observer } from "mobx-react-lite";
 import { Link } from "react-router-dom";
-import { ADMIN_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE } from "../utils/consts";
+import { ADMIN_ROUTE, LOGIN_ROUTE, PROFILE_ROUTE, REGISTRATION_ROUTE, SETTINGS_ROUTE, SHOP_ROUTE } from "../utils/consts";
 import { fetchTypes } from "../http/deviceApi";
 import { logout } from "../http/userApi";
 import logo from "./uzexpo.png";
@@ -90,8 +90,7 @@ const NavBar = observer(() => {
                       <span className="sr-only">Open user menu</span>
                       <img
                         className="h-8 w-8 rounded-full"
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                        alt=""
+                        src={user.user && user.user.profile_image}
                       />
                     </Menu.Button>
                   </div>
@@ -106,28 +105,28 @@ const NavBar = observer(() => {
                   >
                     <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                       <Menu.Item>
-                          <button
-                            href="#"
+                          <Link
+                            to={PROFILE_ROUTE}
                             className={classNames('block px-4 py-2 text-sm text-gray-900 w-full ')}
                           >
-                            Профиль
-                          </button>
+                            {user.user.first_name}
+                          </Link>
                       </Menu.Item>
                       <Menu.Item>
-                          <button
-                            href="#"
+                          <Link
+                            to={SETTINGS_ROUTE}
                             className={classNames('block px-4 py-2 text-sm text-gray-900 w-full ')}
                           >
                             Настройки
-                          </button>
+                          </Link>
                       </Menu.Item>
                       <Menu.Item>
-                          <button
+                          <Link
                             onClick={() => logout(user)}
                             className={classNames('block px-4 py-2 text-sm text-gray-900 w-full ')}
                           >
                             Выйти
-                          </button>
+                          </Link>
                       </Menu.Item>
                     </Menu.Items>
                   </Transition>
