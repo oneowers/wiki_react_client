@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './index.css';
 import { BrowserRouter } from 'react-router-dom';
 import AppRouter from './components/AppRouter';
@@ -7,7 +6,7 @@ import { observer } from 'mobx-react-lite';
 import { useContext, useEffect, useState } from 'react';
 import { Context } from '.';
 import { check, user as userApi } from './http/userApi'; // Renamed to avoid naming conflict
-import { toast } from 'react-toastify';
+import Footer from './components/Footer';
 
 const App = observer(() => {
   const { user } = useContext(Context);
@@ -49,6 +48,7 @@ const App = observer(() => {
       <BrowserRouter>
         <NavBar />
         <AppRouter />
+        <Footer />
       </BrowserRouter>
     </div>
   );
