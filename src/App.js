@@ -19,14 +19,13 @@ const App = observer(() => {
         const checkData = await check();
         if (checkData.success) {
           user.setIsAuth(true);
+          localStorage.setItem('token', checkData.data.token)
         }
-        toast(checkData.message);
         
         const userData = await userApi();
         if (userData.success) {
           user.setUser(userData.data.user);
         }
-        toast(userData.message);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {

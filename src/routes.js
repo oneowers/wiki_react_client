@@ -6,7 +6,8 @@ import Shop from './pages/Shop';
 import Settings from './pages/Settings'
 import Profile from './pages/Profile'
 
-import { ADMIN_ROUTE, BASKET_ROUTE, DEVICE_ROUTE, SETTINGS_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE, PROFILE_ROUTE } from './utils/consts';
+import { ADMIN_ROUTE, BASKET_ROUTE, DEVICE_ROUTE, SETTINGS_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE, PROFILE_ROUTE, ABOUT_ROUTE } from './utils/consts';
+import About from './pages/About';
 
 export const authRoutes = [
   {
@@ -31,6 +32,10 @@ export const publicRoutes = [
   {
     path: SHOP_ROUTE,
     element: <Shop />,
+  },
+  {
+    path: ABOUT_ROUTE,
+    element: <About />,
   },
   {
     path: LOGIN_ROUTE,
