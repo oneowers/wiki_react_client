@@ -24,7 +24,6 @@ function classNames(...classes) {
 const CreateDevice = ({ show, onHide }) => {
   const { device } = useContext(Context);
   const [name, setName] = useState("");
-  const [price, setPrice] = useState(0);
   const [file, setFile] = useState(null);
   const [brandField, setBrand] = useState(null);
   const [typeField, setType] = useState(null);
@@ -66,7 +65,6 @@ const CreateDevice = ({ show, onHide }) => {
 const addDevice = () => {
     const formData = new FormData();
     formData.append("name", name);
-    formData.append("price", `${price}`);
     formData.append("img", file);
     formData.append("brandId", brandField.id);
     formData.append("typeId", typeField.id);
@@ -227,23 +225,6 @@ const addDevice = () => {
                               name="name"
                               value={name}
                               onChange={(e) => setName(e.target.value)}
-                              className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm rounded-md border border-gray-300 px-3 py-2"
-                              required
-                            />
-                          </div>
-                          <div className="mb-4">
-                            <label
-                              htmlFor="price"
-                              className="block text-sm font-medium text-gray-700"
-                            >
-                              Цена
-                            </label>
-                            <input
-                              type="number"
-                              id="price"
-                              name="price"
-                              value={price}
-                              onChange={(e) => setPrice(Number(e.target.value))}
                               className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm rounded-md border border-gray-300 px-3 py-2"
                               required
                             />

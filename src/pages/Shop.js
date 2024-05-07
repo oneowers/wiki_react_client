@@ -5,6 +5,8 @@ import PreviewDeviceList from "../components/PreviewDeviceList";
 import { observer } from "mobx-react-lite";
 import { Context } from "..";
 import { fetchBrands, fetchTypes, fetchDevices } from "../http/deviceApi";
+import { Link } from "react-router-dom";
+import { ABOUT_ROUTE } from "../utils/consts";
 
 const Shop = observer(() => {
   const { device } = useContext(Context);
@@ -56,12 +58,12 @@ const Shop = observer(() => {
                       Присоединяйтесь к нам в Экспо с 28 по 30 мая, нажмите чтобы узнать больше.
                     </p>
                   </div>
-                  <a
-                    href="#"
+                  <Link
+                    to={ABOUT_ROUTE}
                     className="mt-6 flex flex-shrink-0 items-center justify-center rounded-full  bg-black px-4 py-3 text-base font-medium text-white hover:bg-black-900 sm:ml-8 sm:mt-0 lg:ml-0 lg:w-full"
                   >
-                    Участвовать
-                  </a>
+                    Подробнее
+                  </Link>
                 </div>
               </div>
           <PreviewDeviceList />

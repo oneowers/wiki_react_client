@@ -1,8 +1,5 @@
-// Participate.js
 import React, { useState, useContext, useEffect } from "react";
-import { Context } from "..";
 import { createDevice, fetchDevices } from "../http/deviceApi";
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { Modal, InputField, DropdownSelect } from "../elements";
 import { fetchCountries } from "../http/countryesApi";
 import { Link } from "react-router-dom";
@@ -16,6 +13,7 @@ const Participate = ({ show, onHide }) => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [employeeName, setEmployeeName] = useState("");
+  const [activeTab, setActiveTab] = useState("GUEST"); // Initial active tab
 
   useEffect(() => {
     fetchCountries().then((data) => setCountryes(data));
@@ -33,10 +31,38 @@ const Participate = ({ show, onHide }) => {
     createDevice(formData).then((data) => onHide());
   };
 
+  const handleTabChange = (tabName) => {
+    setActiveTab(tabName);
+  };
+
   return (
     <Modal show={show} onHide={onHide}>
       <div className="grid w-full grid-cols-1 items-start gap-x-6 gap-y-8 sm:grid-cols-12 lg:gap-x-8">
         <div className="sm:col-span-12 lg:col-span-12">
+          <div className="flex justify-center">
+            <span className="flex mb-5 p-1 border rounded-full border-gray-300">
+              <div
+                className={`py-1 px-5 ${
+                  activeTab === "GUEST"
+                    ? "bg-green-500 rounded-full text-white font-medium tabTransition"
+                    : "font-medium"
+                }`}
+                onClick={() => handleTabChange("GUEST")}
+              >
+                Участник
+              </div>
+              <div
+                className={`py-1 px-5 ${
+                  activeTab === "PLAYER"
+                    ? "bg-green-500 rounded-full text-white font-medium tabTransition"
+                    : "font-medium"
+                }`}
+                onClick={() => handleTabChange("PLAYER")}
+              >
+                Предприниматель
+              </div>
+            </span>
+          </div>
           <h2 className="text-2xl font-bold text-gray-900 sm:pr-12">
             Участвовать на выставке
           </h2>
@@ -47,8 +73,8 @@ const Participate = ({ show, onHide }) => {
           >
             Информация о выставке
           </Link>
-
-          <section aria-labelledby="options-heading" className="mt-5">
+{
+          activeTab == "PLAYER" ? (<section aria-labelledby="options-heading" className="mt-5">
             <div className="grid w-full grid-cols-12 space-x-2">
               <DropdownSelect
                 label="Выбрать страну"
@@ -90,15 +116,15 @@ const Participate = ({ show, onHide }) => {
                   >
                     <div className="absolute bottom-1 w-full p-2">
                       <div className="rounded-full bg-white/70 grid grid-cols-12 p-2">
-                      <button className="bg-white text-gray-800 w-full py-1 rounded-full shadow-md col-span-4">
-                        -
-                      </button>
-                      <span className="text-black font-bold text-xl mx-2 col-span-4 text-center">
-                        0
-                      </span>
-                      <button className="bg-white text-gray-800 w-full py-1 rounded-full shadow-md col-span-4">
-                        +
-                      </button>
+                        <button className="bg-white text-gray-800 w-full py-1 rounded-full shadow-md col-span-4">
+                          -
+                        </button>
+                        <span className="text-black font-bold text-xl mx-2 col-span-4 text-center">
+                          0
+                        </span>
+                        <button className="bg-white text-gray-800 w-full py-1 rounded-full shadow-md col-span-4">
+                          +
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -109,12 +135,41 @@ const Participate = ({ show, onHide }) => {
             <div
               onClick={addDevice}
               className="
-                bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-600 cursor-pointer
-                mt-6 flex w-full items-center justify-center rounded-md border border-transparent px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+    bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-600 cursor-pointer
+    mt-6 flex w-full items-center justify-center rounded-md border border-transparent px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             >
               Отправить
             </div>
-          </section>
+          </section>):
+          <section aria-labelledby="options-heading" className="mt-5">
+          <div className="grid w-full grid-cols-12 space-x-2">
+            <DropdownSelect
+              label="Выбрать страну"
+              onChange={setCountry}
+              selected={country}
+              arrayList={countryes}
+            />
+            <InputField
+              label="Имя участника"
+              value={employeeName}
+              onChange={setEmployeeName}
+            />
+            <InputField
+              label="Фамилия участника"
+              value={employeeName}
+              onChange={setEmployeeName}
+            />
+          </div>
+
+          <div
+            onClick={addDevice}
+            className="
+  bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-600 cursor-pointer
+  mt-6 flex w-full items-center justify-center rounded-md border border-transparent px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          >
+            Отправить
+          </div>
+        </section>}
         </div>
       </div>
     </Modal>
