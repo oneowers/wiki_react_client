@@ -174,7 +174,7 @@ export default function About() {
                 <div className="mx-auto max-w-2xl gap-x-14 lg:mx-0 lg:flex lg:max-w-none lg:items-center">
                   <div className="w-full max-w-xl lg:shrink-0 xl:max-w-2xl">
                     <h1 className="text-3xl mb-7 font-bold tracking-tight text-gray-900 sm:text-5xl">
-                      Ассоциация "Global Expo" приглашает вас принять участие
+                      Коммпания "Global Expo" приглашает вас принять участие
                     </h1>
                     <span
                       className=" cursor-pointer flex-none rounded-full bg-gray-900 px-5 py-3 text-md font-semibold text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
