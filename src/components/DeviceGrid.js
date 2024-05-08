@@ -21,7 +21,7 @@ const Shop = observer(() => {
   }, []);
 
   return (
-    <div className="mt-6 grid grid-cols-12 gap-x-6 gap-y-5 sm:grid-cols-12 lg:grid-cols-1 xl:gap-x-8">
+    <div className="mt-6 grid grid-cols-3 gap-x-6 gap-y-5 sm:grid-cols-3 lg:grid-cols-3 xl:gap-x-8">
       {popularDevices.count &&
         popularDevices.rows.map((product) => (
           <div

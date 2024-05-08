@@ -7,7 +7,7 @@ import Footer from "../components/Footer";
 import VideoSection from "../components/VideoSection";
 import Participate from "../modals/Participate";
 import { Link } from "react-router-dom";
-import DeviceList from "../components/DeviceList";
+import DeviceGrid from "../components/DeviceGrid";
 
 const navigation = [
   { name: "Product", href: "#" },
@@ -300,7 +300,7 @@ export default function About() {
             <h1 className="text-3xl mb-7 font-bold tracking-tight text-gray-900 sm:text-3xl">
               Популярные посты
             </h1>
-            <DeviceList />
+            <DeviceGrid />
           </div>
 
           {/* Values section */}
