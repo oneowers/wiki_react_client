@@ -8,6 +8,7 @@ import VideoSection from "../components/VideoSection";
 import Participate from "../modals/Participate";
 import { Link } from "react-router-dom";
 import DeviceGrid from "../components/DeviceGrid";
+import { SHOP_ROUTE } from "../utils/consts";
 
 const navigation = [
   { name: "Product", href: "#" },
@@ -297,9 +298,9 @@ export default function About() {
           <VideoSection />
 
           <div className="mx-auto mt-32 max-w-7xl px-6 sm:mt-40 lg:px-8">
-            <h1 className="text-3xl mb-7 font-bold tracking-tight text-gray-900 sm:text-3xl">
+            <Link to={SHOP_ROUTE} className="text-3xl mb-7 font-bold tracking-tight text-blue-700 underline sm:text-3xl">
               Популярные посты
-            </h1>
+            </Link>
             <DeviceGrid />
           </div>
 

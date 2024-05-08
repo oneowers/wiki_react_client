@@ -70,19 +70,20 @@ const NavBar = observer(() => {
             {user.isAuth && user.user.role != "GHOST" ? (
               <div className="space-x-3 absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 {/* {console.log(user.user.role)} */}
-                {/* {user.user.role == "ADMIN" &&  */}
-                <Link
-                  to={ADMIN_ROUTE}
-                  className="text-sm font-medium relative rounded-md bg-gray-100 p-2 text-black hover:text-gray-700 focus:outline-none"
-                >
-                  Admin
-                </Link>
+                {user.user.role == "ADMIN" && (
+                  <Link
+                    to={ADMIN_ROUTE}
+                    className="text-sm font-medium relative rounded-md bg-gray-100 p-2 text-black hover:text-gray-700 focus:outline-none"
+                  >
+                    Admin
+                  </Link>
+                )}
 
-                <button className="relative rounded-full p-1 text-gray-600 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                {/* <button className="relative rounded-full p-1 text-gray-600 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                   <span className="absolute -inset-1.5" />
                   <span className="sr-only">View notifications</span>
                   <BellIcon className="h-6 w-6" aria-hidden="true" />
-                </button>
+                </button> */}
 
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative ml-3">
@@ -92,7 +93,7 @@ const NavBar = observer(() => {
                       <span className="sr-only">Open user menu</span>
                       <img
                         className="h-8 w-8 rounded-full"
-                        src={user.user && user.user.profile_image}
+                        src={user.user && user.user.profile_image ? user.user.profile_image : "https://amu.edu.kz/upload/default-avatar.jpg"}
                       />
                     </Menu.Button>
                   </div>
@@ -113,7 +114,7 @@ const NavBar = observer(() => {
                             "block px-4 py-2 text-sm text-gray-900 w-full "
                           )}
                         >
-                          {user.user.first_name}
+                          {user.user.first_name ? user.user.first_name : "Профиль"}
                         </Link>
                       </Menu.Item>
                       <Menu.Item>

@@ -11,6 +11,7 @@ const TypeBar = observer(() => {
 
     return (
       <div className="bg-white m-5 rounded-lg  mt-6 px-6 py-4 h-full">
+        <span className=" sr-only bg-red-200 text-red-800 bg-green-200 text-green-800 bg-indigo-200 text-indigo-800 bg-yellow-200 text-yellow-800 bg-orange-200 text-orange-800 bg-blue-200 text-blue-800"></span>
         <div className="text-2xl font-medium mb-5">Leathers 2024</div>
         <div className="flex space-y-1 flex-col">
             {device.brands.map((brand) => (
