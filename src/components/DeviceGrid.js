@@ -21,13 +21,13 @@ const Shop = observer(() => {
   }, []);
 
   return (
-    <div className="mt-6 grid grid-cols-3 gap-x-6 gap-y-5 sm:grid-cols-3 lg:grid-cols-3 xl:gap-x-8">
+    <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-5  lg:grid-cols-3 xl:gap-x-8">
       {popularDevices.count &&
         popularDevices.rows.map((product) => (
           <div
             onClick={() => navigate(DEVICE_ROUTE + "/" + product.id)}
             key={product.id}
-            className="bg-white p-3 rounded-lg group relative flex flex-col items-start"
+            className="bg-white rounded-lg group relative flex flex-col items-start"
           >
             <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none group-hover:opacity-75 lg:h-40 mb-4">
               <img
