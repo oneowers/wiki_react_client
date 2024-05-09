@@ -14,14 +14,23 @@ const CreateBrand = ({ show, onHide }) => {
   const [name, setName] = useState("");
   const [color, setColor] = useState("bg-green-100 text-green-700");
   const [description, setDescription] = useState("");
+  const [file, setFile] = useState(null);
+
 
   const addBrand = () => {
-    createBrand({ name, color, description }).then((data) => {
+    createBrand({ name, color, description, cover_image: file }).then((data) => {
       setName("");
       setColor("");
       setDescription("");
+      setFile(null)
       onHide();
     });
+  };
+
+
+
+  const selectFile = (e) => {
+    setFile(e.target.files[0]);
   };
 
   return (
@@ -52,6 +61,23 @@ const CreateBrand = ({ show, onHide }) => {
                 value={description}
                 onChange={setDescription}
               />
+
+              <div className="mb-4">
+                <label
+                  htmlFor="photo"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Фотография
+                </label>
+                <input
+                  type="file"
+                  id="photo"
+                  name="photo"
+                  onChange={selectFile}
+                  accept="image/*"
+                  className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm rounded-md border border-gray-300 px-3 py-2"
+                />
+              </div>
 
               {name != "" && (
                 <span

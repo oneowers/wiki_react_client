@@ -2,10 +2,30 @@ import { XMarkIcon } from '@heroicons/react/20/solid'
 import { ABOUT_ROUTE } from '../utils/consts'
 import { Link } from 'react-router-dom'
 import Participate from '../modals/Participate'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function TopBanner() {
   const [participateVisible, setParticipateVisible] = useState(false);
+  const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+
+  useEffect(() => {
+    const exhibitionDate = new Date("2024-05-21"); // Установите дату и время начала выставки
+    const intervalId = setInterval(() => {
+      const now = new Date();
+      const difference = exhibitionDate - now;
+      if (difference <= 0) {
+        clearInterval(intervalId);
+      } else {
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+        setCountdown({ days, hours, minutes, seconds });
+      }
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   return (
     <>
@@ -35,13 +55,19 @@ export default function TopBanner() {
         />
       </div>
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-        <p className="text-sm font-medium leading-6 text-white">
+        <p className="text-lg font-medium leading-6 text-white">
           <strong className="font-semibold">Leather 2024</strong>
           <svg viewBox="0 0 2 2" className="mx-2 inline h-0.5 w-0.5 fill-current" aria-hidden="true">
             <circle cx={1} cy={1} r={1} />
           </svg>
-          Присоединяйтесь к нам в Экспо с 21 по 23 мая, нажмите чтобы узнать больше.
+          Присоединяйтесь к нам в Экспо с 21 по 23 мая, осталось до выставки: 
         </p>
+        <div className="flex items-center text-white">
+          <span className="mr-1 font-semibold">{countdown.days}</span>д
+          <span className="mx-1 font-semibold">{countdown.hours}</span>ч
+          <span className="mx-1 font-semibold">{countdown.minutes}</span>м
+          <span className="mx-1 font-semibold">{countdown.seconds}</span>с
+        </div>
         <Link
           className="flex-none rounded-full bg-white px-3.5 py-1 text-sm font-semibold text-black shadow-sm hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
           onClick={() => setParticipateVisible(true)}
