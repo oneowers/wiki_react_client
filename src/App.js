@@ -16,15 +16,6 @@ const App = observer(() => {
     const fetchData = async () => {
       try {
         const checkData = await check();
-        if (checkData.success) {
-          user.setIsAuth(true);
-          localStorage.setItem('token', checkData.data.token)
-        }
-        
-        const userData = await userApi();
-        if (userData.success) {
-          user.setUser(userData.data.user);
-        }
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {

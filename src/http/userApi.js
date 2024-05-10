@@ -1,11 +1,12 @@
 import { useContext } from "react";
 import { $authHost, $host } from ".";
 import {jwtDecode as jwt_decode} from "jwt-decode"; 
+
 import { Context } from "..";
 
-export const registration = async (phone_number, password) => {
+export const registration = async (phone_number, password, first_name) => {
   try {
-    const { data } = await $host.post('/api/user/registration', { phone_number, password });
+    const { data } = await $host.post('/api/user/registration', { phone_number, password, first_name });
     localStorage.setItem('token', data.token)
     return {success: true, token: jwt_decode(data.token)}; 
   } catch (error) {
@@ -34,10 +35,16 @@ export const logout = (user) => {
 export const check = async () => {
   try {
     const { data } = await $authHost.get('/api/user/auth');
-    localStorage.setItem('token', data.token)
-    return {success: true, message: "С возврашением!", data: data};
-  }catch (error) {
-    return {success: false, message: error.response.data.message, error: error};
+    const decodedToken = jwt_decode(data.token);
+
+    localStorage.setItem('token', data.token);
+    user.setIsAuth(true);
+    user.setUser(decodedToken);
+    console.log(decodedToken)
+
+    return { success: true, message: "С возвращением!", data: decodedToken };
+  } catch (error) {
+    return { success: false, message: error.response.data.message, error: error };
   }
 };
 
