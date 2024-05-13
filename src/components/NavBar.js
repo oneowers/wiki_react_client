@@ -15,7 +15,8 @@ import {
 } from "../utils/consts";
 import { fetchTypes } from "../http/deviceApi";
 import { logout } from "../http/userApi";
-import logo from "./uzexpo.png";
+import logo1 from "./uzexpo.png";
+import logo from "./logo.png";
 import TopBanner from "./TopBanner";
 
 function classNames(...classes) {
@@ -33,21 +34,19 @@ const NavBar = observer(() => {
     <>
       <TopBanner />
       <Disclosure as="nav" className="bg-white">
-  <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 py-10">
+  <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 lg:py-10 py-2">
     <div className="relative flex h-16 items-center justify-between">
-      <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
+      <div className="absolute inset-y-0 left-0 flex items-center md:hidden lg:hidden">
         <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
           <span className="absolute -inset-0.5" />
           <span className="sr-only">Open main menu</span>
           <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
         </Disclosure.Button>
       </div>
-      <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-        <Link to={SHOP_ROUTE} className="flex flex-shrink-0 items-center">
-          <img className="h-24 w-auto" src={logo} alt="Global expo" />
-          <p className="ml-4 text-3xl font-medium text-green-800">
-            Global Expo
-          </p>
+      <div className="flex flex-1 sm:items-stretch lg:justify-start md:ml-0 lg:ml-0 ml-11">
+      <Link to={SHOP_ROUTE} className="flex flex-shrink-0 items-center">
+          <img className="h-24 w-auto hidden md:block lg:block" src={logo} alt="Global expo" />
+          <img className="h-12 w-auto lg:hidden md:hidden " src={logo1} alt="Global expo" />
         </Link>
       </div>
       <div className="">
@@ -142,11 +141,16 @@ const NavBar = observer(() => {
         </div>
       )}
       {/* Contact Information */}
-      <div className=" mt-3 mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 pb-4 text-sm text-gray-600">
+      <div className="hidden lg:block md:block mt-3 mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 pb-4 text-sm text-gray-600">
         <p>Контактный телефон: +998 (71) 207-95-55</p>
         <p>Телефон доверия: +998 (71) 267 53 64</p>
-      </div></div>
+      </div>
+      </div>
     </div>
+      <div className="md:hidden lg:hidden mt-3 mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 pb-4 text-sm text-gray-600">
+        <p>Контактный телефон: +998 (71) 207-95-55</p>
+        <p>Телефон доверия: +998 (71) 267 53 64</p>
+      </div>
   </div>
 </Disclosure>
 

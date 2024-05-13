@@ -32,8 +32,8 @@ const Shop = observer(() => {
         <TypeBar />
       </div>
       <div class="basis-6/6 lg:basis-3/6 ">
-        <div className="mt-6 h-full">
-              <div className="relative overflow-hidden rounded-lg lg:h-96">
+        <div className="mt-6">
+              <div className="m-3 lg:m-0 md:m-0 relative overflow-hidden rounded-md lg:h-48">
                 <div className="absolute inset-0">
                   <img
                     src="https://images.unsplash.com/photo-1631697886307-421ae87d3426?q=80&w=2486&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
@@ -49,7 +49,7 @@ const Shop = observer(() => {
                   aria-hidden="true"
                   className="relative h-32 w-full lg:hidden"
                 />
-                <div className="absolute inset-x-0 bottom-0 rounded-bl-lg rounded-br-lg bg-white bg-opacity-75 p-6 backdrop-blur backdrop-filter sm:flex sm:items-center sm:justify-between lg:inset-x-auto lg:inset-y-0 lg:w-96 lg:flex-col lg:items-start lg:rounded-br-none lg:rounded-tl-lg">
+                <div className="absolute inset-x-0 bottom-0 rounded-bl-md rounded-br-md bg-white bg-opacity-75 p-6 backdrop-blur backdrop-filter sm:flex sm:items-center sm:justify-between lg:inset-x-auto lg:inset-y-0 lg:w-96 lg:flex-col lg:items-start lg:rounded-br-none lg:rounded-tl-lg">
                   <div>
                     <h2 className="text-xl font-bold text-black">
                       Leather Expo 2024
@@ -60,7 +60,7 @@ const Shop = observer(() => {
                   </div>
                   <Link
                     to={ABOUT_ROUTE}
-                    className="mt-6 flex flex-shrink-0 items-center justify-center rounded-full  bg-black px-4 py-3 text-base font-medium text-white hover:bg-black-900 sm:ml-8 sm:mt-0 lg:ml-0 lg:w-full"
+                    className="mt-6 flex flex-shrink-0 items-center justify-center rounded-md  bg-green-950 px-4 py-3 text-base font-medium text-white hover:bg-black-900 sm:ml-8 sm:mt-0 lg:ml-0 lg:w-full"
                   >
                     Подробнее
                   </Link>

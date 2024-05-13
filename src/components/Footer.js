@@ -79,9 +79,9 @@ const footerNavigation = {
 const Footer = () => {
 
   return (
-    <footer className="bg-white mx-auto max-w-7xl overflow-hidden pb-20 sm:pt-32 sm:pb-24 lg:px-8">
+    <footer className="bg-white pt-3 mx-auto max-w-7xl overflow-hidden pb-20 sm:pt-32 sm:pb-24 lg:px-8">
       <nav
-        className="-mb-6 columns-2 sm:flex sm:justify-center sm:space-x-12"
+        className="-mb-6 px-10 lg:px-0 md:px-0 columns-2 sm:flex sm:justify-center sm:space-x-12"
         aria-label="Footer"
       >
         {footerNavigation.main.map((item) => (
