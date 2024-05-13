@@ -142,14 +142,14 @@ const NavBar = observer(() => {
       )}
       {/* Contact Information */}
       <div className="hidden lg:block md:block mt-3 mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 pb-4 text-sm text-gray-600">
-        <p>Контактный телефон: +998 (71) 207-95-55</p>
-        <p>Телефон доверия: +998 (71) 267 53 64</p>
+      <p>Контактный телефон: +998 (98) 707-64-44</p>
+        <p>Телефон доверия: +998 (71) 207-95-55</p>
       </div>
       </div>
     </div>
       <div className="md:hidden lg:hidden mt-3 mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 pb-4 text-sm text-gray-600">
-        <p>Контактный телефон: +998 (71) 207-95-55</p>
-        <p>Телефон доверия: +998 (71) 267 53 64</p>
+        <p>Контактный телефон: +998 (98) 707-64-44</p>
+        <p>Телефон доверия: +998 (71) 207-95-55</p>
       </div>
   </div>
 </Disclosure>
