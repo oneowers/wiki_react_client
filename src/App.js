@@ -1,12 +1,12 @@
 import './index.css';
 import { BrowserRouter } from 'react-router-dom';
-import AppRouter from './components/AppRouter';
-import NavBar from './components/NavBar';
+import AppRouter from './components/AppRouter.js';
+import NavBar from './components/NavBar.js';
 import { observer } from 'mobx-react-lite';
 import { useContext, useEffect, useState } from 'react';
-import { Context } from '.';
-import { check, user as userApi } from './http/userApi'; // Renamed to avoid naming conflict
-import Footer from './components/Footer';
+import { Context } from './index.js';
+import { check, user as userApi } from './http/userApi.js'; // Renamed to avoid naming conflict
+import Footer from './components/Footer.js';
 
 const App = observer(() => {
   const { user } = useContext(Context);

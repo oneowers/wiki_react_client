@@ -1,10 +1,10 @@
 import React, { createContext } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import UserStore from './store/UserStore';
-import DeviceStore from './store/DeviceStore';
+import App from './App.js';
+import reportWebVitals from './reportWebVitals.js';
+import UserStore from './store/UserStore.js';
+import DeviceStore from './store/DeviceStore.js';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 

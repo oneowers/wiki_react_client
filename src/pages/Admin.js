@@ -5,9 +5,9 @@ import {
   TagIcon,
   DevicePhoneMobileIcon,
 } from "@heroicons/react/24/outline";
-import CreateBrand from "../modals/CreateBrand";
-import CreateType from "../modals/CreateType";
-import CreateDevice from "../modals/CreateDevice";
+import CreateBrand from "../modals/CreateBrand.js";
+import CreateType from "../modals/CreateType.js";
+import CreateDevice from "../modals/CreateDevice.js";
 
 const Admin = observer(() => {
   const [brandVisible, setBrandVisible] = useState(false);

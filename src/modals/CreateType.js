@@ -3,7 +3,7 @@ import { Dialog, RadioGroup, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { StarIcon } from '@heroicons/react/20/solid'
 import { Fragment, useState } from 'react'
-import { createType } from "../http/deviceApi";
+import { createType } from "../http/deviceApi.js";
 
 const CreateType = ({show, onHide}) => {
     const [name, setName] = useState('');

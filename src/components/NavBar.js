@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { Context } from "..";
+import { Context } from "../index.js";
 import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
@@ -12,12 +12,12 @@ import {
   REGISTRATION_ROUTE,
   SETTINGS_ROUTE,
   SHOP_ROUTE,
-} from "../utils/consts";
-import { fetchTypes } from "../http/deviceApi";
-import { logout } from "../http/userApi";
+} from "../utils/consts.js";
+import { fetchTypes } from "../http/deviceApi.js";
+import { logout } from "../http/userApi.js";
 import logo1 from "./uzexpo.png";
 import logo from "./logo.png";
-import TopBanner from "./TopBanner";
+import TopBanner from "./TopBanner.js";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");

@@ -1,4 +1,4 @@
-import { $authHost, $host } from ".";
+import { $authHost, $host } from "./index.js";
 
 export const createType = async (type) => {
   const { data } = await $authHost.post("/api/type", type);

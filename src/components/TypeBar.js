@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import React, { useContext } from "react";
-import { Context } from "..";
+import { Context } from "../index.js";
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')

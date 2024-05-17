@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { ABOUT_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE } from "../utils/consts";
+import { ABOUT_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE } from "../utils/consts.js";
 
 
 

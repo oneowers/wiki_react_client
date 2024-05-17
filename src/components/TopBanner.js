@@ -1,4 +1,4 @@
-import Participate from "../modals/Participate";
+import Participate from "../modals/Participate.js";
 import { useState, useEffect } from "react";
 import TopHeader from "./TopHeader.js";
 

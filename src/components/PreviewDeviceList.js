@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Context } from "..";
+import { Context } from "../index.js";
 import { useNavigate } from "react-router-dom";
-import { DEVICE_ROUTE } from "../utils/consts";
+import { DEVICE_ROUTE } from "../utils/consts.js";
 import { observer } from "mobx-react-lite";
 import {
   ChatBubbleLeftIcon,
@@ -11,7 +11,7 @@ import {
 import {
   createDeviceComment,
   fetchDeviceComments,
-} from "../http/deviceApi";
+} from "../http/deviceApi.js";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");

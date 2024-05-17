@@ -1,13 +1,13 @@
-import Admin from './pages/Admin';
-import Auth from './pages/Auth';
-import Basket from './pages/Basket';
-import DevicePage from './pages/DevicePage';
-import Shop from './pages/Shop';
-import Settings from './pages/Settings'
-import Profile from './pages/Profile'
+import Admin from './pages/Admin.js';
+import Auth from './pages/Auth.js';
+import Basket from './pages/Basket.js';
+import DevicePage from './pages/DevicePage.js';
+import Shop from './pages/Shop.js';
+import Settings from './pages/Settings.js'
+import Profile from './pages/Profile.js'
 
-import { ADMIN_ROUTE, BASKET_ROUTE, DEVICE_ROUTE, SETTINGS_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE, PROFILE_ROUTE, ABOUT_ROUTE } from './utils/consts';
-import About from './pages/About';
+import { ADMIN_ROUTE, BASKET_ROUTE, DEVICE_ROUTE, SETTINGS_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE, PROFILE_ROUTE, ABOUT_ROUTE } from './utils/consts.js';
+import About from './pages/About.js';
 
 export const authRoutes = [
   {

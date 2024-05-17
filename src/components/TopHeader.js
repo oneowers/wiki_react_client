@@ -1,5 +1,5 @@
 import { XMarkIcon } from '@heroicons/react/20/solid'
-import { ABOUT_ROUTE } from '../utils/consts'
+import { ABOUT_ROUTE } from '../utils/consts.js'
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react';
 

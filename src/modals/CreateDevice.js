@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useContext, useEffect } from "react";
 import { convertToRaw } from "draft-js";
-import { Context } from "..";
+import { Context } from "../index.js";
 import {
   Disclosure,
   Menu,
@@ -10,7 +10,7 @@ import {
 } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
-import { createDevice, fetchBrands, fetchDevices } from "../http/deviceApi";
+import { createDevice, fetchBrands, fetchDevices } from "../http/deviceApi.js";
 import { EditorState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";

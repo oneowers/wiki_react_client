@@ -2,7 +2,7 @@ import { EnvelopeIcon, PhoneIcon} from '@heroicons/react/20/solid'
 import { useState } from 'react';
 import React, { useContext, useEffect } from "react";
 
-import { Context } from "..";
+import { Context } from "../index.js";
 
 
 

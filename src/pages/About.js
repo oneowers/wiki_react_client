@@ -1,14 +1,14 @@
 import { useContext, useEffect, useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { Context } from "..";
-import { fetchDevices } from "../http/deviceApi";
-import Footer from "../components/Footer";
-import VideoSection from "../components/VideoSection";
-import Participate from "../modals/Participate";
+import { Context } from "../index.js";
+import { fetchDevices } from "../http/deviceApi.js";
+import Footer from "../components/Footer.js";
+import VideoSection from "../components/VideoSection.js";
+import Participate from "../modals/Participate.js";
 import { Link } from "react-router-dom";
-import DeviceGrid from "../components/DeviceGrid";
-import { SHOP_ROUTE } from "../utils/consts";
+import DeviceGrid from "../components/DeviceGrid.js";
+import { SHOP_ROUTE } from "../utils/consts.js";
 
 const navigation = [
   { name: "Product", href: "#" },

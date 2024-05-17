@@ -1,18 +1,18 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE } from "../utils/consts";
+import { LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE } from "../utils/consts.js";
 import {
   login,
   registration,
   sendVerificationSms,
   verifyCodeSms,
-} from "../http/userApi";
+} from "../http/userApi.js";
 import { observer } from "mobx-react-lite";
 import { useNavigate } from "react-router-dom";
-import { Context } from "..";
+import { Context } from "../index.js";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
-import { InputField } from "../elements";
+import { InputField } from "../elements/index.js";
 
 const Auth = observer(() => {
   const { user } = useContext(Context);

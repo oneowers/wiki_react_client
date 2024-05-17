@@ -1,10 +1,7 @@
 import React from "react";
-import { Dialog, RadioGroup, Transition } from "@headlessui/react";
-import { XMarkIcon } from "@heroicons/react/24/outline";
-import { StarIcon } from "@heroicons/react/20/solid";
-import { Fragment, useState } from "react";
-import { createBrand } from "../http/deviceApi";
-import { InputField, Modal } from "../elements";
+import { useState } from "react";
+import { createBrand } from "../http/deviceApi.js";
+import { InputField, Modal } from "../elements/index.js";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");

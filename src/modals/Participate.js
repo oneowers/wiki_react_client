@@ -1,9 +1,9 @@
 import React, { useState, useContext, useEffect } from "react";
-import { createDevice, fetchDevices } from "../http/deviceApi";
-import { Modal, InputField, DropdownSelect } from "../elements";
-import { fetchCountries } from "../http/countryesApi";
+import { createDevice, fetchDevices } from "../http/deviceApi.js";
+import { Modal, InputField, DropdownSelect } from "../elements/index.js";
+import { fetchCountries } from "../http/countryesApi.js";
 import { Link } from "react-router-dom";
-import { ABOUT_ROUTE } from "../utils/consts";
+import { ABOUT_ROUTE } from "../utils/consts.js";
 
 const Participate = ({ show, onHide }) => {
   const [country, setCountry] = useState("");

@@ -1,12 +1,12 @@
 import React, { useContext, useEffect } from "react";
-import TypeBar from "../components/TypeBar";
-import DeviceList from "../components/DeviceList";
-import PreviewDeviceList from "../components/PreviewDeviceList";
+import TypeBar from "../components/TypeBar.js";
+import DeviceList from "../components/DeviceList.js";
+import PreviewDeviceList from "../components/PreviewDeviceList.js";
 import { observer } from "mobx-react-lite";
-import { Context } from "..";
-import { fetchBrands, fetchTypes, fetchDevices } from "../http/deviceApi";
+import { Context } from "../index.js";
+import { fetchBrands, fetchTypes, fetchDevices } from "../http/deviceApi.js";
 import { Link } from "react-router-dom";
-import { ABOUT_ROUTE } from "../utils/consts";
+import { ABOUT_ROUTE } from "../utils/consts.js";
 
 const Shop = observer(() => {
   const { device } = useContext(Context);

@@ -1,25 +1,26 @@
-const { SitemapStream, streamToPromise } = require('sitemap');
-const { createWriteStream } = require('fs');
-const { Readable } = require('stream');
+import fs from 'fs';
+import xmlBuilder from 'xmlbuilder';
 
-const pages = [
-  // List of URLs of your website
-  { url: '/page1', changefreq: 'daily', priority: 0.3 },
-  { url: '/page2', changefreq: 'daily', priority: 0.5 },
-  // Add more URLs as needed
+// Define your routes
+const routes = [
+  { url: '/', changefreq: 'daily', priority: 1.0 },
+  { url: '/news', changefreq: 'daily', priority: 0.8 },
+  { url: '/device/:id', changefreq: 'daily', priority: 0.7 },
 ];
 
-// Create a ReadableStream to pass to the SitemapStream
-const stream = new SitemapStream({ hostname: 'https://yourwebsite.com' });
-const writeStream = createWriteStream('./public/sitemap.xml');
+// Create XML structure for sitemap
+const root = xmlBuilder.create({ urlset: { '@xmlns': 'http://www.sitemaps.org/schemas/sitemap/0.9' } });
+routes.forEach(route => {
+  root.ele('url')
+    .ele('loc', `https://uzexpo.com${route.url}`)
+    .up()
+    .ele('changefreq', route.changefreq)
+    .up()
+    .ele('priority', route.priority);
+});
 
-(async () => {
-  for (const page of pages) {
-    stream.write(page);
-  }
-  stream.end();
-  await streamToPromise(stream).then((data) => {
-    writeStream.write(data.toString());
-    writeStream.end();
-  });
-})();
+// Convert XML to string
+const xmlString = root.end({ pretty: true });
+
+// Write XML string to file
+fs.writeFileSync('./public/sitemap.xml', xmlString, 'utf8');

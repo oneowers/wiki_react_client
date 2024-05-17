@@ -1,8 +1,8 @@
 import { useContext } from "react";
-import { $authHost, $host } from ".";
+import { $authHost, $host } from "./index.js";
 import {jwtDecode as jwt_decode} from "jwt-decode"; 
 
-import { Context } from "..";
+import { Context } from "../index.js";
 
 export const registration = async (phone_number, password, first_name) => {
   try {
