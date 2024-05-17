@@ -305,7 +305,7 @@ export default function About() {
           </div>
 
           {/* Values section */}
-          <div className="mx-auto mt-5 max-w-7xl px-6 sm:mt-10 lg:px-8">
+          <div className="mx-auto pb-10 mt-5 max-w-7xl px-6 sm:mt-10 lg:px-8">
             <dl className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 text-base leading-7 sm:grid-cols-2 lg:mx-0 lg:max-w-none lg:grid-cols-3">
               {values.map((value) => (
                 <div key={value.name}>

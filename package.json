@@ -26,6 +26,7 @@
     "react-toastify": "^10.0.5",
     "react-youtube": "^10.1.0",
     "sequelize": "^6.37.3",
+    "sitemap": "^7.1.1",
     "tailwindcss": "^3.4.3",
     "web-vitals": "^2.1.4"
   },
@@ -33,7 +34,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "generate-sitemap": "node generate-sitemap.js"
   },
   "eslintConfig": {
     "extends": [

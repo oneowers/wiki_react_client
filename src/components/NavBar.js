@@ -56,7 +56,7 @@ const NavBar = observer(() => {
           {user.user.role === "ADMIN" && (
             <Link
               to={ADMIN_ROUTE}
-              className="text-sm font-medium relative rounded-md bg-gray-100 p-2 text-black hover:text-gray-700 focus:outline-none"
+              className="text-sm font-medium relative rounded-md bg-green-9Надеюсь, ночь прошла спокойно и без кровотечений из носа.00 p-2 text-white:text-gray-700 focus:outline-none"
             >
               Admin
             </Link>
@@ -128,13 +128,13 @@ const NavBar = observer(() => {
         <div className="absolute inset-y-0 right-0 flex space-x-4 items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
           <Link
             to={REGISTRATION_ROUTE}
-            className="text-sm font-medium relative rounded-md bg-gray-100 p-2 text-gray-500 hover:text-gray-700 focus:outline-none"
+            className="text-sm font-medium relative rounded-md bg-green-9Надеюсь, ночь прошла спокойно и без кровотечений из bg-green-900 p-2 text-white hover:text-gray-100 focus:outline-none"
           >
             Зарегистрироваться
           </Link>
           <Link
             to={LOGIN_ROUTE}
-            className="text-sm font-medium relative rounded-md bg-gray-100 p-2 text-gray-500 hover:text-gray-700 focus:outline-none"
+            className="text-sm font-medium relative rounded-md bg-green-9Надеюсь, ночь прошла спокойно и без кровотечений из bg-green-900 p-2 text-white hover:text-gray-100 focus:outline-none"
           >
             Войти
           </Link>

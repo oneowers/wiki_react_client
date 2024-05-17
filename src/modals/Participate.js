@@ -37,7 +37,7 @@ const Participate = ({ show, onHide }) => {
 
   return (
     <Modal show={show} onHide={onHide}>
-      <div className="grid w-full items-start gap-x-6 gap-y-8 lg:gap-x-8">
+      <div className="grid w-full gap-x-6 gap-y-8 lg:gap-x-8">
         <div className="col-span-12">
           <div className="flex justify-center">
             <span className="flex mb-5 p-1 border rounded-full border-gray-300">
