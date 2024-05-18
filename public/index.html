@@ -7,6 +7,18 @@
     <meta name="yandex-verification" content="152db84fe8cdd307" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <title>UzExpo</title>
+
+    <PageMap>
+      <DataObject type="thumbnail">
+        <Attribute
+          name="src"
+          value="%PUBLIC_URL%/favicon.ico"
+        />
+        <Attribute name="width" value="100" />
+        <Attribute name="height" value="100" />
+      </DataObject>
+    </PageMap>
+
   </head>
   <body>
     <div id="root"></div>
@@ -26,19 +38,19 @@
     gtag("config", "G-6Z2SXMWGRW");
   </script>
 
-<script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "url": "https://uzexpo.com/",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": {
-        "@type": "EntryPoint",
-        "urlTemplate": "https://uzexpo.com/news/search?q={search_term_string}"
-      },
-      "query-input": "required name=search_term_string"
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "url": "https://uzexpo.com/",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://uzexpo.com/news/search?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
     }
-  }
   </script>
 </html>
