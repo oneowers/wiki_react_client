@@ -16,13 +16,12 @@ const Participate = ({ show, onHide }) => {
   const [phone, setPhone] = useState("");
   const [employeeName, setEmployeeName] = useState("");
 
-  const [employeeLastName, setEmployeeLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
 
   const addParticipant = async () => {
     const participant = {
       state: country,
-      full_name: `${employeeName} ${employeeLastName}`,
+      full_name: `${employeeName}`,
       phone_number: phoneNumber,
     };
 
@@ -45,7 +44,8 @@ const Participate = ({ show, onHide }) => {
   };
 
   return (
-      <div className="grid w-full gap-x-6 gap-y-8 lg:gap-x-8 p-7 lg:p-0">
+    <div className="bg-white ">
+      <div className="grid w-full gap-x-6 gap-y-8 lg:gap-x-8 p-7 mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="col-span-12">
           <div className="flex justify-center">
             <span className="flex mb-5 p-1 border rounded-full border-gray-300">
@@ -162,14 +162,9 @@ const Participate = ({ show, onHide }) => {
                   arrayList={countryes}
                 />}
                 <InputField
-                  label="Имя участника"
+                  label="Полное имя"
                   value={employeeName}
                   onChange={setEmployeeName}
-                />
-                <InputField
-                  label="Фамилия участника"
-                  value={employeeLastName}
-                  onChange={setEmployeeLastName}
                 />
                 <InputField
                   label="Телефонный номер"
@@ -188,7 +183,7 @@ const Participate = ({ show, onHide }) => {
             </section>
           )}
         </div>
-      </div>
+      </div></div>
   );
 };
 
