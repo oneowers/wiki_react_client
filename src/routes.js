@@ -6,8 +6,9 @@ import Shop from './pages/Shop.js';
 import Settings from './pages/Settings.js'
 import Profile from './pages/Profile.js'
 
-import { ADMIN_ROUTE, BASKET_ROUTE, DEVICE_ROUTE, SETTINGS_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE, PROFILE_ROUTE, ABOUT_ROUTE } from './utils/consts.js';
+import { ADMIN_ROUTE, BASKET_ROUTE, DEVICE_ROUTE, SETTINGS_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE, PROFILE_ROUTE, ABOUT_ROUTE, PARTICIPANT_ROUTE } from './utils/consts.js';
 import About from './pages/About.js';
+import Participate from './pages/Participant.js';
 
 export const authRoutes = [
   {
@@ -32,6 +33,10 @@ export const publicRoutes = [
   {
     path: SHOP_ROUTE,
     element: <Shop />,
+  },
+  {
+    path: PARTICIPANT_ROUTE,
+    element: <Participate />,
   },
   {
     path: ABOUT_ROUTE,
