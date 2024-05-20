@@ -1,51 +1,56 @@
-import React, { useState, useContext, useEffect } from "react";
-import { createDevice, fetchDevices } from "../http/deviceApi.js";
+import React, { useState, useEffect } from "react";
+import { createParticipant } from "../http/participantApi.js";
 import { Modal, InputField, DropdownSelect } from "../elements/index.js";
 import { fetchCountries } from "../http/countryesApi.js";
 import { Link } from "react-router-dom";
-import { ABOUT_ROUTE } from "../utils/consts.js";
-import { createParticipant } from "../http/participantApi.js"; // Import the function you'll create
+import { ABOUT_ROUTE, DEVICE_ROUTE, SHOP_ROUTE } from "../utils/consts.js";
 
 const Participate = ({ show, onHide }) => {
-  const [countryes, setCountryes] = useState("");
-  const [activeTab, setActiveTab] = useState("GUEST"); // Initial active tab
+  const [countryes, setCountryes] = useState([]);
+  const [activeTab, setActiveTab] = useState("GUEST");
   const [country, setCountry] = useState("");
+  const [region, setRegion] = useState(""); // New state for manual input of region
   const [companyName, setCompanyName] = useState("");
   const [address, setAddress] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [employeeName, setEmployeeName] = useState("");
-
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
 
   const addParticipant = async () => {
     const participant = {
-      state: country,
-      full_name: `${employeeName}`,
+      state: country || region, // Use either the selected country or the manually input region
+      full_name: employeeName,
       phone_number: phoneNumber,
     };
 
     try {
       const data = await createParticipant(participant);
       console.log("Participant created:", data);
-      // Optionally, reset form fields or provide user feedback here
+      setError(null);
+      setSuccess(true)
     } catch (error) {
       console.error("Error creating participant:", error);
+      setError(error.response?.data?.error || "Could not create participant");
     }
   };
 
   useEffect(() => {
-    fetchCountries().then((data) => setCountryes(data));
+    fetchCountries()
+      .then((data) => setCountryes(data))
+      .catch((error) => console.error("Error fetching countries:", error));
   }, []);
-
 
   const handleTabChange = (tabName) => {
     setActiveTab(tabName);
   };
 
   return (
-    <div className="bg-white ">
+    <div className="bg-white">
       <div className="grid w-full gap-x-6 gap-y-8 lg:gap-x-8 p-7 mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+        {success ? 
         <div className="col-span-12">
           <div className="flex justify-center">
             <span className="flex mb-5 p-1 border rounded-full border-gray-300">
@@ -81,11 +86,13 @@ const Participate = ({ show, onHide }) => {
           >
             Информация о выставке
           </Link>
+                
           {activeTab === "PLAYER" ? (
             <section aria-labelledby="options-heading" className="mt-5">
               <div className="grid w-full grid-cols-1 lg:grid-cols-12 space-x-2">
+                {/* Input fields for manual input */}
                 <DropdownSelect
-                  label="Выбрать страну"
+                  label="или выбрать страну"
                   onChange={setCountry}
                   selected={country}
                   arrayList={countryes}
@@ -155,12 +162,18 @@ const Participate = ({ show, onHide }) => {
           ) : (
             <section aria-labelledby="options-heading" className="mt-5">
               <div className="grid w-full grid-cols-1 lg:grid-cols-12 space-x-2">
-                {countryes && <DropdownSelect
-                  label="Выбрать страну"
+                
+                <DropdownSelect
+                  label="Ввыбрать страну"
                   onChange={setCountry}
                   selected={country}
                   arrayList={countryes}
-                />}
+                />
+                <InputField
+                  label="или введите страну"
+                  value={region}
+                  onChange={setRegion}
+                />
                 <InputField
                   label="Полное имя"
                   value={employeeName}
@@ -181,9 +194,23 @@ const Participate = ({ show, onHide }) => {
                 Отправить
               </div>
             </section>
-          )}
+          ) }
         </div>
-      </div></div>
+      : 
+      (
+        <div>
+            <div className=" rounded-lg bg-green-100 p-3">Вы успешно зарегистрировались </div>
+      <Link
+        to={SHOP_ROUTE}
+        className="text-sm text-gray-500 underline"
+        onClick={onHide}
+      >
+        Вернутся на главную страницы
+      </Link>
+        </div>
+      )}
+      </div>
+    </div>
   );
 };
 
