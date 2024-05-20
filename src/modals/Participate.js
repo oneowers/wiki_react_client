@@ -4,32 +4,41 @@ import { Modal, InputField, DropdownSelect } from "../elements/index.js";
 import { fetchCountries } from "../http/countryesApi.js";
 import { Link } from "react-router-dom";
 import { ABOUT_ROUTE } from "../utils/consts.js";
+import { createParticipant } from "../http/participantApi.js"; // Import the function you'll create
 
 const Participate = ({ show, onHide }) => {
-  const [country, setCountry] = useState("");
   const [countryes, setCountryes] = useState("");
+  const [activeTab, setActiveTab] = useState("GUEST"); // Initial active tab
+  const [country, setCountry] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [address, setAddress] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [employeeName, setEmployeeName] = useState("");
-  const [activeTab, setActiveTab] = useState("GUEST"); // Initial active tab
+
+  const [employeeLastName, setEmployeeLastName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+
+  const addParticipant = async () => {
+    const participant = {
+      state: country,
+      full_name: `${employeeName} ${employeeLastName}`,
+      phone_number: phoneNumber,
+    };
+
+    try {
+      const data = await createParticipant(participant);
+      console.log("Participant created:", data);
+      // Optionally, reset form fields or provide user feedback here
+    } catch (error) {
+      console.error("Error creating participant:", error);
+    }
+  };
 
   useEffect(() => {
     fetchCountries().then((data) => setCountryes(data));
   }, []);
 
-  const addDevice = () => {
-    const formData = new FormData();
-    formData.append("country", country);
-    formData.append("companyName", companyName);
-    formData.append("address", address);
-    formData.append("email", email);
-    formData.append("phone", phone);
-    formData.append("employeeName", employeeName);
-
-    createDevice(formData).then((data) => onHide());
-  };
 
   const handleTabChange = (tabName) => {
     setActiveTab(tabName);
@@ -88,7 +97,11 @@ const Participate = ({ show, onHide }) => {
                   onChange={setCompanyName}
                   required
                 />
-                <InputField label="Адрес" value={address} onChange={setAddress} />
+                <InputField
+                  label="Адрес"
+                  value={address}
+                  onChange={setAddress}
+                />
                 <InputField label="E-mail" value={email} onChange={setEmail} />
                 <InputField label="Телефон" value={phone} onChange={setPhone} />
                 <InputField
@@ -133,10 +146,9 @@ const Participate = ({ show, onHide }) => {
               </div>
 
               <div
-                onClick={addDevice}
                 className="
-                  bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-600 cursor-pointer
-                  mt-6 flex w-full items-center justify-center rounded-md border border-transparent px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-600 cursor-pointer
+                mt-6 flex w-full items-center justify-center rounded-md border border-transparent px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
                 Отправить
               </div>
@@ -157,16 +169,20 @@ const Participate = ({ show, onHide }) => {
                 />
                 <InputField
                   label="Фамилия участника"
-                  value={employeeName}
-                  onChange={setEmployeeName}
+                  value={employeeLastName}
+                  onChange={setEmployeeLastName}
+                />
+                <InputField
+                  label="Телефонный номер"
+                  value={phoneNumber}
+                  onChange={setPhoneNumber}
                 />
               </div>
-
               <div
-                onClick={addDevice}
+                onClick={addParticipant}
                 className="
-                  bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-600 cursor-pointer
-                  mt-6 flex w-full items-center justify-center rounded-md border border-transparent px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-600 cursor-pointer
+          mt-6 flex w-full items-center justify-center rounded-md border border-transparent px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
                 Отправить
               </div>
