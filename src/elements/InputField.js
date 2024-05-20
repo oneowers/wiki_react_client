@@ -13,7 +13,7 @@ const InputField = ({ label, value, onChange, type = "text", required = false })
         <textarea
           value={value}
           onChange={handleChange}
-          className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm rounded-md border border-gray-300 px-3 py-2"
+          className="mt-1 focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm rounded-md border border-gray-300 px-3 py-2"
           required={required}
         />
       ) : (
@@ -21,7 +21,7 @@ const InputField = ({ label, value, onChange, type = "text", required = false })
           type={type}
           value={value}
           onChange={handleChange}
-          className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm rounded-md border border-gray-300 px-3 py-2"
+          className="mt-1 focus:ring-green-500 focus:border-green-500 block w-full sm:text-sm rounded-md border border-gray-300 px-3 py-2"
           required={required}
         />
       )}

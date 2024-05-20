@@ -45,14 +45,14 @@ const Participate = ({ show, onHide }) => {
   };
 
   return (
-      <div className="grid w-full gap-x-6 gap-y-8 lg:gap-x-8">
+      <div className="grid w-full gap-x-6 gap-y-8 lg:gap-x-8 p-7 lg:p-0">
         <div className="col-span-12">
           <div className="flex justify-center">
             <span className="flex mb-5 p-1 border rounded-full border-gray-300">
               <div
                 className={`py-1 px-5 ${
                   activeTab === "GUEST"
-                    ? "bg-green-500 rounded-full text-white font-medium tabTransition"
+                    ? "bg-green-800 rounded-full text-white font-medium tabTransition"
                     : "font-medium"
                 }`}
                 onClick={() => handleTabChange("GUEST")}
@@ -62,7 +62,7 @@ const Participate = ({ show, onHide }) => {
               <div
                 className={`py-1 px-5 ${
                   activeTab === "PLAYER"
-                    ? "bg-green-500 rounded-full text-white font-medium tabTransition"
+                    ? "bg-green-800 rounded-full text-white font-medium tabTransition"
                     : "font-medium"
                 }`}
                 onClick={() => handleTabChange("PLAYER")}
@@ -180,7 +180,7 @@ const Participate = ({ show, onHide }) => {
               <div
                 onClick={addParticipant}
                 className="
-          bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-600 cursor-pointer
+          bg-gradient-to-r from-green-800 to-green-900 hover:from-green-900 hover:to-green-900 cursor-pointer
           mt-6 flex w-full items-center justify-center rounded-md border border-transparent px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
                 Отправить
