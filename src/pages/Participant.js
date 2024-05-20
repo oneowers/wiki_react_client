@@ -155,12 +155,12 @@ const Participate = ({ show, onHide }) => {
           ) : (
             <section aria-labelledby="options-heading" className="mt-5">
               <div className="grid w-full grid-cols-1 lg:grid-cols-12 space-x-2">
-                <DropdownSelect
+                {countryes && <DropdownSelect
                   label="Выбрать страну"
                   onChange={setCountry}
                   selected={country}
                   arrayList={countryes}
-                />
+                />}
                 <InputField
                   label="Имя участника"
                   value={employeeName}
