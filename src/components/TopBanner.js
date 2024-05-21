@@ -7,7 +7,7 @@ export default function TopBanner() {
 
   return (
     <>
-      <TopHeader trigger={setParticipateVisible} />
+      {/* <TopHeader trigger={setParticipateVisible} /> */}
       <Participate
         show={participateVisible}
         onHide={() => setParticipateVisible(false)}

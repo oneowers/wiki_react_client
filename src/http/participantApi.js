@@ -1,7 +1,7 @@
 
     import { toast } from 'react-toastify';
     import axios from 'axios';
-import { $authHost, $host } from "./index.js";
+    import { $authHost, $host } from "./index.js";
 
     
     export const createParticipant = async (participant) => {
