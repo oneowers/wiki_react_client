@@ -7,15 +7,18 @@ import QRCode from "qrcode.react";
 
 const Participate = ({ show, onHide }) => {
   // Состояние для хранения текущего выбранного языка
-  const [country, setCountry] = useState({ common: "🇺🇿 O'zbekiston", id: "uz" }); // Define country state
+  const [country, setCountry] = useState({
+    common: "🇺🇿 O'zbekiston",
+    id: "uz",
+  }); // Define country state
   const [employeeName, setEmployeeName] = useState(""); // Define employeeName state
+  const [companyName, setCompanyName] = useState("") // Define employee state
   const [phoneNumber, setPhoneNumber] = useState(""); // Define phoneNumber state
   const [email, setEmail] = useState(""); // Define email state
   const [success, setSuccess] = useState(false); // Define success state
   const [id, setId] = useState(0); // Define id state
-  
-  // Словарь переводов для различных языков
-  const translations= {
+
+  const translations = {
     uz: {
       countryOptions: [
         { common: "🇺🇿 O'zbekiston", id: "uz" },
@@ -25,7 +28,7 @@ const Participate = ({ show, onHide }) => {
         { common: "🇨🇳 Xitoy", id: "cn" },
         { common: "🇮🇷 Eron", id: "ir" },
         { common: "🇧🇾 Belarus", id: "by" },
-        { common: "🇩🇪 Germaniya", id: "de" }
+        { common: "🇩🇪 Germaniya", id: "de" },
       ],
       participateTitle: "Chiqishga qatnashish",
       aboutExhibition: "Nazorat haqida ma'lumot",
@@ -35,7 +38,8 @@ const Participate = ({ show, onHide }) => {
       submitButton: "Jo'natish",
       successMessage: "Muvaffaqiyatli ro'yxatdan o'tdingiz",
       returnHomeLink: "Bosh sahifaga qaytish",
-      pleaseDontClose: "Iltimos, ushbu sahifani yopmang"
+      pleaseDontClose: "Iltimos, ushbu sahifani yopmang",
+      companyLabel: "Kompaniyani kiriting",
     },
     ru: {
       countryOptions: [
@@ -46,7 +50,7 @@ const Participate = ({ show, onHide }) => {
         { common: "🇨🇳 Китай", id: "cn" },
         { common: "🇮🇷 Иран", id: "ir" },
         { common: "🇧🇾 Беларусь", id: "by" },
-        { common: "🇩🇪 Германия", id: "de" }
+        { common: "🇩🇪 Германия", id: "de" },
       ],
       participateTitle: "Участвовать на выставке",
       aboutExhibition: "Информация о выставке",
@@ -56,7 +60,8 @@ const Participate = ({ show, onHide }) => {
       submitButton: "Отправить",
       successMessage: "Вы успешно зарегистрировались",
       returnHomeLink: "Вернуться на главную страницу",
-      pleaseDontClose: "Пожалуйста, не закрывайте эту страницу"
+      pleaseDontClose: "Пожалуйста, не закрывайте эту страницу",
+      companyLabel: "Введите компанию",
     },
     us: {
       countryOptions: [
@@ -67,7 +72,7 @@ const Participate = ({ show, onHide }) => {
         { common: "🇨🇳 China", id: "cn" },
         { common: "🇮🇷 Iran", id: "ir" },
         { common: "🇧🇾 Belarus", id: "by" },
-        { common: "🇩🇪 Germany", id: "de" }
+        { common: "🇩🇪 Germany", id: "de" },
       ],
       participateTitle: "Participate in the exhibition",
       aboutExhibition: "About the exhibition",
@@ -77,7 +82,8 @@ const Participate = ({ show, onHide }) => {
       submitButton: "Submit",
       successMessage: "You have successfully registered",
       returnHomeLink: "Return to the homepage",
-      pleaseDontClose: "Please do not close this page"
+      pleaseDontClose: "Please do not close this page",
+      companyLabel: "Enter company",
     },
     it: {
       countryOptions: [
@@ -88,7 +94,7 @@ const Participate = ({ show, onHide }) => {
         { common: "🇨🇳 China", id: "cn" },
         { common: "🇮🇷 Iran", id: "ir" },
         { common: "🇧🇾 Belarus", id: "by" },
-        { common: "🇩🇪 Germany", id: "de" }
+        { common: "🇩🇪 Germany", id: "de" },
       ],
       participateTitle: "Partecipare alla mostra",
       aboutExhibition: "Informazioni sulla mostra",
@@ -98,7 +104,8 @@ const Participate = ({ show, onHide }) => {
       submitButton: "Invia",
       successMessage: "Ti sei registrato con successo",
       returnHomeLink: "Torna alla homepage",
-      pleaseDontClose: "Per favore, non chiudere questa pagina"
+      pleaseDontClose: "Per favore, non chiudere questa pagina",
+      companyLabel: "Inserisci azienda",
     },
     cn: {
       countryOptions: [
@@ -109,7 +116,7 @@ const Participate = ({ show, onHide }) => {
         { common: "🇨🇳 中国", id: "cn" },
         { common: "🇮🇷 伊朗", id: "ir" },
         { common: "🇧🇾 白俄罗斯", id: "by" },
-        { common: "🇩🇪 德国", id: "de" }
+        { common: "🇩🇪 德国", id: "de" },
       ],
       participateTitle: "参加展览",
       aboutExhibition: "关于展览",
@@ -119,7 +126,8 @@ const Participate = ({ show, onHide }) => {
       submitButton: "提交",
       successMessage: "您已成功注册",
       returnHomeLink: "返回首页",
-      pleaseDontClose: "请不要关闭此页面"
+      pleaseDontClose: "请不要关闭此页面",
+      companyLabel: "输入公司",
     },
     ir: {
       countryOptions: [
@@ -130,7 +138,7 @@ const Participate = ({ show, onHide }) => {
         { common: "🇨🇳 چین", id: "cn" },
         { common: "🇮🇷 ایران", id: "ir" },
         { common: "🇧🇾 بلاروس", id: "by" },
-        { common: "🇩🇪 آلمان", id: "de" }
+        { common: "🇩🇪 آلمان", id: "de" },
       ],
       participateTitle: "شرکت در نمایشگاه",
       aboutExhibition: "درباره نمایشگاه",
@@ -140,7 +148,8 @@ const Participate = ({ show, onHide }) => {
       submitButton: "ارسال",
       successMessage: "شما با موفقیت ثبت نام کرده اید",
       returnHomeLink: "بازگشت به صفحه اصلی",
-      pleaseDontClose: "لطفاً این صفحه را بسته نکنید"
+      pleaseDontClose: "لطفاً این صفحه را بسته نکنید",
+      companyLabel: "وارد کردن شرکت",
     },
     by: {
       countryOptions: [
@@ -151,7 +160,7 @@ const Participate = ({ show, onHide }) => {
         { common: "🇨🇳 Китай", id: "cn" },
         { common: "🇮🇷 Иран", id: "ir" },
         { common: "🇧🇾 Беларусь", id: "by" },
-        { common: "🇩🇪 Германия", id: "de" }
+        { common: "🇩🇪 Германия", id: "de" },
       ],
       participateTitle: "Удзельнічаць у выставе",
       aboutExhibition: "Інфармацыя пра выставу",
@@ -161,7 +170,8 @@ const Participate = ({ show, onHide }) => {
       submitButton: "Адправіць",
       successMessage: "Вы паспяхова зарэгістраваліся",
       returnHomeLink: "Вярнуцца на галоўную старонку",
-      pleaseDontClose: "Калі ласка, не зачыняйце гэтую старонку"
+      pleaseDontClose: "Калі ласка, не зачыняйце гэтую старонку",
+      companyLabel: "Увядзіце кампанію",
     },
     de: {
       countryOptions: [
@@ -172,7 +182,7 @@ const Participate = ({ show, onHide }) => {
         { common: "🇨🇳 China", id: "cn" },
         { common: "🇮🇷 Iran", id: "ir" },
         { common: "🇧🇾 Weißrussland", id: "by" },
-        { common: "🇩🇪 Deutschland", id: "de" }
+        { common: "🇩🇪 Deutschland", id: "de" },
       ],
       participateTitle: "An der Ausstellung teilnehmen",
       aboutExhibition: "Über die Ausstellung",
@@ -182,11 +192,10 @@ const Participate = ({ show, onHide }) => {
       submitButton: "Einreichen",
       successMessage: "Sie haben sich erfolgreich registriert",
       returnHomeLink: "Zurück zur Startseite",
-      pleaseDontClose: "Bitte schließen Sie diese Seite nicht"
-    }
-  }
-  
-  
+      pleaseDontClose: "Bitte schließen Sie diese Seite nicht",
+      companyLabel: "Firma eingeben",
+    },
+  };
   
 
   // Функция для обработки добавления участника
@@ -195,7 +204,8 @@ const Participate = ({ show, onHide }) => {
       state: country.id, // Используйте выбранную страну или регион, если введен вручную
       full_name: employeeName,
       phone_number: phoneNumber,
-      email: email
+      email: email,
+      company: companyName,
     };
 
     try {
@@ -223,47 +233,55 @@ const Participate = ({ show, onHide }) => {
             >
               {translations[country.id].aboutExhibition}
             </Link>
-              <section aria-labelledby="options-heading" className="mt-5">
-                <div className="grid w-full grid-cols-1 lg:grid-cols-12 space-x-2">
-                  <DropdownSelect
-                    label={translations[country.id].countryLabel}
-                    onChange={setCountry}
-                    selected={country}
-                    arrayList={translations[country.id].countryOptions}
-                  />
-                  <InputField
-                    label={translations[country.id].fullNameLabel}
-                    value={employeeName}
-                    onChange={setEmployeeName}
-                  />
-                  <InputField
-                    label={translations[country.id].phoneNumberLabel}
-                    value={phoneNumber}
-                    onChange={setPhoneNumber}
-                  />
-                  <InputField
-                    label={translations[country.id].emailLabel}
-                    value={email}
-                    onChange={setEmail}
-                  />
-                </div>
-                <button
-                  onClick={addParticipant}
-                  className="
+            <section aria-labelledby="options-heading" className="mt-5">
+              <div className="grid w-full grid-cols-1 lg:grid-cols-12 space-x-2">
+                <DropdownSelect
+                  label={translations[country.id].countryLabel}
+                  onChange={setCountry}
+                  selected={country}
+                  arrayList={translations[country.id].countryOptions}
+                />
+                <InputField
+                  label={translations[country.id].fullNameLabel}
+                  value={employeeName}
+                  onChange={setEmployeeName}
+                />
+                <InputField
+                  label={translations[country.id].phoneNumberLabel}
+                  value={phoneNumber}
+                  onChange={setPhoneNumber}
+                />
+                <InputField
+                  label={translations[country.id].emailLabel}
+                  value={email}
+                  onChange={setEmail}
+                />
+
+                <InputField
+                  label={translations[country.id].companyLabel}
+                  value={companyName}
+                  onChange={setCompanyName}
+                />
+              </div>
+              <button
+                onClick={addParticipant}
+                className="
           bg-gradient-to-r from-green-800 to-green-900 hover:from-green-900 hover:to-green-900 cursor-pointer
           mt-6 flex w-full items-center justify-center rounded-md border border-transparent px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                >
-                  {translations[country.id].submitButton}
-                </button>
-              </section>
+              >
+                {translations[country.id].submitButton}
+              </button>
+            </section>
           </div>
         ) : (
-            <div className="flex flex-col items-center justify-center">
-                {translations[country.id].pleaseDontClose}
+          <div className="flex flex-col items-center justify-center">
+            {translations[country.id].pleaseDontClose}
             <div className="rounded-lg bg-green-100 p-6 text-center">
-              <p className="text-lg font-semibold">{translations[country.id].successMessage}</p>
+              <p className="text-lg font-semibold">
+                {translations[country.id].successMessage}
+              </p>
             </div>
-      
+
             <div className="mt-6">
               <QRCode
                 value={`https://uzexpo.com/participants/` + id}
@@ -273,7 +291,7 @@ const Participate = ({ show, onHide }) => {
                 level="H"
               />
             </div>
-      
+
             <Link
               to={SHOP_ROUTE} // Предполагая, что SHOP_ROUTE определен
               className="mt-6 text-sm text-gray-500 underline"
@@ -282,7 +300,6 @@ const Participate = ({ show, onHide }) => {
               {translations[country.id].returnHomeLink}
             </Link>
           </div>
-          
         )}
       </div>
     </div>
