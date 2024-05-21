@@ -8,7 +8,6 @@ import QRCode from "qrcode.react";
 const Participate = ({ show, onHide }) => {
   // Состояние для хранения текущего выбранного языка
   const [country, setCountry] = useState({ common: "🇺🇿 O'zbekiston", id: "uz" }); // Define country state
-  const [region, setRegion] = useState(""); // Define region state
   const [employeeName, setEmployeeName] = useState(""); // Define employeeName state
   const [phoneNumber, setPhoneNumber] = useState(""); // Define phoneNumber state
   const [email, setEmail] = useState(""); // Define email state
@@ -193,9 +192,10 @@ const Participate = ({ show, onHide }) => {
   // Функция для обработки добавления участника
   const addParticipant = async () => {
     const participant = {
-      state: country || region, // Используйте выбранную страну или регион, если введен вручную
+      state: country.id, // Используйте выбранную страну или регион, если введен вручную
       full_name: employeeName,
       phone_number: phoneNumber,
+      email: email
     };
 
     try {
