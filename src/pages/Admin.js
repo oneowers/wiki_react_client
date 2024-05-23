@@ -8,6 +8,7 @@ import {
 import CreateBrand from "../modals/CreateBrand.js";
 import CreateType from "../modals/CreateType.js";
 import CreateDevice from "../modals/CreateDevice.js";
+import ParticipantsList from '../components/admin/ParticipantsList.js'
 
 const Admin = observer(() => {
   const [brandVisible, setBrandVisible] = useState(false);
@@ -46,6 +47,8 @@ const Admin = observer(() => {
           show={deviceVisible}
           onHide={() => setDeviceVisible(false)}
         />
+
+        <ParticipantsList />
       </div>
     </div>
   );

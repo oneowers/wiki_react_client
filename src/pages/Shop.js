@@ -7,6 +7,7 @@ import { Context } from "../index.js";
 import { fetchBrands, fetchTypes, fetchDevices } from "../http/deviceApi.js";
 import { Link } from "react-router-dom";
 import { ABOUT_ROUTE } from "../utils/consts.js";
+import ParticipantsList from "../components/admin/ParticipantsList.js";
 
 const Shop = observer(() => {
   const { device } = useContext(Context);
@@ -33,6 +34,8 @@ const Shop = observer(() => {
       </div>
       <div class="basis-6/6 lg:basis-3/6 ">
         <div className="mt-6">
+      <ParticipantsList />
+          
               <div className="m-3 lg:m-0 md:m-0 relative overflow-hidden rounded-md lg:h-48">
                 <div className="absolute inset-0">
                   <img
@@ -68,6 +71,7 @@ const Shop = observer(() => {
               </div>
           <PreviewDeviceList />
         </div>
+        
       </div>
       <div class="basis-2/6 hidden lg:block">
         <div className=" m-5 rounded-lg mt-6 h-full">
