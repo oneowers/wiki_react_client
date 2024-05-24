@@ -69,7 +69,7 @@ const Shop = observer(() => {
                   </Link>
                 </div>
               </div>
-          <PreviewDeviceList />
+          {/* <PreviewDeviceList /> */}
         </div>
         
       </div>

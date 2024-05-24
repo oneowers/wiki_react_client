@@ -45,7 +45,7 @@ const ParticipantsList = observer(() => {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="my-5">
       <h1 className="text-2xl font-bold mb-4">Participants List</h1>
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
         <table className="min-w-full bg-white">
