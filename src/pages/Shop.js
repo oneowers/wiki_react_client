@@ -34,7 +34,7 @@ const Shop = observer(() => {
       </div>
       <div class="basis-6/6 lg:basis-3/6 ">
         <div className="mt-6">
-      <ParticipantsList />
+      {/* <ParticipantsList /> */}
           
               <div className="m-3 lg:m-0 md:m-0 relative overflow-hidden rounded-md lg:h-48">
                 <div className="absolute inset-0">
@@ -69,7 +69,7 @@ const Shop = observer(() => {
                   </Link>
                 </div>
               </div>
-          {/* <PreviewDeviceList /> */}
+          <PreviewDeviceList />
         </div>
         
       </div>
