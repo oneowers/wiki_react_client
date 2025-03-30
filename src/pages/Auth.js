@@ -13,6 +13,7 @@ import { Context } from "../index.js";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { InputField } from "../elements/index.js";
+import logo from "../components/logo.png";
 
 const Auth = observer(() => {
   const { user } = useContext(Context);
@@ -104,18 +105,18 @@ const Auth = observer(() => {
   };
 
   const inputBorderColor = isValidPhoneNumber
-    ? "border-indigo-300"
+    ? "border-red-300"
     : "border-red-500";
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <img
           className="mx-auto h-10 w-auto"
-          src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+          src={logo}
           alt="Your Company"
         />
-        <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-          {isLogin ? <>Войдите в свою учетную запись</> : <>Авторизация</>}
+        <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-white">
+          {isLogin ? <>Login</> : <>Registration</>}
         </h2>
       </div>
 
@@ -127,9 +128,9 @@ const Auth = observer(() => {
             <div>
               <label
                 htmlFor="text"
-                className="block text-sm font-medium leading-6 text-gray-900"
+                className="block text-sm font-medium leading-6 text-white"
               >
-                Номер телефона
+                Phone number
               </label>
               <div
                 className={`relative mt-2 rounded-md shadow-sm ${inputBorderColor}`}
@@ -142,7 +143,7 @@ const Auth = observer(() => {
                     id="country"
                     name="country"
                     autoComplete="country"
-                    className="h-full rounded-md border-0 bg-transparent py-0 pl-3 pr-1 text-gray-500 focus:outline-none sm:text-sm"
+                    className="h-full rounded-md border-0 bg-transparent py-0 pl-3 pr-1 text-black focus:outline-none sm:text-sm"
                   >
                     <option>+998</option>
                   </select>
@@ -156,9 +157,9 @@ const Auth = observer(() => {
                   value={phoneNumber}
                   onChange={handlePhoneNumberChange}
                   className={`focus:outline-none focus:ring block w-full rounded-md border-0
-                      py-1.5 pl-20 text-gray-900 ring-1 ${
+                      py-1.5 pl-20 text-white ring-1 ${
                         isValidPhoneNumber
-                          ? "focus:ring-indigo-500 ring-indigo-500"
+                          ? "focus:ring-red-500 ring-red-500"
                           : "focus:ring-red-500 ring-red-500"
                       }
                       text-sm leading-6`}
@@ -184,16 +185,16 @@ const Auth = observer(() => {
               <div className="flex items-center justify-between">
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  className="block text-sm font-medium leading-6 text-white"
                 >
-                  Пароль
+                  Password
                 </label>
                 <div className="text-sm">
                   <a
                     href="#"
-                    className="font-semibold text-indigo-600 hover:text-indigo-500"
+                    className="font-semibold text-red-600 hover:text-red-500"
                   >
-                    Забыли пароль?
+                    Forget password (dev)
                   </a>
                 </div>
               </div>
@@ -206,7 +207,7 @@ const Auth = observer(() => {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="pl-2 block w-full rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-white focus:ring-2 focus:ring-inset focus:ring-red-600 sm:text-sm sm:leading-6"
                 />
               </div>
             </div>
@@ -216,9 +217,9 @@ const Auth = observer(() => {
               <div className="flex items-center justify-between">
                 <label
                   htmlFor="code"
-                  className="block text-sm font-medium leading-6 text-gray-900"
+                  className="block text-sm font-medium leading-6 text-white"
                 >
-                  Введите код, который пришел вам на номер
+                  Enter sms code
                 </label>
               </div>
               <div className="mt-2">
@@ -232,25 +233,25 @@ const Auth = observer(() => {
                   autocomplete="one-time-code"
                   onChange={handleCodeChange}
                   maxLength={5} // Устанавливаем максимальную длину вводимого кода
-                  className="pl-2 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  className="pl-2 block w-full rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-white focus:ring-2 focus:ring-inset focus:ring-red-600 sm:text-sm sm:leading-6"
                 />
               </div>
               <div className="text-sm">
                 {}
                 {timeLeft < user.timerSms ? (
-                  <p className="font-semibold text-sm text-gray-500">
-                    Можете отправить код повторно через{" "}
+                  <p className="font-semibold text-sm text-white">
+                    U can get another code in {" "}
                     {user.timerSms - timeLeft} секунд
                   </p>
                 ) : (
-                  <p className="font-semibold text-sm text-gray-500">
-                    Не пришел код?{" "}
+                  <p className="font-semibold text-sm text-white">
+                    No have a code?{" "}
                     <button
                       type="button"
-                      className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+                      className="font-semibold leading-6 text-red-600 hover:text-red-500"
                       onClick={resendVerificationCode}
                     >
-                      Отправить повторно
+                      Resend code
                     </button>
                   </p>
                 )}
@@ -261,29 +262,29 @@ const Auth = observer(() => {
           <div>
             <div
               onClick={click}
-              className=" cursor-pointer flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className=" cursor-pointer flex w-full justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
             >
-              {isLogin ? <>Войти</> : <>Регистрация</>}
+              {isLogin ? <>Login</> : <>Registration</>}
             </div>
           </div>
         </form>
 
         {isLogin ? (
-          <p className="mt-10 text-center text-sm text-gray-500">
-            Нет аккаунта?{" "}
+          <p className="mt-10 text-center text-sm text-white">
+            No account?{" "}
             <Link
               to={REGISTRATION_ROUTE}
-              className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+              className="font-semibold leading-6 text-red-600 hover:text-red-500"
             >
-              Зарегистрируйся!
+              Register!
             </Link>
           </p>
         ) : (
-          <p className="mt-10 text-center text-sm text-gray-500">
+          <p className="mt-10 text-center text-sm text-white">
             Есть аккаунт?{" "}
             <Link
               to={LOGIN_ROUTE}
-              className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+              className="font-semibold leading-6 text-red-600 hover:text-red-500"
             >
               Войдите!
             </Link>

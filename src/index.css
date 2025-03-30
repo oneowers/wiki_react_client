@@ -2,6 +2,22 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+/* fonts.css */
+@font-face {
+  font-family: 'Estrella';
+  src: url('./fonts/Estrella-Early.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Northing';
+  src: url('./fonts/Northing.ttf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 
 body {
   margin: 0;
@@ -20,3 +36,4 @@ code {
 .tabTransition {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
+

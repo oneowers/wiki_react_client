@@ -35,7 +35,7 @@ const App = observer(() => {
   }
 
   return (
-    <div className="bg-gray-100">
+    <div className='bg-black absolute w-full' style={{ fontFamily: 'Northing' }}>
       <BrowserRouter>
         <NavBar />
         <AppRouter />

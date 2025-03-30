@@ -79,7 +79,7 @@ const footerNavigation = {
 const Footer = () => {
 
   return (
-    <footer className="bg-white rounded-t-lg pt-3 mx-auto overflow-hidden pb-20 sm:pt-32 sm:pb-24 lg:px-8">
+    <footer className=" rounded-t-lg pt-3 mx-auto overflow-hidden pb-20 sm:pt-32 sm:pb-24 lg:px-8">
       <nav
         className="-mb-6 px-10 lg:px-0 md:px-0 columns-2 sm:flex sm:justify-center sm:space-x-12"
         aria-label="Footer"
@@ -88,7 +88,7 @@ const Footer = () => {
           <div key={item.name} className="pb-6">
             <a
               href={item.href}
-              className="text-sm leading-6 text-gray-600 hover:text-gray-900"
+              className="text-sm leading-6 text-white hover:text-gray-100"
             >
               {item.name}
             </a>
