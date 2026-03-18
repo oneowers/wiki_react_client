@@ -59,7 +59,7 @@ const Auth = observer(() => {
         res = await login(formatedPhoneNumber, password, user);
         if (res.success) navigate(NEWS_ROUTE);
       } else {
-        res = await registration(formatedPhoneNumber, password, firstName);
+        res = await registration(formatedPhoneNumber, password, firstName, user);
         if (res.success) {
           const sms = await sendVerificationSms(formatedPhoneNumber);
           if (sms.success) {

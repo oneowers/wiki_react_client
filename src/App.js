@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import './index.css';
 import { BrowserRouter } from 'react-router-dom';
 import AppRouter from './components/AppRouter.js';
@@ -11,7 +11,6 @@ import { toast } from "react-toastify";
 
 const App = observer(() => {
   const { user } = useContext(Context); // Получаем доступ к стору пользователя
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Вызываем проверку при первой загрузке
@@ -27,11 +26,11 @@ const App = observer(() => {
       })
       .finally(() => {
         // Убираем лоадер в любом случае через небольшую паузу для эффекта
-        setTimeout(() => setLoading(false), 800);
+        setTimeout(() => user.setLoading(false), 800);
       });
   }, [user]);
 
-  if (loading) {
+  if (user.loading) {
     return (
       <div className="h-screen w-full bg-black flex flex-col items-center justify-center font-mono">
         <div className="relative">

@@ -1,7 +1,7 @@
 import { $authHost, $host } from "./index.js";
 import { jwtDecode as jwt_decode } from "jwt-decode"; 
 
-export const registration = async (phone_number, password, first_name) => {
+export const registration = async (phone_number, password, first_name, userStore) => {
   try {
     const { data, status } = await $host.post('/api/user/registration', { phone_number, password, first_name });
     
@@ -11,7 +11,10 @@ export const registration = async (phone_number, password, first_name) => {
     }
 
     localStorage.setItem('token', data.token);
-    return { success: true, message: "NODE_CREATED: СЕССИЯ ИНИЦИАЛИЗИРОВАНА", token: jwt_decode(data.token) }; 
+    const decoded = jwt_decode(data.token);
+    userStore.setUser(decoded);
+    userStore.setIsAuth(true);
+    return { success: true, message: "NODE_CREATED: СЕССИЯ ИНИЦИАЛИЗИРОВАНА", token: decoded }; 
   } catch (error) {
     return { success: false, message: error.response?.data?.message || "REGISTRY_ERROR", error };
   }
@@ -82,5 +85,32 @@ export const verifyCodeSms = async (phoneNumber, code, userStore) => {
     return { success: false, message: "TOKEN_MISSING_IN_RESPONSE" };
   } catch (error) {
     return { success: false, message: error.response?.data?.message || "INVALID_CODE" };
+  }
+};
+
+export const updateProfile = async (id, first_name, profile_image, role, userStore) => {
+  try {
+    // Делаем PUT запрос к бэкенду. 
+    // ВНИМАНИЕ: Убедитесь, что роут '/api/user/update' совпадает с вашим бэкендом (возможно это '/api/user/' + id)
+    const { data } = await $authHost.put('/api/user/update', { id, first_name, profile_image, role });
+    
+    // Если сервер после обновления возвращает новый JWT токен (чтобы данные не пропали при F5):
+    if (data && data.token) {
+      localStorage.setItem('token', data.token);
+      const decoded = jwt_decode(data.token);
+      userStore.setUser(decoded);
+    } else {
+      // Иначе просто обновляем часть данных локально 
+      userStore.setUser({
+        ...userStore.user,
+        first_name,
+        profile_image,
+        role
+      });
+    }
+    
+    return { success: true, message: "PROFILE_UPDATED" };
+  } catch (error) {
+    return { success: false, message: error.response?.data?.message || "UPDATE_FAILED" };
   }
 };

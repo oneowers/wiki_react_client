@@ -5,16 +5,20 @@ export default class UserStore {
     this._isAuth = false;
     this._user = {};
     this._timerSms = 120;
-    makeAutoObservable(this); // Call makeAutoObservable in the constructor
+    this._loading = true;
+    makeAutoObservable(this);
   }
 
   setIsAuth(bool) {
     this._isAuth = bool;
-    console.log(this._isAuth)
   }
 
   setUser(user) {
     this._user = user;
+  }
+
+  setLoading(bool) {
+    this._loading = bool;
   }
 
   get isAuth() {
@@ -26,5 +30,9 @@ export default class UserStore {
   }
   get timerSms() {
     return this._timerSms;
+  }
+
+  get loading() {
+    return this._loading;
   }
 }

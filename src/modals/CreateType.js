@@ -1,15 +1,13 @@
-import React from "react";
-import { Dialog, RadioGroup, Transition } from '@headlessui/react'
-import { XMarkIcon } from '@heroicons/react/24/outline'
-import { StarIcon } from '@heroicons/react/20/solid'
-import { Fragment, useState } from 'react'
+import React, { Fragment, useState } from "react";
+import { Dialog, Transition } from '@headlessui/react'
+import { XMarkIcon, CommandLineIcon, TagIcon } from '@heroicons/react/24/outline'
 import { createType } from "../http/deviceApi.js";
 
-const CreateType = ({show, onHide}) => {
+const CreateType = ({ show, onHide }) => {
     const [name, setName] = useState('');
 
     const addType = () => {
-        createType({name: name}).then(data => {
+        createType({ name: name }).then(data => {
             setName('')
             onHide()
         })
@@ -17,66 +15,111 @@ const CreateType = ({show, onHide}) => {
 
     return (
         <Transition.Root show={show} as={Fragment}>
-            <Dialog as="div" className="relative z-10" onClose={onHide}>
-                <div className="fixed inset-0 hidden bg-gray-500 bg-opacity-75 transition-opacity md:block" />
+            <Dialog as="div" className="relative z-[100] font-mono" onClose={onHide}>
+                {/* --- BACKDROP --- */}
+                <Transition.Child
+                    as={Fragment}
+                    enter="ease-out duration-200"
+                    enterFrom="opacity-0"
+                    enterTo="opacity-100"
+                    leave="ease-in duration-150"
+                >
+                    <div className="fixed inset-0 bg-black/90 backdrop-blur-sm transition-opacity" />
+                </Transition.Child>
+
                 <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-                    <div className="flex min-h-full items-stretch justify-center text-center md:items-center md:px-2 lg:px-4">
+                    <div className="flex min-h-full items-center justify-center p-4 text-center">
                         <Transition.Child
-                        as={Fragment}
-                        enter="ease-out duration-300"
-                        enterFrom="opacity-0 translate-y-4 md:translate-y-0 md:scale-95"
-                        enterTo="opacity-100 translate-y-0 md:scale-100"
-                        leave="ease-in duration-200"
-                        leaveFrom="opacity-100 translate-y-0 md:scale-100"
-                        leaveTo="opacity-0 translate-y-4 md:translate-y-0 md:scale-95"
+                            as={Fragment}
+                            enter="ease-out duration-200"
+                            enterFrom="opacity-0 scale-95"
+                            enterTo="opacity-100 scale-100"
+                            leave="ease-in duration-150"
                         >
-                        <Dialog.Panel className="flex w-full transform text-left text-base transition md:my-8 md:max-w-2xl md:px-4 lg:max-w-4xl">
-                            <div className="rounded-md relative flex w-full items-center overflow-hidden bg-white px-4 pb-8 pt-14 shadow-2xl sm:px-6 sm:pt-8 md:p-6 lg:p-8">
-                            <button
-                                type="button"
-                                className="absolute right-4 top-4 text-gray-400 hover:text-gray-500 sm:right-6 sm:top-8 md:right-6 md:top-6 lg:right-8 lg:top-8"
-                                onClick={() => onHide()}
-                            >
-                                <span className="sr-only">Close</span>
-                                <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-                            </button>
-
-                            <div className=" grid w-full grid-cols-1 items-start gap-x-6 gap-y-8 sm:grid-cols-12 lg:gap-x-8">
-                                <div className="aspect-h-3 aspect-w-2 overflow-hidden rounded-lg bg-gray-100 sm:col-span-4 lg:col-span-5">
-                                <img src="https://tailwindui.com/img/ecommerce-images/product-quick-preview-02-detail.jpg" className="object-cover object-center" />
-                                </div>
-                                <div className="sm:col-span-8 lg:col-span-7">
-                                <h2 className="text-2xl font-bold text-gray-900 sm:pr-12">Создать новую категорию</h2>
-
-                                <section aria-labelledby="options-heading" className="mt-10">
-                                    <div>
-                                        <div className="my-4">
-                                            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                                            Названия категории
-                                            </label>
-                                            <input
-                                            type="text"
-                                            id="name"
-                                            name="name"
-                                            value={name}
-                                            onChange={e=> setName(e.target.value)}
-                                            className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm rounded-md border border-gray-300 px-3 py-2"
-                                            required
-                                            />
-                                        </div>
-
-                                    <div
-                                    onClick={addType}
-                                        className="cursor-pointer mt-6 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                            <Dialog.Panel className="relative w-full max-w-2xl transform bg-black border-2 border-white text-left transition-all shadow-[0_0_50px_rgba(255,255,255,0.1)]">
+                                
+                                {/* --- TERMINAL HEADER --- */}
+                                <div className="bg-white text-black px-4 py-1.5 flex justify-between items-center">
+                                    <div className="flex items-center gap-2">
+                                        <CommandLineIcon className="h-4 w-4 animate-pulse" />
+                                        <span className="text-[10px] font-black uppercase tracking-[0.2em]">
+                                            [ Category_Registry_Init ]
+                                        </span>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        className="hover:bg-black hover:text-white transition-colors p-0.5"
+                                        onClick={() => onHide()}
                                     >
-                                        Добавить
-                                    </div>
-                                    </div>
-                                </section>
+                                        <XMarkIcon className="h-4 w-4" aria-hidden="true" />
+                                    </button>
                                 </div>
-                            </div>
-                            </div>
-                        </Dialog.Panel>
+
+                                <div className="grid grid-cols-1 md:grid-cols-12">
+                                    {/* --- SIDE VISUAL (Technical Placeholder) --- */}
+                                    <div className="relative hidden md:block md:col-span-4 bg-white/5 border-r border-white/10 overflow-hidden">
+                                        <img 
+                                            src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop" 
+                                            className="h-full object-cover grayscale brightness-50 contrast-125" 
+                                            alt="Code Matrix"
+                                        />
+                                        <div className="absolute inset-0 bg-black/40" />
+                                        <div className="absolute inset-0 pointer-events-none opacity-20 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(255,255,255,0.25)_50%)] bg-[length:100%_4px]" />
+                                    </div>
+
+                                    {/* --- FORM CONTENT --- */}
+                                    <div className="md:col-span-8 p-8 flex flex-col justify-center">
+                                        <div className="flex items-center gap-2 mb-2">
+                                            <TagIcon className="h-3 w-3 text-white/40" />
+                                            <h2 className="text-xl font-black text-white uppercase tracking-tighter">
+                                                Initialize_New_Type
+                                            </h2>
+                                        </div>
+                                        <p className="text-[10px] text-white/40 uppercase tracking-widest mb-8">
+                                            Define hardware classification parameters.
+                                        </p>
+
+                                        <section className="space-y-6">
+                                            <div>
+                                                <label htmlFor="name" className="block text-[10px] uppercase text-white/50 mb-1">
+                                                    &gt; Type_Label_ID
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    id="name"
+                                                    name="name"
+                                                    value={name}
+                                                    autoComplete="off"
+                                                    onChange={e => setName(e.target.value)}
+                                                    placeholder="E.G._DEDICATED_SERVERS"
+                                                    className="w-full bg-transparent border-b border-white/20 focus:border-white py-3 outline-none text-sm text-white transition-all placeholder:text-white/10"
+                                                    required
+                                                />
+                                            </div>
+
+                                            <div className="pt-4 flex flex-col gap-3">
+                                                <button
+                                                    onClick={addType}
+                                                    className="w-full bg-white text-black py-4 font-black uppercase text-xs tracking-[0.3em] border-2 border-white hover:bg-black hover:text-white transition-all active:scale-[0.98]"
+                                                >
+                                                    [ REGISTER_NODE_TYPE ]
+                                                </button>
+                                                
+                                                <div className="flex justify-between items-center opacity-20 text-[7px] uppercase tracking-widest">
+                                                    <span>STATUS: READY</span>
+                                                    <span>ENCRYPT: AES_256</span>
+                                                    <span>LOG: WR_CORE</span>
+                                                </div>
+                                            </div>
+                                        </section>
+                                    </div>
+                                </div>
+
+                                {/* Decorative Corner Accent */}
+                                <div className="absolute bottom-0 right-0 p-1">
+                                    <div className="w-4 h-4 border-b border-r border-white/20" />
+                                </div>
+                            </Dialog.Panel>
                         </Transition.Child>
                     </div>
                 </div>

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Context } from "../index.js";
 import { 
   CommandLineIcon, 
@@ -6,17 +6,48 @@ import {
   ShieldCheckIcon,
   PencilSquareIcon 
 } from '@heroicons/react/24/outline';
-import Modal from "../elements/Modal"; // Using the modal we created earlier
+import Modal from "../elements/Modal";
+import { observer } from "mobx-react-lite";
+import { updateProfile } from "../http/userApi.js";
+import { toast } from "react-toastify";
 
-const Profile = () => {
+const Profile = observer(() => {
   const { user } = useContext(Context);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  // Инициализация состояний из стора
   const [newName, setNewName] = useState(user.user?.first_name || "");
+  const [newImage, setNewImage] = useState(user.user?.profile_image || "");
+  const [newRole, setNewRole] = useState(user.user?.role || "USER");
 
-  const handleUpdate = () => {
-    // Logic to call API and update name
-    console.log("Updating node alias to:", newName);
-    setIsModalOpen(false);
+  useEffect(() => {
+    if (isModalOpen) {
+      setNewName(user.user?.first_name || "");
+      setNewImage(user.user?.profile_image || "");
+      setNewRole(user.user?.role || "USER");
+    }
+  }, [isModalOpen, user.user]);
+
+  const handleUpdate = async () => {
+    try {
+      // Вызываем API для сохранения данных в базу
+      const response = await updateProfile(
+        user.user.id, 
+        newName, 
+        newImage, 
+        newRole, 
+        user
+      );
+
+      if (response.success) {
+        toast.success(`> STATUS: OK. ${response.message}`);
+        setIsModalOpen(false);
+      } else {
+        toast.error(`> ERROR: UPDATE_FAILED. ${response.message}`);
+      }
+    } catch (e) {
+      toast.error("> ERROR: NETWORK_OR_SERVER_ERROR");
+    }
   };
 
   return (
@@ -125,7 +156,7 @@ const Profile = () => {
 
           <div className="space-y-4">
             <div>
-              <label className="block text-[10px] text-white/50 uppercase mb-1">&gt; node_alias</label>
+              <label className="block text-[10px] text-white/50 uppercase mb-1">&gt; first_name (alias)</label>
               <input
                 type="text"
                 value={newName}
@@ -133,6 +164,29 @@ const Profile = () => {
                 className="w-full bg-transparent border-b border-white/30 focus:border-white py-2 outline-none text-sm transition-colors"
                 placeholder="ENTER_NEW_ALIAS"
               />
+            </div>
+            
+            <div>
+              <label className="block text-[10px] text-white/50 uppercase mb-1">&gt; profile_image_url</label>
+              <input
+                type="text"
+                value={newImage}
+                onChange={(e) => setNewImage(e.target.value)}
+                className="w-full bg-transparent border-b border-white/30 focus:border-white py-2 outline-none text-sm transition-colors"
+                placeholder="https://example.com/image.png"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[10px] text-white/50 uppercase mb-1">&gt; system_role</label>
+              <select
+                value={newRole}
+                onChange={(e) => setNewRole(e.target.value)}
+                className="w-full bg-black text-white border-b border-white/30 focus:border-white py-2 outline-none text-sm transition-colors uppercase"
+              >
+                <option value="USER">USER</option>
+                <option value="ADMIN">ADMIN</option>
+              </select>
             </div>
             
             {/* Displaying static info as non-editable for aesthetic */}
@@ -162,6 +216,6 @@ const Profile = () => {
       </Modal>
     </div>
   );
-};
+});
 
 export default Profile;
