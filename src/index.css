@@ -195,3 +195,25 @@ code {
   from { transform: rotate(0deg) translateX(50px) translateX(-60px); }
   to   { transform: rotate(360deg) translateX(50px) translateX(-60px); }
 }
+
+
+/* Custom floating animations */
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes float-medium {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+}
+
+@keyframes orbit {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-float-slow { animation: float-slow 6s ease-in-out infinite; }
+.animate-float-medium { animation: float-medium 5s ease-in-out infinite; }
+.animate-orbit-slow { animation: orbit 25s linear infinite; }
+.animate-orbit-reverse { animation: orbit 15s linear infinite reverse; }
