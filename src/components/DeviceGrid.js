@@ -31,7 +31,7 @@ const Shop = observer(() => {
           >
             <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none group-hover:opacity-75 lg:h-40 mb-4">
               <img
-                src={product.img}
+                src={product.img ? (product.img.startsWith('http') ? product.img : process.env.REACT_APP_API_URL + product.img) : ''}
                 className="h-full w-full object-cover object-center lg:h-full lg:w-full"
               />
             </div>

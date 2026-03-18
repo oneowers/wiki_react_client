@@ -119,7 +119,7 @@ const Shop = observer(() => {
                 className="relative w-full lg:w-1/3 h-48 lg:h-auto overflow-hidden cursor-pointer group"
               >
                 <img
-                  src={product.img}
+                  src={product.img ? (product.img.startsWith('http') ? product.img : process.env.REACT_APP_API_URL + product.img) : ''}
                   className="h-full w-full object-cover grayscale brightness-75 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
                   alt={product.name}
                 />

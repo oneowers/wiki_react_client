@@ -22,7 +22,7 @@ const DevicePage = observer(() => {
       <div className="py-10 mx-auto max-w-2xl px-4sm:px-6 lg:max-w-7xl lg:gap-x-8 lg:px-8 px-3">
         <div className="aspect-h-1 aspect-w-1 overflow-hidden rounded-lg">
             <img
-              src={device.img}
+              src={device.img ? (device.img.startsWith('http') ? device.img : process.env.REACT_APP_API_URL + device.img) : ''}
               className={classNames(
                 !device.img && "animate-pulse bg-gray-300",
                 "h-96 w-full object-cover object-center"
