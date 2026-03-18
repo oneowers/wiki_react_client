@@ -54,7 +54,9 @@ const CreateDevice = ({ show, onHide }) => {
     const descriptionHtml = draftToHtml(convertToRaw(contentState));
     formData.append("description", descriptionHtml);
 
-    createDevice(formData).then(() => onHide());
+    createDevice(formData)
+      .then(() => onHide())
+      .catch(e => alert(e.response?.data?.message || e.message));
   };
 
   return (
