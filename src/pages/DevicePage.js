@@ -26,7 +26,7 @@ const DevicePage = observer(() => {
               className={classNames(
                 !device.img && "animate-pulse bg-gray-300",
                 "h-96 w-full object-cover object-center"
-              )}
+              )} 
             />
         </div>
 
