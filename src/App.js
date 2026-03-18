@@ -28,8 +28,12 @@ const App = observer(() => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full border-b-2 border-gray-200 w-8 h-8"></div>
+      <div className="rabbit-loader">
+        <span className="rabbit-label">Loading</span>
+
+        <div className="rabbit-dots">
+          <span /><span /><span />
+        </div>
       </div>
     );
   }
