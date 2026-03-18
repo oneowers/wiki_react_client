@@ -17,7 +17,23 @@ root.render(
     device: new DeviceStore(),
   }}>
     <App />
-    <ToastContainer />
+    <ToastContainer
+      position="bottom-right"
+      autoClose={4000}
+      hideProgressBar={false}
+      newestOnTop={true}
+      closeOnClick
+      rtl={false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover
+      theme="dark"
+      toastClassName={() =>
+        "relative flex p-1 min-h-10 border-2 border-white bg-black text-white font-mono text-xs uppercase tracking-tighter shadow-[5px_5px_0px_0px_rgba(255,255,255,0.2)] mb-4 overflow-hidden"
+      }
+      bodyClassName={() => "flex items-center p-3"}
+      progressClassName="bg-white"
+    />
   </Context.Provider>
 );
 

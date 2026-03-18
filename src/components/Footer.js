@@ -1,11 +1,11 @@
 import React, { useContext } from "react";
-import { ABOUT_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE } from "../utils/consts.js";
+import { ABOUT_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, NEWS_ROUTE } from "../utils/consts.js";
 
 
 
 const footerNavigation = {
   main: [
-    { name: "Blog", href: SHOP_ROUTE },
+    { name: "Blog", href: NEWS_ROUTE },
     { name: "About", href: ABOUT_ROUTE },
     { name: "Login", href: LOGIN_ROUTE },
     { name: "Registration", href: REGISTRATION_ROUTE },

@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE } from "../utils/consts.js";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { LOGIN_ROUTE, REGISTRATION_ROUTE, NEWS_ROUTE } from "../utils/consts.js";
+import logo from "../components/logo.png";
 import {
   login,
   registration,
@@ -8,18 +9,15 @@ import {
   verifyCodeSms,
 } from "../http/userApi.js";
 import { observer } from "mobx-react-lite";
-import { useNavigate } from "react-router-dom";
 import { Context } from "../index.js";
-import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
-import { InputField } from "../elements/index.js";
-import logo from "../components/logo.png";
+import { toast } from "react-toastify";
 
 const Auth = observer(() => {
   const { user } = useContext(Context);
   const location = useLocation();
   const navigate = useNavigate();
   const isLogin = location.pathname === LOGIN_ROUTE;
+
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(true);
@@ -33,34 +31,14 @@ const Auth = observer(() => {
     const interval = setInterval(() => {
       setTimeLeft(Math.ceil((Date.now() - timer) / 1000));
     }, 1000);
-
     return () => clearInterval(interval);
   }, [timer]);
-
-  const resendVerificationCode = async () => {
-    const formatedPhoneNumber = "+998" + phoneNumber.replace(/-/g, "");
-    const request_sms = await sendVerificationSms(formatedPhoneNumber);
-    if (request_sms.success) {
-      setCodeSended(true);
-      const currentTime = new Date();
-      setTimer(currentTime.getTime());
-    }
-    toast(request_sms.message);
-  };
-
-  const handleCodeChange = (e) => {
-    // Добавляем ограничение, чтобы код состоял из 5 цифр
-    const newCode = e.target.value.replace(/\D/g, "").slice(0, 4);
-    setCode(newCode);
-  };
 
   const formatPhoneNumber = (input) => {
     const cleanedInput = input.replace(/\D/g, "");
     let formattedNumber = "";
     for (let i = 0; i < cleanedInput.length; i++) {
-      if (i === 2 || i === 5 || i === 7) {
-        formattedNumber += "-";
-      }
+      if (i === 2 || i === 5 || i === 7) formattedNumber += "-";
       formattedNumber += cleanedInput[i];
     }
     return formattedNumber;
@@ -76,221 +54,179 @@ const Auth = observer(() => {
   const click = async () => {
     const formatedPhoneNumber = "+998" + phoneNumber.replace(/-/g, "");
     if (!codeSended) {
-      let request_get_token;
+      let res;
       if (isLogin) {
-        request_get_token = await login(formatedPhoneNumber, password, user);
-        toast(request_get_token.message);
-        if (request_get_token.success) navigate(SHOP_ROUTE);
+        res = await login(formatedPhoneNumber, password, user);
+        if (res.success) navigate(NEWS_ROUTE);
       } else {
-        request_get_token = await registration(formatedPhoneNumber, password, firstName);
-        if (request_get_token.success) {
-          const request_sms = await sendVerificationSms(formatedPhoneNumber);
-          if (request_sms.success) {
+        res = await registration(formatedPhoneNumber, password, firstName);
+        if (res.success) {
+          const sms = await sendVerificationSms(formatedPhoneNumber);
+          if (sms.success) {
             setCodeSended(true);
-            const currentTime = new Date();
-            setTimer(currentTime.getTime());
+            setTimer(Date.now());
           }
-          console.log(request_sms);
-          toast(request_sms.message);
-        } else {
-          toast.error(request_get_token.message);
         }
       }
+      // Styled Toast
+      res.success 
+        ? toast.success(`> STATUS: OK. ${res.message}`) 
+        : toast.error(`> ERROR: ACCESS_DENIED. ${res.message}`);
+        
     } else {
       const response = await verifyCodeSms(formatedPhoneNumber, code, user);
-      console.log(response);
-      toast(response.message);
-      if (response.success) navigate(SHOP_ROUTE);
+      
+      response.success 
+        ? toast.success(`> AUTH_COMPLETE: ${response.message}`) 
+        : toast.error(`> ERROR: INVALID_TOKEN. ${response.message}`);
+
+      if (response.success) navigate(NEWS_ROUTE);
     }
   };
 
-  const inputBorderColor = isValidPhoneNumber
-    ? "border-red-300"
-    : "border-red-500";
   return (
-    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img
-          className="mx-auto h-10 w-auto"
-          src={logo}
-          alt="Your Company"
-        />
-        <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-white">
-          {isLogin ? <>Login</> : <>Registration</>}
-        </h2>
-      </div>
+    <div className="min-h-screen bg-black text-white font-mono flex flex-col justify-center items-center px-6 selection:bg-white selection:text-black">
+      {/* Background Grid Decor */}
+      <div className="fixed inset-0 pointer-events-none opacity-5"
+        style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
 
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="space-y-6" action="#" method="POST">
-          <fieldset disabled={codeSended}>
-          {!isLogin && <InputField label="Введите имя" value={firstName} onChange={setFirstName} />}
+      <div className="w-full max-w-md relative z-10">
+        {/* Terminal Header Area */}
+        <div className="border-2 border-white p-1 mb-8">
+          <div className="bg-white text-black px-3 py-1 flex justify-between items-center font-bold text-xs uppercase tracking-tighter">
+            <span>{isLogin ? "Session_Init" : "Registry_New_Node"}</span>
+            <div className="flex gap-1">
+              <div className="w-2 h-2 rounded-full bg-black animate-pulse" />
+              <span>V.2.0.4</span>
+            </div>
+          </div>
 
-            <div>
-              <label
-                htmlFor="text"
-                className="block text-sm font-medium leading-6 text-white"
-              >
-                Phone number
-              </label>
-              <div
-                className={`relative mt-2 rounded-md shadow-sm ${inputBorderColor}`}
-              >
-                <div className="absolute inset-y-0 left-0 flex items-center">
-                  <label htmlFor="country" className="sr-only">
-                    Country
-                  </label>
-                  <select
-                    id="country"
-                    name="country"
-                    autoComplete="country"
-                    className="h-full rounded-md border-0 bg-transparent py-0 pl-3 pr-1 text-black focus:outline-none sm:text-sm"
-                  >
-                    <option>+998</option>
-                  </select>
-                </div>
+          <div className="p-6 bg-black border-t-2 border-white flex flex-col items-center">
+            {/* --- TERMINAL LOGO --- */}
+            <div className="relative mb-6 group">
+
+              <img
+                className="relative h-16 w-auto grayscale"
+                src={logo}
+                alt="System Logo"
+              />
+
+              </div>
+
+            <h2 className="text-2xl font-black uppercase tracking-widest text-center mb-2">
+              {isLogin ? "Auth_Required" : "Create_ID"}
+            </h2>
+            <p className="text-[10px] text-white/40 text-center uppercase tracking-widest">
+              Enter credentials to establish secure link
+            </p>
+          </div>
+        </div>
+
+        {/* Form Body */}
+        <div className="space-y-6">
+          <div className={`${codeSended ? "opacity-30 pointer-events-none" : "opacity-100"} transition-opacity duration-500`}>
+
+            {!isLogin && (
+              <div className="mb-4">
+                <label className="block text-[10px] uppercase text-white/50 mb-1">&gt; node_alias</label>
                 <input
-                  id="text"
-                  name="text"
                   type="text"
-                  autoComplete="text"
-                  required
+                  placeholder="FIRST_NAME"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  className="w-full bg-transparent border-b border-white/30 focus:border-white py-2 outline-none text-sm transition-colors"
+                />
+              </div>
+            )}
+
+            <div className="mb-4">
+              <label className="block text-[10px] uppercase text-white/50 mb-1">&gt; phone_identifier</label>
+              <div className="flex items-center border-b border-white/30 focus-within:border-white transition-colors">
+                <span className="text-sm pr-2 text-white/60">+998</span>
+                <input
+                  type="text"
+                  placeholder="00-000-00-00"
                   value={phoneNumber}
                   onChange={handlePhoneNumberChange}
-                  className={`focus:outline-none focus:ring block w-full rounded-md border-0
-                      py-1.5 pl-20 text-white ring-1 ${
-                        isValidPhoneNumber
-                          ? "focus:ring-red-500 ring-red-500"
-                          : "focus:ring-red-500 ring-red-500"
-                      }
-                      text-sm leading-6`}
+                  className="w-full bg-transparent py-2 outline-none text-sm tracking-widest"
                 />
-                {!isValidPhoneNumber && (
-                  <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                    <svg
-                      className="h-6 w-6 text-red-500"
-                      fill="currentColor"
-                      viewBox="0 0 30 20"
-                    >
-                      <g>
-                        <path fill="none" d="M0 0h24v24H0z" />
-                        <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1-7v2h2v-2h-2zm0-8v6h2V7h-2z" />
-                      </g>
-                    </svg>
-                  </div>
-                )}
               </div>
+              {!isValidPhoneNumber && (
+                <span className="text-[9px] text-red-500 mt-1 uppercase">Error: invalid_format</span>
+              )}
             </div>
 
             <div>
-              <div className="flex items-center justify-between">
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium leading-6 text-white"
-                >
-                  Password
-                </label>
-                <div className="text-sm">
-                  <a
-                    href="#"
-                    className="font-semibold text-red-600 hover:text-red-500"
-                  >
-                    Forget password (dev)
-                  </a>
-                </div>
-              </div>
-              <div className="mt-2">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="pl-2 block w-full rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-white focus:ring-2 focus:ring-inset focus:ring-red-600 sm:text-sm sm:leading-6"
-                />
-              </div>
+              <label className="block text-[10px] uppercase text-white/50 mb-1">&gt; access_key</label>
+              <input
+                type="password"
+                placeholder="********"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full bg-transparent border-b border-white/30 focus:border-white py-2 outline-none text-sm transition-colors"
+              />
             </div>
-          </fieldset>
+          </div>
+
+          {/* SMS Verification Area */}
           {codeSended && (
-            <div>
-              <div className="flex items-center justify-between">
-                <label
-                  htmlFor="code"
-                  className="block text-sm font-medium leading-6 text-white"
-                >
-                  Enter sms code
-                </label>
+            <div className="border border-white p-4 animate-[slideIn_0.3s_ease-out]">
+              <div className="flex justify-between items-center mb-4">
+                <label className="text-[10px] uppercase text-white font-bold">Verify_One_Time_Pass</label>
+                <span className="text-[10px] text-white/40">ID: SMS_{Math.floor(Math.random() * 9000)}</span>
               </div>
-              <div className="mt-2">
-                <input
-                  id="code"
-                  name="code"
-                  type="text"
-                  autoComplete="off"
-                  required
-                  value={code}
-                  autocomplete="one-time-code"
-                  onChange={handleCodeChange}
-                  maxLength={5} // Устанавливаем максимальную длину вводимого кода
-                  className="pl-2 block w-full rounded-md border-0 py-1.5 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-white focus:ring-2 focus:ring-inset focus:ring-red-600 sm:text-sm sm:leading-6"
-                />
-              </div>
-              <div className="text-sm">
-                {}
+              <input
+                type="text"
+                placeholder="[ 0 0 0 0 ]"
+                value={code}
+                onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                className="w-full bg-white text-black font-bold text-center py-3 outline-none tracking-[1em] text-xl"
+              />
+              <div className="mt-3 text-[10px] text-center uppercase tracking-tighter">
                 {timeLeft < user.timerSms ? (
-                  <p className="font-semibold text-sm text-white">
-                    U can get another code in {" "}
-                    {user.timerSms - timeLeft} секунд
-                  </p>
+                  <span className="text-white/40">Request cooldown: {user.timerSms - timeLeft}s</span>
                 ) : (
-                  <p className="font-semibold text-sm text-white">
-                    No have a code?{" "}
-                    <button
-                      type="button"
-                      className="font-semibold leading-6 text-red-600 hover:text-red-500"
-                      onClick={resendVerificationCode}
-                    >
-                      Resend code
-                    </button>
-                  </p>
+                  <button onClick={() => setCodeSended(false)} className="underline hover:text-white transition-colors">
+                    Re-request access code
+                  </button>
                 )}
               </div>
             </div>
           )}
 
-          <div>
-            <div
-              onClick={click}
-              className=" cursor-pointer flex w-full justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-            >
-              {isLogin ? <>Login</> : <>Registration</>}
-            </div>
-          </div>
-        </form>
+          {/* Execute Button */}
+          <button
+            onClick={click}
+            className="w-full py-4 bg-white text-black font-black uppercase tracking-[0.3em] text-xs hover:bg-black hover:text-white border-2 border-white transition-all duration-300"
+          >
+            {isLogin ? "[ Execute_Login ]" : "[ Initialize_Registry ]"}
+          </button>
 
-        {isLogin ? (
-          <p className="mt-10 text-center text-sm text-white">
-            No account?{" "}
+          {/* Switch Link */}
+          <div className="text-center mt-6">
             <Link
-              to={REGISTRATION_ROUTE}
-              className="font-semibold leading-6 text-red-600 hover:text-red-500"
+              to={isLogin ? REGISTRATION_ROUTE : LOGIN_ROUTE}
+              className="text-[10px] uppercase text-white/40 hover:text-white border-b border-transparent hover:border-white transition-all pb-1 tracking-widest"
             >
-              Register!
+              {isLogin ? "// No_account? _Register" : "// Existing_node? _Login"}
             </Link>
-          </p>
-        ) : (
-          <p className="mt-10 text-center text-sm text-white">
-            Есть аккаунт?{" "}
-            <Link
-              to={LOGIN_ROUTE}
-              className="font-semibold leading-6 text-red-600 hover:text-red-500"
-            >
-              Войдите!
-            </Link>
-          </p>
-        )}
+          </div>
+        </div>
+
+        {/* Footer Technical Metadata */}
+        <div className="mt-12 opacity-20 flex justify-between text-[8px] uppercase tracking-[0.2em] font-bold">
+          <span>Terminal_v2.0</span>
+          <span>Local_Time: {new Date().toLocaleTimeString()}</span>
+          <span>Encryption: AES_256</span>
+        </div>
       </div>
+
+      <style jsx>{`
+        @keyframes slideIn {
+          from { transform: translateY(10px); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+      `}</style>
     </div>
   );
 });

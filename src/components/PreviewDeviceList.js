@@ -5,8 +5,8 @@ import { DEVICE_ROUTE } from "../utils/consts.js";
 import { observer } from "mobx-react-lite";
 import {
   ChatBubbleLeftIcon,
-  CommentIcon,
   EyeIcon,
+  CommandLineIcon,
 } from "@heroicons/react/24/outline";
 import {
   createDeviceComment,
@@ -18,10 +18,10 @@ function classNames(...classes) {
 }
 
 const Shop = observer(() => {
-  const { device } = useContext(Context);
   const [comments, setComments] = useState({});
-  const [commentText, setCommentText] = useState(""); // State to hold the text of the comment
+  const [commentText, setCommentText] = useState("");
   const [loading, setLoading] = useState(true);
+  const { device, user } = useContext(Context); // Add 'user' here
 
   useEffect(() => {
     if (device.devices.count) {
@@ -45,11 +45,8 @@ const Shop = observer(() => {
   }, [device.devices]);
 
   function decodeHTML(html) {
-    // Create a temporary DOM element
     var tempElement = document.createElement("div");
-    // Set the HTML content of the temporary element
     tempElement.innerHTML = html;
-    // Return the text content of the temporary element
     return tempElement.textContent || tempElement.innerText || "";
   }
 
@@ -57,16 +54,13 @@ const Shop = observer(() => {
 
   const sendComment = async (deviceId) => {
     try {
-      // Make a POST request to create a comment
       await createDeviceComment(deviceId, commentText);
-      // Refetch comments for the device to update the UI
       await fetchDeviceComments(deviceId).then((comments) => {
         setComments((prevComments) => ({
           ...prevComments,
           [deviceId]: comments,
         }));
       });
-      // Clear the comment input field
       setCommentText("");
     } catch (error) {
       console.error("Error sending comment:", error);
@@ -82,135 +76,159 @@ const Shop = observer(() => {
 
   const options = {
     day: "2-digit",
-    month: "long",
+    month: "short",
     hour: "2-digit",
     minute: "2-digit",
     hour12: false,
   };
 
   return (
-    <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-1 xl:gap-x-8">
+    <div className="mt-10 grid grid-cols-1 gap-y-12 font-mono selection:bg-white selection:text-black">
       {loading
-        ? // Render loading skeleton
-          Array(12)
-            .fill()
-            .map((_, index) => (
-              <div
-                key={index}
-                className="bg-gray-200 p-3 rounded-lg animate-pulse py-32"
-              >
-                {/* Placeholder for loading skeleton */}
-              </div>
-            ))
+        ? Array(3)
+          .fill()
+          .map((_, index) => (
+            <div
+              key={index}
+              className="border border-white/10 p-6 bg-black animate-pulse flex flex-col gap-4"
+            >
+              <div className="h-40 bg-white/5 w-full" />
+              <div className="h-4 bg-white/20 w-1/4" />
+              <div className="h-10 bg-white/10 w-full" />
+            </div>
+          ))
         : device.devices.count &&
-          device.devices.rows.map((product) => (
-            <div className="" key={product.id}>
+        device.devices.rows.map((product) => (
+          <div
+            key={product.id}
+            className="group relative border border-white/20 hover:border-white transition-colors duration-500 bg-black overflow-hidden"
+          >
+            {/* --- HEADER BAR --- */}
+            <div className="flex justify-between items-center bg-white/5 border-b border-white/20 px-4 py-2">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-white animate-pulse" />
+                <span className="text-[10px] text-white/50 tracking-widest uppercase">Node_Protocol: v.4.0</span>
+              </div>
+              <span className="text-[10px] text-white/30 uppercase">ID: {product.id.toString().padStart(4, '0')}</span>
+            </div>
+
+            <div className="flex flex-col lg:flex-row">
+              {/* Image Section */}
               <div
                 onClick={() => navigate(DEVICE_ROUTE + "/" + product.id)}
-                className="bg-white p-3 rounded-lg group relative flex flex-col items-start"
+                className="relative w-full lg:w-1/3 h-48 lg:h-auto overflow-hidden cursor-pointer group"
               >
-                {/* Product image */}
-                <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none group-hover:opacity-75 lg:h-40 mb-4">
-                  <img
-                    src={product.img}
-                    className="bg-gray-100 h-full w-full object-cover object-center lg:h-full lg:w-full"
-                    alt={product.name}
-                  />
-                </div>
-                <div className="flex flex-col justify-between">
-                  {/* Product details */}
-                  <div className="flex justify-between w-full">
-                    <div>
-                      {/* Brand name and product name */}
-                      <span
-                        aria-hidden="true"
-                        className={classNames(
-                          `text-sm font-bold uppercase text-center ${
-                            device.brands[product.brandId] &&
-                            device.brands[product.brandId].color
-                          } px-4 py-0.5 rounded-full`
-                        )}
-                      >
-                        {device.brands[product.brandId] &&
-                          device.brands[product.brandId].name}
-                      </span>
-                      <p className="mt-1 font-bold text-lg text-black">
-                        {product.name}
-                      </p>
+                <img
+                  src={product.img}
+                  className="h-full w-full object-cover grayscale brightness-75 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+                  alt={product.name}
+                />
+                <div className="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors" />
+                {/* Scanline Overlay on Image */}
+                <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%] z-10 opacity-20" />
+              </div>
+
+              {/* Details Section */}
+              <div className="flex-1 p-5 flex flex-col justify-between">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <span className="inline-block border border-white px-3 py-0.5 text-[10px] font-bold uppercase mb-2">
+                      {device.brands[product.brandId]?.name || "Generic_Node"}
+                    </span>
+                    <h3 className="text-xl font-black text-white uppercase tracking-tighter">
+                      {product.name}
+                    </h3>
+                  </div>
+
+                  <div className="flex gap-4 text-white/60">
+                    <div className="flex items-center gap-1">
+                      <EyeIcon className="h-3 w-3" />
+                      <span className="text-xs">{product.views || 0}</span>
                     </div>
-                    <div>
-                      {/* Views and comments count */}
-                      <div className="flex items-center">
-                        <span>
-                          <EyeIcon className="h-4 w-4 mr-2 inline-block text-gray-500" />
-                        </span>
-                        <span className="text-black text-lg font-medium mr-4">
-                          {product.views ? product.views : 0}
-                        </span>
-                        <span>
-                          <ChatBubbleLeftIcon className="h-4 w-4 mr-2 inline-block text-gray-500" />
-                        </span>
-                        <span className="text-black text-lg font-medium">
-                          {comments[product.id] &&
-                            comments[product.id].length}
-                        </span>
-                      </div>
+                    <div className="flex items-center gap-1">
+                      <ChatBubbleLeftIcon className="h-3 w-3" />
+                      <span className="text-xs">{comments[product.id]?.length || 0}</span>
                     </div>
                   </div>
                 </div>
-              </div>
-              {/* Product description and comments */}
-              <div className=" p-3 mt-2">
-                {/* Product description */}
-                <p className="text-sm text-gray-500 line-clamp-3">
+
+                <p className="mt-4 text-xs text-white/50 line-clamp-2 italic leading-relaxed">
                   {decodeHTML(product.description)}
                 </p>
-                <div className="mt-4 border-t border-gray-300 divide-y divide-gray-300">
-                  {/* Comments */}
-                  {comments[product.id] &&
-                    comments[product.id].map((comment, index) => (
-                      <div className="text-gray-500 text-sm mx-3 py-2" key={index}>
-                        <div className="text-xs text-gray-400">
-                          {new Date(comment.createdAt).toLocaleDateString(
-                            "en-US",
-                            options
-                          )}
-                        </div>
-                        <span className="text-sm text-gray-700">
-                          {comment.text}
-                        </span>
+
+                {/* Comments Log */}
+                <div className="mt-6 border-t border-white/10 pt-4">
+                  <div className="max-h-32 overflow-y-auto space-y-3 custom-scrollbar">
+                    {comments[product.id]?.slice(0, 2).map((comment, index) => (
+                      <div className="text-[11px] leading-tight" key={index}>
+                        <span className="text-white/30 mr-2">[{new Date(comment.createdAt).toLocaleDateString("en-US", options)}]</span>
+                        <span className="text-white/80">&gt; {comment.text}</span>
                       </div>
                     ))}
-                  {/* Comment input */}
-                  <div className="text-gray-500 text-sm ml-3 py-2 flex">
+                  </div>
+
+                  {/* Input Field (Terminal Style) */}
+                  {user.isAuth ? (
                     <form
-                      onSubmit={(event) =>
-                        handleFormSubmit(event, product.id)
-                      }
-                      className="flex w-full"
+                      onSubmit={(event) => handleFormSubmit(event, product.id)}
+                      className="mt-4 flex items-center bg-white/5 border border-white/10 px-3 focus-within:border-white transition-colors"
                     >
+                      <span className="text-white/40 text-xs mr-2">$</span>
                       <input
                         type="text"
                         value={commentText}
-                        onFocus={() => setCommentText("")}
-                        placeholder="Leave a comment"
-                        className="w-full bg-gray-100 focus:border-gray-300 px-3 py-2 mr-2"
+                        placeholder="INPUT_COMMAND..."
+                        className="flex-1 bg-transparent text-xs text-white py-2 focus:outline-none placeholder:text-white/20"
                         onChange={(e) => setCommentText(e.target.value)}
                       />
                       {commentText.length > 0 && (
                         <button
                           type="submit"
-                          className="bg-gray-400 text-white px-4 py-2"
+                          className="text-[10px] font-bold text-white hover:underline uppercase tracking-widest"
                         >
-                          Send
+                          Execute
                         </button>
                       )}
                     </form>
-                  </div>
+                  ) : (
+                    <div className="mt-4 flex items-center bg-red-950/10 border border-red-900/30 px-3 py-2 justify-between">
+                      <div className="flex items-center">
+                        <span className="text-red-500 text-xs mr-2 font-bold animate-pulse">!</span>
+                        <span className="text-[10px] text-red-500/70 uppercase tracking-tighter">
+                          Error: Unauthorized_Access_Detected
+                        </span>
+                      </div>
+                      <button
+                        onClick={() => navigate('/login')} // Update route as needed
+                        className="text-[10px] bg-white text-black px-2 py-0.5 font-bold hover:bg-gray-200 transition-colors uppercase"
+                      >
+                        Login_to_Comment
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
-          ))}
+
+            {/* Decorative Corner Label */}
+            <div className="absolute bottom-0 right-0 bg-white text-black px-1 text-[8px] font-bold">
+              PRCH_READY
+            </div>
+          </div>
+        ))}
+
+      {/* Internal CSS for scrollbar and styling */}
+      <style jsx>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 2px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.2);
+        }
+      `}</style>
     </div>
   );
 });

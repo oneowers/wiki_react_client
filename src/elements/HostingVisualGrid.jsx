@@ -25,9 +25,9 @@ const HostingVisualGrid = () => {
           {/* TERMINAL TEXT */}
           <div className="text-[11px] leading-relaxed opacity-80 space-y-1">
             <p className="animate-pulse">Initializing system...</p>
-            <p>> Loading kernel modules</p>
-            <p>> Establishing secure link</p>
-            <p className="text-white">> ACCESS GRANTED</p>
+            <p> Loading kernel modules</p>
+            <p> Establishing secure link</p>
+            <p className="text-white"> ACCESS GRANTED</p>
           </div>
 
           {/* ID */}

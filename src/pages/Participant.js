@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { createParticipant } from "../http/participantApi.js";
 import { InputField, DropdownSelect } from "../elements/index.js";
 import { Link } from "react-router-dom";
-import { ABOUT_ROUTE, DEVICE_ROUTE, SHOP_ROUTE } from "../utils/consts.js";
+import { ABOUT_ROUTE, DEVICE_ROUTE, NEWS_ROUTE } from "../utils/consts.js";
 import QRCode from "qrcode.react";
 
 const Participate = ({ show, onHide }) => {
@@ -293,7 +293,7 @@ const Participate = ({ show, onHide }) => {
             </div>
 
             <Link
-              to={SHOP_ROUTE} // Предполагая, что SHOP_ROUTE определен
+              to={NEWS_ROUTE} // Предполагая, что SHOP_ROUTE определен
               className="mt-6 text-sm text-gray-500 underline"
               onClick={onHide}
             >
