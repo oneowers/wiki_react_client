@@ -2,13 +2,9 @@ import { useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { getAllParticipants } from "../../http/participantApi.js";
 
-// Utility function to format text to camel case
-const toCamelCase = (text) => {
-  return text
-    .toLowerCase()
-    .split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
+// Utility function to format text to terminal-style uppercase
+const toTerminalCase = (text) => {
+  return text ? text.toUpperCase() : "N/A";
 };
 
 // Array mapping state IDs to their corresponding flag emojis
@@ -27,7 +23,7 @@ const ParticipantsList = observer(() => {
   const [participants, setParticipants] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const limit = 10; // Number of participants per page
+  const limit = 10;
 
   useEffect(() => {
     getAllParticipants(page, limit).then((data) => {
@@ -36,67 +32,100 @@ const ParticipantsList = observer(() => {
     });
   }, [page]);
 
-  const handlePrevPage = () => {
-    setPage((prev) => Math.max(prev - 1, 1));
-  };
-
-  const handleNextPage = () => {
-    setPage((prev) => Math.min(prev + 1, totalPages));
-  };
+  const handlePrevPage = () => setPage((prev) => Math.max(prev - 1, 1));
+  const handleNextPage = () => setPage((prev) => Math.min(prev + 1, totalPages));
 
   return (
-    <div className="my-5">
-      <h1 className="text-2xl font-bold mb-4">Participants List</h1>
-      <div className="bg-white shadow-md rounded-lg overflow-hidden">
-        <table className="min-w-full bg-white">
-          <thead className="bg-gray-800 text-white">
-            <tr>
-              <th className="w-1/6 py-3 px-4 uppercase font-semibold text-sm">ID</th>
-              <th className="w-1/6 py-3 px-4 uppercase font-semibold text-sm">State</th>
-              <th className="w-1/6 py-3 px-4 uppercase font-semibold text-sm">Full Name</th>
-              <th className="w-1/6 py-3 px-4 uppercase font-semibold text-sm">Phone Number</th>
-              <th className="w-1/6 py-3 px-4 uppercase font-semibold text-sm">Email</th>
-              <th className="w-1/6 py-3 px-4 uppercase font-semibold text-sm">Company</th>
+    <div className="my-8 font-mono bg-black text-white p-1">
+      {/* Header Bar */}
+      <div className="flex items-center justify-between mb-4 border-b border-white/20 pb-2">
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 bg-white animate-pulse" />
+          <h1 className="text-sm font-black uppercase tracking-[0.2em]">
+            Node_Registry / Participants_Log
+          </h1>
+        </div>
+        <span className="text-[10px] text-white/40 tracking-widest">
+          TOTAL_PAGES: {totalPages}
+        </span>
+      </div>
+
+      <div className="border border-white/20 overflow-x-auto relative">
+        <table className="min-w-full border-collapse">
+          <thead>
+            <tr className="bg-white text-black text-[10px] font-bold uppercase tracking-widest">
+              <th className="py-2 px-4 text-left border-r border-black/10">Node_ID</th>
+              <th className="py-2 px-4 text-left border-r border-black/10">Origin</th>
+              <th className="py-2 px-4 text-left border-r border-black/10">User_Alias</th>
+              <th className="py-2 px-4 text-left border-r border-black/10">Uplink</th>
+              <th className="py-2 px-4 text-left border-r border-black/10">Secure_Mail</th>
+              <th className="py-2 px-4 text-left">Entity</th>
             </tr>
           </thead>
-          <tbody className="text-gray-700">
+          <tbody className="text-[11px] divide-y divide-white/10">
             {participants.map((participant) => (
-              <tr key={participant.id} className="hover:bg-gray-100">
-                <td className="w-1/6 py-3 px-4">{participant.id}</td>
-                <td className="w-1/6 py-3 px-4">
-                  {stateFlags.find((flag) => flag.id === participant.state)?.common || 'Unknown'}
+              <tr 
+                key={participant.id} 
+                className="group hover:bg-white hover:text-black transition-colors duration-150 cursor-crosshair"
+              >
+                <td className="py-3 px-4 border-r border-white/10 opacity-50 font-bold">
+                  #{participant.id.toString().padStart(4, '0')}
                 </td>
-                <td className="w-1/6 py-3 px-4">{toCamelCase(participant.full_name)}</td>
-                <td className="w-1/6 py-3 px-4">{participant.phone_number}</td>
-                <td className="w-1/6 py-3 px-4">
-                  {participant.email ? participant.email : 'none email'}
+                <td className="py-3 px-4 border-r border-white/10">
+                  <span className="grayscale group-hover:grayscale-0 transition-all">
+                    {stateFlags.find((flag) => flag.id === participant.state)?.common || '??'}
+                  </span>
+                  <span className="ml-2 opacity-40 group-hover:opacity-100">{participant.state?.toUpperCase()}</span>
                 </td>
-                <td className="w-1/6 py-3 px-4">
-                  {participant.company ? participant.company : 'No company'}
+                <td className="py-3 px-4 border-r border-white/10 font-bold uppercase tracking-tighter">
+                  {toTerminalCase(participant.full_name)}
+                </td>
+                <td className="py-3 px-4 border-r border-white/10 text-white/60 group-hover:text-black">
+                  {participant.phone_number}
+                </td>
+                <td className="py-3 px-4 border-r border-white/10 italic">
+                  {participant.email || 'NO_COMMS'}
+                </td>
+                <td className="py-3 px-4 truncate max-w-[150px]">
+                  {participant.company ? `[ ${participant.company.toUpperCase()} ]` : 'UNASSIGNED'}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <div className="flex justify-between items-center mt-4">
+
+      {/* TERMINAL PAGINATION */}
+      <div className="flex justify-between items-center mt-6">
         <button
           onClick={handlePrevPage}
           disabled={page === 1}
-          className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l"
+          className="group flex items-center gap-2 border border-white px-4 py-2 text-[10px] font-bold uppercase tracking-widest disabled:opacity-20 disabled:cursor-not-allowed hover:bg-white hover:text-black transition-all"
         >
-          Previous
+          <span>{"<"}</span> PREVIOUS_SEGMENT
         </button>
-        <span className="text-gray-700">
-          Page {page} of {totalPages}
-        </span>
+
+        <div className="flex items-center gap-4 text-[10px] tracking-widest font-bold">
+          <span className="text-white/30">CURRENT_BLOCK:</span>
+          <span className="bg-white text-black px-2 py-1">{page.toString().padStart(2, '0')}</span>
+          <span className="text-white/30">/</span>
+          <span className="text-white/60">{totalPages.toString().padStart(2, '0')}</span>
+        </div>
+
         <button
           onClick={handleNextPage}
           disabled={page === totalPages}
-          className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r"
+          className="group flex items-center gap-2 border border-white px-4 py-2 text-[10px] font-bold uppercase tracking-widest disabled:opacity-20 disabled:cursor-not-allowed hover:bg-white hover:text-black transition-all"
         >
-          Next
+          NEXT_SEGMENT <span>{">"}</span>
         </button>
+      </div>
+
+      {/* Decorative Metadata Footer */}
+      <div className="mt-4 opacity-10 flex justify-between text-[7px] uppercase tracking-[0.5em]">
+          <span>Database_Encrypted: YES</span>
+          <span>Access_Point: Edge_01</span>
+          <span>Sync_Status: Verified</span>
       </div>
     </div>
   );
