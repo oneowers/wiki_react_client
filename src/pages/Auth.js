@@ -7,10 +7,12 @@ import {
   registration,
   sendVerificationSms,
   verifyCodeSms,
+  googleAuth // <-- Не забудьте добавить этот метод в ваш userApi.js
 } from "../http/userApi.js";
 import { observer } from "mobx-react-lite";
 import { Context } from "../index.js";
 import { toast } from "react-toastify";
+import { useGoogleLogin } from "@react-oauth/google"; // <-- Импорт хука Google
 
 const Auth = observer(() => {
   const { user } = useContext(Context);
@@ -19,12 +21,12 @@ const Auth = observer(() => {
   const isLogin = location.pathname === LOGIN_ROUTE;
 
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [password, setPassword] = useState("");
+  const[password, setPassword] = useState("");
   const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(true);
   const [code, setCode] = useState("");
   const [timer, setTimer] = useState(0);
   const [timeLeft, setTimeLeft] = useState(0);
-  const [codeSended, setCodeSended] = useState(false);
+  const[codeSended, setCodeSended] = useState(false);
   const [firstName, setFirstName] = useState("");
 
   useEffect(() => {
@@ -51,6 +53,29 @@ const Auth = observer(() => {
     setIsValidPhoneNumber(/^\d{2}-\d{3}-\d{2}-\d{2}$/.test(formattedNumber));
   };
 
+  // --- ЛОГИКА GOOGLE AUTH ---
+  const loginWithGoogle = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        toast.info("> GOOGLE_API: TOKEN_RECEIVED. VERIFYING...");
+        // Отправляем access_token на бэкенд для проверки и создания/авторизации пользователя
+        const res = await googleAuth(tokenResponse.access_token, user);
+        
+        if (res.success) {
+          toast.success(`> GOOGLE_AUTH: SUCCESS. ${res.message || ''}`);
+          navigate(NEWS_ROUTE);
+        } else {
+          toast.error(`> GOOGLE_AUTH_ERROR: ${res.message}`);
+        }
+      } catch (error) {
+        toast.error(`> GOOGLE_AUTH_ERROR: CONNECTION_FAILED`);
+      }
+    },
+    onError: () => {
+      toast.error(`> GOOGLE_AUTH_ERROR: USER_REJECTED`);
+    },
+  });
+
   const click = async () => {
     const formatedPhoneNumber = "+998" + phoneNumber.replace(/-/g, "");
     if (!codeSended) {
@@ -68,14 +93,13 @@ const Auth = observer(() => {
           }
         }
       }
-      // Styled Toast
       res.success 
         ? toast.success(`> STATUS: OK. ${res.message}`) 
         : toast.error(`> ERROR: ACCESS_DENIED. ${res.message}`);
-        
+
     } else {
       const response = await verifyCodeSms(formatedPhoneNumber, code, user);
-      
+
       response.success 
         ? toast.success(`> AUTH_COMPLETE: ${response.message}`) 
         : toast.error(`> ERROR: INVALID_TOKEN. ${response.message}`);
@@ -86,12 +110,10 @@ const Auth = observer(() => {
 
   return (
     <div className="min-h-screen bg-black text-white font-mono flex flex-col justify-center items-center px-6 selection:bg-white selection:text-black">
-      {/* Background Grid Decor */}
       <div className="fixed inset-0 pointer-events-none opacity-5"
         style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
 
       <div className="w-full max-w-md relative z-10">
-        {/* Terminal Header Area */}
         <div className="border-2 border-white p-1 mb-8">
           <div className="bg-white text-black px-3 py-1 flex justify-between items-center font-bold text-xs uppercase tracking-tighter">
             <span>{isLogin ? "Session_Init" : "Registry_New_Node"}</span>
@@ -102,17 +124,13 @@ const Auth = observer(() => {
           </div>
 
           <div className="p-6 bg-black border-t-2 border-white flex flex-col items-center">
-            {/* --- TERMINAL LOGO --- */}
             <div className="relative mb-6 group">
-
               <img
                 className="relative h-16 w-auto grayscale"
                 src={logo}
                 alt="System Logo"
               />
-
-              </div>
-
+            </div>
             <h2 className="text-2xl font-black uppercase tracking-widest text-center mb-2">
               {isLogin ? "Auth_Required" : "Create_ID"}
             </h2>
@@ -122,7 +140,6 @@ const Auth = observer(() => {
           </div>
         </div>
 
-        {/* Form Body */}
         <div className="space-y-6">
           <div className={`${codeSended ? "opacity-30 pointer-events-none" : "opacity-100"} transition-opacity duration-500`}>
 
@@ -168,7 +185,6 @@ const Auth = observer(() => {
             </div>
           </div>
 
-          {/* SMS Verification Area */}
           {codeSended && (
             <div className="border border-white p-4 animate-[slideIn_0.3s_ease-out]">
               <div className="flex justify-between items-center mb-4">
@@ -194,15 +210,32 @@ const Auth = observer(() => {
             </div>
           )}
 
-          {/* Execute Button */}
-          <button
-            onClick={click}
-            className="w-full py-4 bg-white text-black font-black uppercase tracking-[0.3em] text-xs hover:bg-black hover:text-white border-2 border-white transition-all duration-300"
-          >
-            {isLogin ? "[ Execute_Login ]" : "[ Initialize_Registry ]"}
-          </button>
+          <div className="space-y-3">
+            <button
+              onClick={click}
+              className="w-full py-4 bg-white text-black font-black uppercase tracking-[0.3em] text-xs hover:bg-black hover:text-white border-2 border-white transition-all duration-300"
+            >
+              {isLogin ? "[ Execute_Login ]" : "[ Initialize_Registry ]"}
+            </button>
 
-          {/* Switch Link */}
+            {/* --- РАЗДЕЛИТЕЛЬ И КНОПКА GOOGLE --- */}
+            <div className="flex items-center justify-between opacity-50 py-2">
+              <span className="w-[40%] border-b border-white"></span>
+              <span className="text-[10px] uppercase tracking-widest font-bold">OR</span>
+              <span className="w-[40%] border-b border-white"></span>
+            </div>
+
+            <button
+              onClick={() => loginWithGoogle()}
+              className="w-full py-3 bg-transparent text-white font-bold uppercase tracking-[0.2em] text-[10px] hover:bg-white hover:text-black border border-white/50 hover:border-white transition-all duration-300 flex justify-center items-center gap-2"
+            >
+              <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                <path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"/>
+              </svg>
+              [ OAUTH_GOOGLE ]
+            </button>
+          </div>
+
           <div className="text-center mt-6">
             <Link
               to={isLogin ? REGISTRATION_ROUTE : LOGIN_ROUTE}
@@ -213,7 +246,6 @@ const Auth = observer(() => {
           </div>
         </div>
 
-        {/* Footer Technical Metadata */}
         <div className="mt-12 opacity-20 flex justify-between text-[8px] uppercase tracking-[0.2em] font-bold">
           <span>Terminal_v2.0</span>
           <span>Local_Time: {new Date().toLocaleTimeString()}</span>
