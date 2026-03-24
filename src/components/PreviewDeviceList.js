@@ -12,6 +12,7 @@ import {
   createDeviceComment,
   fetchDeviceComments,
 } from "../http/deviceApi.js";
+import DeviceModal from "./DeviceModal.js";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -22,6 +23,13 @@ const Shop = observer(() => {
   const [commentText, setCommentText] = useState("");
   const [loading, setLoading] = useState(true);
   const { device, user } = useContext(Context); // Add 'user' here
+  const [selectedDeviceId, setSelectedDeviceId] = useState(null);
+  const [modalShow, setModalShow] = useState(false);
+
+  const openDeviceModal = (id) => {
+    setSelectedDeviceId(id);
+    setModalShow(true);
+  };
 
   useEffect(() => {
     if (device.devices.count) {
@@ -115,7 +123,7 @@ const Shop = observer(() => {
             <div className="flex flex-col lg:flex-row">
               {/* Image Section */}
               <div
-                onClick={() => navigate(DEVICE_ROUTE + "/" + product.id)}
+                onClick={() => openDeviceModal(product.id)}
                 className="relative w-full lg:w-1/3 h-48 lg:h-auto overflow-hidden cursor-pointer group"
               >
                 <img
@@ -216,6 +224,12 @@ const Shop = observer(() => {
             </div>
           </div>
         ))}
+
+      <DeviceModal 
+        show={modalShow} 
+        onHide={() => setModalShow(false)} 
+        deviceId={selectedDeviceId} 
+      />
 
       {/* Internal CSS for scrollbar and styling */}
       <style jsx>{`

@@ -1,7 +1,6 @@
 import Admin from './pages/Admin.js';
 import Auth from './pages/Auth.js';
 import Basket from './pages/Basket.js';
-import DevicePage from './pages/DevicePage.js';
 import News from './pages/Shop.js';
 import Settings from './pages/Settings.js'
 import Profile from './pages/Profile.js'
@@ -49,9 +48,5 @@ export const publicRoutes = [
   {
     path: REGISTRATION_ROUTE,
     element: <Auth />,
-  },
-  {
-    path: DEVICE_ROUTE + '/:id', // Dynamic route for device details
-    element: <DevicePage />,
   },
 ];

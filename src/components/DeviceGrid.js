@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { DEVICE_ROUTE } from "../utils/consts.js";
 import { observer } from "mobx-react-lite";
 import { fetchDevices } from "../http/deviceApi.js";
+import DeviceModal from "./DeviceModal.js";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -13,6 +14,13 @@ const Shop = observer(() => {
   const { device } = useContext(Context);
   const navigate = useNavigate();
   const [popularDevices, setPopularDevices] = useState({});
+  const [selectedDeviceId, setSelectedDeviceId] = useState(null);
+  const [modalShow, setModalShow] = useState(false);
+
+  const openDeviceModal = (id) => {
+    setSelectedDeviceId(id);
+    setModalShow(true);
+  };
 
   useEffect(() => {
     fetchDevices(undefined, undefined, undefined, 12, "views").then((data) =>
@@ -25,9 +33,9 @@ const Shop = observer(() => {
       {popularDevices.count &&
         popularDevices.rows.map((product) => (
           <div
-            onClick={() => navigate(DEVICE_ROUTE + "/" + product.id)}
+            onClick={() => openDeviceModal(product.id)}
             key={product.id}
-            className="bg-white rounded-lg group relative flex flex-col items-start"
+            className="bg-white rounded-lg group relative flex flex-col items-start cursor-pointer"
           >
             <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none group-hover:opacity-75 lg:h-40 mb-4">
               <img
@@ -58,6 +66,12 @@ const Shop = observer(() => {
             </p>
           </div>
         ))}
+      
+      <DeviceModal 
+        show={modalShow} 
+        onHide={() => setModalShow(false)} 
+        deviceId={selectedDeviceId} 
+      />
     </div>
   );
 });
