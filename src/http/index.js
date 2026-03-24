@@ -1,11 +1,11 @@
 import axios from "axios"
 
 const $host = axios.create({
-    baseURL: process.env.REACT_APP_API_URL
+    baseURL: process.env.REACT_APP_API_URL || 'https://wiki-pg-backend.vercel.app/'
 })
 
 const $authHost = axios.create({
-    baseURL: process.env.REACT_APP_API_URL
+    baseURL: process.env.REACT_APP_API_URL || 'https://wiki-pg-backend.vercel.app/'
 })
 
 const authInterceptor = config => {

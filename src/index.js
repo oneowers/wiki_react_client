@@ -7,11 +7,15 @@ import UserStore from './store/UserStore.js';
 import DeviceStore from './store/DeviceStore.js';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 export const Context = createContext(null)
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+const GOOGLE_CLIENT_ID = "481273126997-moiqio6g2beh4gch727rjmfnag11keqc.apps.googleusercontent.com";
+
 root.render(
+  <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
   <Context.Provider value={{
     user: new UserStore(),
     device: new DeviceStore(),
@@ -35,6 +39,7 @@ root.render(
       progressClassName="bg-white"
     />
   </Context.Provider>
+  </GoogleOAuthProvider>
 );
 
 reportWebVitals();

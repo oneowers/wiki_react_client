@@ -78,7 +78,7 @@ const Profile = observer(() => {
           <div className="flex">
             {user.user?.profile_image ? (
               <img 
-                className="h-32 w-32 border-4 border-black bg-black grayscale contrast-150 ring-2 ring-white sm:h-40 sm:w-40"
+                className="h-32 w-32 border-4 border-black bg-black ring-2 ring-white sm:h-40 sm:w-40"
                 src={user.user.profile_image} 
                 alt="Node Avatar"
               />

@@ -114,3 +114,16 @@ export const updateProfile = async (id, first_name, profile_image, role, userSto
     return { success: false, message: error.response?.data?.message || "UPDATE_FAILED" };
   }
 };
+
+export const googleAuth = async (access_token, userStore) => {
+  try {
+    const { data } = await $host.post('/api/user/google', { token: access_token });
+    localStorage.setItem('token', data.token);
+    const decoded = jwt_decode(data.token);
+    userStore.setUser(decoded);
+    userStore.setIsAuth(true);
+    return { success: true, message: "GOOGLE_AUTH: СЕССИЯ ИНИЦИАЛИЗИРОВАНА" };
+  } catch (error) {
+    return { success: false, message: error.response?.data?.message || "GOOGLE_AUTH_FAILED" };
+  }
+};
