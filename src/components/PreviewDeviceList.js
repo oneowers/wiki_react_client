@@ -141,7 +141,7 @@ const Shop = observer(() => {
                 <div className="flex justify-between items-start">
                   <div>
                     <span className="inline-block border border-white px-3 py-0.5 text-[10px] font-bold uppercase mb-2">
-                      {device.brands[product.brandId]?.name || "Generic_Node"}
+                      {device.brands.find(b => b.id === product.brandId)?.name || "Generic_Node"}
                     </span>
                     <h3 className="text-xl font-black text-white uppercase tracking-tighter">
                       {product.name}
