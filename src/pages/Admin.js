@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import {
   CommandLineIcon,
   CpuChipIcon,
   ServerStackIcon,
-  FingerPrintIcon
+  FingerPrintIcon,
+  ChevronRightIcon
 } from "@heroicons/react/24/outline";
 import CreateBrand from "../modals/CreateBrand.js";
 import CreateType from "../modals/CreateType.js";
@@ -12,10 +13,92 @@ import CreateDevice from "../modals/CreateDevice.js";
 import ParticipantsList from '../components/admin/ParticipantsList.js';
 import DeviceListAdmin from '../components/admin/DeviceListAdmin.js';
 
+// --- КОМПОНЕНТ "ХАКЕРСКОГО" СПИСКА (АККОРДЕОНА) ---
+const HackerAccordion = ({ title, logRef, isOpen, onToggle, children }) => {
+  const [isGlitching, setIsGlitching] = useState(false);
+
+  // Эффект "глюка/декодирования" при открытии
+  useEffect(() => {
+    if (isOpen) {
+      setIsGlitching(true);
+      const timer = setTimeout(() => setIsGlitching(false), 250); // длительность бага
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
+
+  return (
+    <div className={`border transition-colors duration-500 relative group ${
+      isOpen ? 'border-white/50 bg-white/5' : 'border-white/20 bg-black'
+    }`}>
+      {/* Декоративные элементы по углам */}
+      <div className="absolute top-0 right-0 p-2 text-[8px] text-white/20">{logRef}</div>
+      <div className={`absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 transition-colors duration-300 ${
+        isOpen ? 'border-white' : 'border-white/30'
+      }`} />
+      
+      {/* Кнопка открытия/закрытия */}
+      <button 
+        onClick={onToggle}
+        className="w-full flex items-center justify-between p-4 outline-none hover:bg-white/5 transition-all focus:outline-none"
+      >
+        <div className="flex items-center gap-3">
+          {/* Анимированная стрелка */}
+          <ChevronRightIcon 
+            className={`w-4 h-4 transition-all duration-300 ease-out transform ${
+              isOpen ? 'rotate-90 text-white' : 'rotate-0 text-white/40 group-hover:translate-x-1 group-hover:text-white'
+            }`} 
+          />
+          
+          <div className="flex items-center gap-2">
+            {/* Статус системы */}
+            <span className={`text-[10px] font-bold tracking-widest transition-all duration-300 ${
+              isOpen ? 'text-green-400' : 'text-red-500/80'
+            }`}>
+              {isOpen ? '[UNLOCKED]' : '[ENCRYPTED]'}
+            </span>
+
+            {/* Заголовок с Glitch анимацией */}
+            <h2 className={`text-xs font-bold uppercase transition-all duration-300 ${
+              isGlitching 
+                ? 'opacity-80 tracking-[0.5em] text-red-400 blur-[0.5px]' 
+                : 'opacity-100 tracking-widest text-white group-hover:text-white'
+            } ${!isOpen && 'text-white/70'}`}>
+              {title}
+            </h2>
+
+            {/* Мигающий курсор терминала */}
+            <div className={`w-2 h-3 bg-white transition-opacity ${isOpen ? 'animate-pulse opacity-100' : 'opacity-0'}`} />
+          </div>
+        </div>
+      </button>
+
+      {/* Плавное раскрытие контента через CSS Grid */}
+      <div className={`grid transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] ${
+        isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+      }`}>
+        <div className="overflow-hidden">
+          <div className="px-4 pb-4 border-t border-white/10 relative mt-2">
+            {/* Анимированная боковая линия "данных" */}
+            <div className="absolute left-0 top-0 w-[2px] h-full bg-gradient-to-b from-transparent via-white/50 to-transparent shadow-[0_0_8px_rgba(255,255,255,0.8)] opacity-50" />
+            
+            {/* Вставляем наши списки сюда */}
+            {children}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Admin = observer(() => {
+  // Состояния для модальных окон
   const [brandVisible, setBrandVisible] = useState(false);
   const [typeVisible, setTypeVisible] = useState(false);
   const [deviceVisible, setDeviceVisible] = useState(false);
+
+  // Состояния для хакерских списков
+  const [participantsOpen, setParticipantsOpen] = useState(false);
+  const [devicesOpen, setDevicesOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-black text-white font-mono selection:bg-white selection:text-black pb-20">
@@ -76,37 +159,29 @@ const Admin = observer(() => {
           </div>
         </div>
 
-        {/* --- MAIN CONTENT AREA --- */}
-        <div className="grid grid-cols-1 gap-8">
-          <div className="border border-white/20 bg-white/5 relative group">
-            {/* Corner Decorative Elements */}
-            <div className="absolute top-0 right-0 p-2 text-[8px] text-white/20">LOG_REF_09</div>
-            <div className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-white" />
-            
-            <div className="p-4 border-b border-white/10 flex items-center gap-2">
-                <div className="w-2 h-2 bg-white animate-pulse" />
-                <h2 className="text-xs font-bold uppercase tracking-widest">Active_Participants_Registry</h2>
-            </div>
-            
-            <div className="p-2 overflow-x-auto">
-                <ParticipantsList />
-            </div>
-          </div>
+        {/* --- MAIN CONTENT AREA (ХАКЕРСКИЕ АККОРДЕОНЫ) --- */}
+        <div className="grid grid-cols-1 gap-6">
+          
+          {/* Секция 1: Active Participants */}
+          <HackerAccordion 
+            title="Active_Participants_Registry" 
+            logRef="LOG_REF_09"
+            isOpen={participantsOpen}
+            onToggle={() => setParticipantsOpen(!participantsOpen)}
+          >
+            <ParticipantsList />
+          </HackerAccordion>
 
-          <div className="border border-white/20 bg-white/5 relative group">
-            {/* Corner Decorative Elements */}
-            <div className="absolute top-0 right-0 p-2 text-[8px] text-white/20">LOG_REF_10</div>
-            <div className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-white" />
-            
-            <div className="p-4 border-b border-white/10 flex items-center gap-2">
-                <div className="w-2 h-2 bg-white animate-pulse" />
-                <h2 className="text-xs font-bold uppercase tracking-widest">Hardware_Nodes_Registry</h2>
-            </div>
-            
-            <div className="p-2">
-                <DeviceListAdmin />
-            </div>
-          </div>
+          {/* Секция 2: Hardware Nodes */}
+          <HackerAccordion 
+            title="Hardware_Nodes_Registry" 
+            logRef="LOG_REF_10"
+            isOpen={devicesOpen}
+            onToggle={() => setDevicesOpen(!devicesOpen)}
+          >
+            <DeviceListAdmin />
+          </HackerAccordion>
+
         </div>
 
         {/* --- MODALS --- */}
