@@ -58,7 +58,7 @@ const HackerAccordion = ({ title, logRef, isOpen, onToggle, children }) => {
             </span>
 
             {/* Заголовок с Glitch анимацией */}
-              {title}
+              <p className="font-black text-white uppercase tracking-tighter">{title}</p>
 
             {/* Мигающий курсор терминала */}
             <div className={`w-2 h-3 bg-white transition-opacity ${isOpen ? 'animate-pulse opacity-100' : 'opacity-0'}`} />

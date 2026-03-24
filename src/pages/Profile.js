@@ -55,18 +55,10 @@ const Profile = observer(() => {
       
       {/* --- PROFILE BANNER --- */}
       <div className="relative h-48 lg:h-64 overflow-hidden border-b-2 border-white">
-        {user.user?.profile_image ? (
-          <img 
-            className="h-full w-full object-cover grayscale brightness-50 contrast-125" 
-            // src={user.user.profile_image} 
-            alt="Hardware" 
-          />
-        ) : (
-          <div className="h-full w-full bg-white/5 flex items-center justify-center">
-             <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
-             <CommandLineIcon className="h-12 w-12 text-white/20 animate-pulse" />
-          </div>
-        )}
+        <div className="h-full w-full bg-white/5 flex items-center justify-center">
+            <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+            <CommandLineIcon className="h-12 w-12 text-white/20 animate-pulse" />
+        </div>
         {/* Scanline overlay */}
         <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,255,255,0.06),rgba(0,255,255,0.02),rgba(255,255,255,0.06))] bg-[length:100%_2px,3px_100%] opacity-30" />
       </div>
