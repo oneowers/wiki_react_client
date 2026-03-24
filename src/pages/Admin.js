@@ -102,22 +102,8 @@ const Admin = observer(() => {
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-10">
         
-        {/* --- HEADER CONSOLE --- */}
-        <div className="border-2 border-white mb-10 overflow-hidden">
-          <div className="bg-white text-black px-4 py-1 flex justify-between items-center">
-            <div className="flex items-center gap-2">
-              <FingerPrintIcon className="h-4 w-4 animate-pulse" />
-              <span className="text-[10px] font-black uppercase tracking-widest">Root_Access_Established</span>
-            </div>
-            <span className="text-[10px] opacity-50">NODE_ADMIN_V4.0</span>
-          </div>
           
-          <div className="p-6 md:flex md:items-center md:justify-between bg-black">
-            <div className="mb-6 md:mb-0">
-              <h1 className="text-4xl font-black uppercase tracking-tighter italic">Command_Center</h1>
-              <p className="text-xs text-white/40 mt-1 tracking-widest">// System hardware and node registry management</p>
-            </div>
-
+          <div className="pb-6 md:flex md:items-center md:justify-between bg-black">
             {/* --- ACTION BUTTONS --- */}
             <div className="flex flex-wrap gap-3">
               <button
@@ -151,7 +137,6 @@ const Admin = observer(() => {
               </button>
             </div>
           </div>
-        </div>
 
         {/* --- MAIN CONTENT AREA (ХАКЕРСКИЕ АККОРДЕОНЫ) --- */}
         <div className="grid grid-cols-1 gap-6">
