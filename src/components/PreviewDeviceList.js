@@ -60,16 +60,16 @@ const Shop = observer(() => {
 
   const navigate = useNavigate();
 
-  const sendComment = async (deviceId) => {
+  const sendComment = async (deviceId, text) => { // Add "text" here
     try {
-      await createDeviceComment(deviceId, commentText);
+      await createDeviceComment(deviceId, text); // Pass "text" here
       await fetchDeviceComments(deviceId).then((comments) => {
         setComments((prevComments) => ({
           ...prevComments,
           [deviceId]: comments,
         }));
       });
-      setCommentText("");
+      setCommentText(""); // Clear the input
     } catch (error) {
       console.error("Error sending comment:", error);
     }
@@ -225,10 +225,10 @@ const Shop = observer(() => {
           </div>
         ))}
 
-      <DeviceModal 
-        show={modalShow} 
-        onHide={() => setModalShow(false)} 
-        deviceId={selectedDeviceId} 
+      <DeviceModal
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+        deviceId={selectedDeviceId}
       />
 
       {/* Internal CSS for scrollbar and styling */}

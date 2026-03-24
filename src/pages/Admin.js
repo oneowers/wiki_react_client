@@ -10,6 +10,7 @@ import CreateBrand from "../modals/CreateBrand.js";
 import CreateType from "../modals/CreateType.js";
 import CreateDevice from "../modals/CreateDevice.js";
 import ParticipantsList from '../components/admin/ParticipantsList.js';
+import DeviceListAdmin from '../components/admin/DeviceListAdmin.js';
 
 const Admin = observer(() => {
   const [brandVisible, setBrandVisible] = useState(false);
@@ -89,6 +90,21 @@ const Admin = observer(() => {
             
             <div className="p-2 overflow-x-auto">
                 <ParticipantsList />
+            </div>
+          </div>
+
+          <div className="border border-white/20 bg-white/5 relative group">
+            {/* Corner Decorative Elements */}
+            <div className="absolute top-0 right-0 p-2 text-[8px] text-white/20">LOG_REF_10</div>
+            <div className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-white" />
+            
+            <div className="p-4 border-b border-white/10 flex items-center gap-2">
+                <div className="w-2 h-2 bg-white animate-pulse" />
+                <h2 className="text-xs font-bold uppercase tracking-widest">Hardware_Nodes_Registry</h2>
+            </div>
+            
+            <div className="p-2">
+                <DeviceListAdmin />
             </div>
           </div>
         </div>

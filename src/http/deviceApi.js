@@ -1,4 +1,4 @@
-import { $authHost, $host } from "./index.js";
+import { $authHost } from "./index.js";
 
 export const createType = async (type) => {
   const { data } = await $authHost.post("/api/type", type);
@@ -58,4 +58,14 @@ export const createDeviceComment = async (deviceId, text) => {
   } catch (error) {
     throw new Error("Error creating comment: " + error.message);
   }
+};
+
+export const updateDevice = async (id, device) => {
+  const { data } = await $authHost.put(`/api/device/${id}`, device);
+  return data;
+};
+
+export const deleteDevice = async (id) => {
+  const { data } = await $authHost.delete(`/api/device/${id}`);
+  return data;
 };
