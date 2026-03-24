@@ -81,6 +81,7 @@ const Shop = observer(() => {
       sendComment(productId, commentText.trim());
     }
   };
+  
 
   const options = {
     day: "2-digit",
