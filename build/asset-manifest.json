@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/static/css/main.5f69c819.css",
+    "main.js": "/static/js/main.3aa05cef.js",
+    "static/js/453.258b012d.chunk.js": "/static/js/453.258b012d.chunk.js",
+    "static/media/Estrella-Early.otf": "/static/media/Estrella-Early.b1dd44ceeb25a1e068e8.otf",
+    "static/media/Northing.ttf": "/static/media/Northing.262b64fc755614d5b2d8.ttf",
+    "static/media/logo.png": "/static/media/logo.086a6821baa6ec331144.png",
+    "index.html": "/index.html",
+    "main.5f69c819.css.map": "/static/css/main.5f69c819.css.map",
+    "main.3aa05cef.js.map": "/static/js/main.3aa05cef.js.map",
+    "453.258b012d.chunk.js.map": "/static/js/453.258b012d.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.5f69c819.css",
+    "static/js/main.3aa05cef.js"
+  ]
+}

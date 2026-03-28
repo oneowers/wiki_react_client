@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>UzExpo — Dark Luxury (reference)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              display: ['"Playfair Display"', "Georgia", "serif"],
+              sans: ['"Plus Jakarta Sans"', "system-ui", "sans-serif"],
+            },
+            animation: {
+              "fade-in": "fadeIn 0.7s ease-out forwards",
+              "slide-up": "slideUp 0.55s ease-out forwards",
+              "pulse-glow": "pulseGlow 2.8s ease-in-out infinite",
+            },
+            keyframes: {
+              fadeIn: {
+                from: { opacity: "0" },
+                to: { opacity: "1" },
+              },
+              slideUp: {
+                from: { opacity: "0", transform: "translateY(14px)" },
+                to: { opacity: "1", transform: "translateY(0)" },
+              },
+              pulseGlow: {
+                "0%, 100%": { opacity: "0.45", transform: "scaleX(0.92)" },
+                "50%": { opacity: "1", transform: "scaleX(1)" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      :root {
+        --color-bg: #0a0a0a;
+        --color-surface: rgba(255, 255, 255, 0.06);
+        --color-accent: #d4a853;
+        --color-text-primary: #f5f0e6;
+        --color-text-muted: rgba(245, 240, 230, 0.55);
+      }
+      @keyframes fade-in {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      @keyframes slide-up {
+        from {
+          opacity: 0;
+          transform: translateY(18px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes pulse-glow {
+        0%,
+        100% {
+          box-shadow: 0 0 20px rgba(212, 168, 83, 0.25);
+        }
+        50% {
+          box-shadow: 0 0 36px rgba(212, 168, 83, 0.55);
+        }
+      }
+      .luxury-noise {
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E");
+      }
+    </style>
+  </head>
+  <body class="min-h-screen bg-[#050505] font-sans antialiased">
+    <div
+      class="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(212,168,83,0.12),_transparent_55%),radial-gradient(ellipse_at_bottom,_rgba(20,20,22,1),_#0a0a0a)]"
+    ></div>
+
+    <div class="relative mx-auto flex min-h-[844px] w-[390px] flex-col overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.45)]">
+      <div class="pointer-events-none absolute inset-0 opacity-[0.2] mix-blend-overlay luxury-noise"></div>
+
+      <!-- STATUS BAR -->
+      <div
+        class="absolute left-0 right-0 top-0 z-50 flex h-10 items-center justify-between px-5 text-[11px] font-semibold tracking-[0.06em] text-[var(--color-text-muted)]"
+      >
+        <span class="tabular-nums text-[var(--color-text-primary)]">9:41</span>
+        <div class="flex items-center gap-1.5">
+          <span class="text-[10px]">●●●○</span>
+          <span class="text-[10px]">⌁</span>
+          <div
+            class="flex h-3 w-6 items-center rounded-sm border border-[var(--color-text-muted)]/50 px-0.5"
+          >
+            <div class="h-2 w-4/5 rounded-[1px] bg-[var(--color-accent)]"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NAVIGATION HEADER -->
+      <header
+        class="relative z-40 mt-10 overflow-hidden rounded-b-[28px] border-b border-white/10 bg-[#0a0a0a]/75 shadow-[0_20px_60px_rgba(0,0,0,0.35)] backdrop-blur-xl backdrop-saturate-150"
+      >
+        <div class="flex h-14 items-center justify-between px-4">
+          <button
+            type="button"
+            class="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+            aria-label="Back"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-5 w-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+            </svg>
+          </button>
+          <div class="text-center">
+            <p class="font-display text-[15px] font-semibold text-[var(--color-text-primary)]">Vault</p>
+            <p class="text-[9px] font-semibold uppercase tracking-[0.2em] text-[var(--color-text-muted)]">UzExpo · Premium</p>
+          </div>
+          <button
+            type="button"
+            class="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-[var(--color-accent)]"
+            aria-label="Alerts"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <main class="relative z-10 flex-1 overflow-y-auto px-4 pb-28 pt-4">
+        <!-- HERO SECTION -->
+        <section class="relative overflow-hidden rounded-[28px] shadow-[0_20px_60px_rgba(0,0,0,0.35)] animate-slide-up">
+          <div class="relative h-[220px] w-full">
+            <img
+              src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1600&auto=format&fit=crop"
+              alt="Hero"
+              class="h-full w-full object-cover"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/75 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-br from-[#d4a853]/25 via-transparent to-[#0a0a0a]/90"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-5">
+              <p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--color-text-muted)]">Curated hardware</p>
+              <h1 class="mt-2 font-display text-[32px] font-extrabold leading-[1.1] tracking-tight text-[var(--color-text-primary)]">
+                Edge-grade
+                <span class="block bg-gradient-to-r from-[#f5e6c8] to-[#d4a853] bg-clip-text text-transparent">performance</span>
+              </h1>
+            </div>
+          </div>
+        </section>
+
+        <!-- METRIC CARDS -->
+        <section class="mt-5 grid grid-cols-2 gap-3">
+          <div class="rounded-[22px] border border-white/10 bg-white/[0.06] p-4 shadow-[0_12px_40px_rgba(0,0,0,0.25)] backdrop-blur-xl">
+            <p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--color-text-muted)]">Live listings</p>
+            <p class="mt-2 font-display text-[28px] font-extrabold text-[var(--color-text-primary)]">128</p>
+          </div>
+          <div class="rounded-[22px] border border-white/10 bg-white/[0.06] p-4 shadow-[0_12px_40px_rgba(0,0,0,0.25)] backdrop-blur-xl">
+            <p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--color-text-muted)]">Avg. deploy</p>
+            <p class="mt-2 font-display text-[28px] font-extrabold text-[var(--color-text-primary)]">18m</p>
+          </div>
+        </section>
+
+        <!-- LIST ITEMS -->
+        <section class="mt-6 space-y-3">
+          <div class="flex items-center gap-3 rounded-[22px] border border-white/10 bg-white/[0.05] p-3 shadow-[0_12px_40px_rgba(0,0,0,0.28)] backdrop-blur-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer">
+            <div class="h-14 w-14 shrink-0 overflow-hidden rounded-2xl bg-gradient-to-br from-[#d4a853]/40 to-[#0a0a0a]"></div>
+            <div class="min-w-0 flex-1">
+              <p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--color-text-muted)]">Aurora DC</p>
+              <p class="truncate font-display text-lg font-bold text-[var(--color-text-primary)]">Bare metal · Frankfurt</p>
+            </div>
+            <span class="text-[var(--color-accent)]">›</span>
+          </div>
+          <div class="flex items-center gap-3 rounded-[22px] border border-white/10 bg-white/[0.05] p-3 shadow-[0_12px_40px_rgba(0,0,0,0.28)] backdrop-blur-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer">
+            <div class="h-14 w-14 shrink-0 overflow-hidden rounded-2xl bg-gradient-to-br from-[#b8860b]/50 to-[#0a0a0a]"></div>
+            <div class="min-w-0 flex-1">
+              <p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--color-text-muted)]">Nebula Edge</p>
+              <p class="truncate font-display text-lg font-bold text-[var(--color-text-primary)]">GPU · Singapore</p>
+            </div>
+            <span class="text-[var(--color-accent)]">›</span>
+          </div>
+        </section>
+
+        <!-- PRIMARY CTA -->
+        <button
+          type="button"
+          class="mt-8 w-full rounded-full bg-gradient-to-r from-[#d4a853] via-[#c9a227] to-[#b8860b] py-4 text-[13px] font-extrabold uppercase tracking-[0.2em] text-[#0a0a0a] shadow-[0_20px_60px_rgba(212,168,83,0.35)] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+        >
+          Reserve capacity
+        </button>
+
+        <!-- DECORATIVE -->
+        <div class="pointer-events-none absolute -right-12 top-48 h-56 w-56 rounded-full border border-[var(--color-accent)]/20 animate-slide-up"></div>
+      </main>
+
+      <!-- BOTTOM NAV -->
+      <nav
+        class="absolute bottom-0 left-0 right-0 z-50 flex h-[72px] items-stretch border-t border-white/10 bg-[#0a0a0a]/80 px-2 backdrop-blur-xl backdrop-saturate-150"
+      >
+        <div class="pointer-events-none absolute inset-x-8 -top-3 h-6 rounded-full bg-[var(--color-accent)]/15 blur-xl animate-pulse-glow"></div>
+        <a href="#" class="flex flex-1 flex-col items-center justify-center gap-0.5 rounded-2xl py-2 text-[var(--color-accent)] scale-[1.02]">
+          <span class="rounded-full bg-[var(--color-accent)]/20 p-1 ring-1 ring-[var(--color-accent)]/40">⌂</span>
+          <span class="text-[9px] font-semibold uppercase tracking-[0.14em]">Home</span>
+        </a>
+        <a href="#" class="flex flex-1 flex-col items-center justify-center gap-0.5 py-2 text-[var(--color-text-muted)] transition-all hover:text-[var(--color-text-primary)]">
+          <span class="rounded-full p-1">◎</span>
+          <span class="text-[9px] font-semibold uppercase tracking-[0.14em]">About</span>
+        </a>
+        <a href="#" class="flex flex-1 flex-col items-center justify-center gap-0.5 py-2 text-[var(--color-text-muted)]">
+          <span class="rounded-full p-1">✦</span>
+          <span class="text-[9px] font-semibold uppercase tracking-[0.14em]">Events</span>
+        </a>
+        <a href="#" class="flex flex-1 flex-col items-center justify-center gap-0.5 py-2 text-[var(--color-text-muted)]">
+          <span class="rounded-full p-1">☐</span>
+          <span class="text-[9px] font-semibold uppercase tracking-[0.14em]">Cart</span>
+        </a>
+        <a href="#" class="flex flex-1 flex-col items-center justify-center gap-0.5 py-2 text-[var(--color-text-muted)]">
+          <span class="rounded-full p-1">○</span>
+          <span class="text-[9px] font-semibold uppercase tracking-[0.14em]">You</span>
+        </a>
+      </nav>
+    </div>
+  </body>
+</html>

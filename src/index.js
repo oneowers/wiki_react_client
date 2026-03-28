@@ -31,12 +31,12 @@ root.render(
       pauseOnFocusLoss
       draggable
       pauseOnHover
-      theme="dark"
+      theme="light"
       toastClassName={() =>
-        "relative flex p-1 min-h-10 border-2 border-white bg-black text-white font-mono text-xs uppercase tracking-tighter shadow-[5px_5px_0px_0px_rgba(255,255,255,0.2)] mb-4 overflow-hidden"
+        "relative flex p-1 min-h-10 border border-[var(--color-border)] bg-white/95 text-[var(--color-text-primary)] font-sans text-xs font-medium shadow-[0_20px_50px_rgba(15,23,42,0.12)] backdrop-blur-md mb-4 overflow-hidden rounded-2xl"
       }
       bodyClassName={() => "flex items-center p-3"}
-      progressClassName="bg-white"
+      progressClassName="bg-[var(--color-accent)]"
     />
   </Context.Provider>
   </GoogleOAuthProvider>
