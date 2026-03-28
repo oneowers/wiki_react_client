@@ -2,17 +2,20 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Context } from "../index.js";
 import { fetchOneDevices, updateDevice, fetchTypes, fetchBrands } from "../http/deviceApi.js";
 import { observer } from "mobx-react-lite";
+import { getImgSrc } from "../utils/getImgSrc.js";
 
 const UpdateDevice = observer(({ show, onHide, deviceId, onUpdated }) => {
     const { device } = useContext(Context);
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
+    const [price, setPrice] = useState('0');
     const [file, setFile] = useState(null);
     const [brand, setBrand] = useState(null);
     const [type, setType] = useState(null);
     const [info, setInfo] = useState([]);
     const [loading, setLoading] = useState(false);
     const [img, setImg] = useState('');
+    const [previewUrl, setPreviewUrl] = useState('');
 
     // Загрузка справочников при открытии
     useEffect(() => {
@@ -30,6 +33,7 @@ const UpdateDevice = observer(({ show, onHide, deviceId, onUpdated }) => {
                 setName(data.name);
                 setDescription(data.description || '');
                 setImg(data.img || '');
+                setPrice(data.price !== undefined && data.price !== null ? String(data.price) : '0');
                 setInfo(data.info || []);
                 
                 // Находим объекты бренда и типа в сторе
@@ -41,35 +45,82 @@ const UpdateDevice = observer(({ show, onHide, deviceId, onUpdated }) => {
         }
     }, [show, deviceId]); // Зависим только от открытия и смены ID
 
+    // Чистим временный blob URL от выбранного файла
+    useEffect(() => {
+        return () => {
+            if (previewUrl) URL.revokeObjectURL(previewUrl);
+        };
+    }, [previewUrl]);
+
     // --- Функции управления характеристиками ---
     const addInfo = () => setInfo([...info, { title: '', description: '', id: Date.now() }]);
     const removeInfo = (id) => setInfo(info.filter(i => i.id !== id));
     const changeInfo = (key, value, id) => setInfo(info.map(i => i.id === id ? { ...i, [key]: value } : i));
 
-    const handleUpdate = () => {
-        const formData = new FormData();
-        formData.append('name', name);
-        formData.append('description', description);
-        
-        // Логика: если выбран новый файл — шлем его, иначе шлем строку URL
-        if (file) {
-            formData.append('img', file);
-        } else {
-            formData.append('img', img);
+    const getImageSrc = () => {
+        if (previewUrl) return previewUrl;
+        if (!img) return '';
+        return getImgSrc(img);
+    };
+
+    const convertUrlToFile = async (imageUrl) => {
+        const response = await fetch(imageUrl);
+        if (!response.ok) {
+            throw new Error('Cannot load image from URL');
         }
+        const blob = await response.blob();
+        const extension = blob.type.includes('/') ? blob.type.split('/')[1] : 'jpg';
+        return new File([blob], `device-image-${Date.now()}.${extension}`, { type: blob.type || 'image/jpeg' });
+    };
 
-        if (brand) formData.append('brandId', brand.id);
-        if (type) formData.append('typeId', type.id);
-        
-        const cleanInfo = info.map(i => ({ title: i.title, description: i.description }));
-        formData.append('info', JSON.stringify(cleanInfo));
+    const handleFileSelect = (event) => {
+        const selectedFile = event.target.files?.[0];
+        if (!selectedFile) return;
 
-        updateDevice(deviceId, formData).then(() => {
+        if (previewUrl) URL.revokeObjectURL(previewUrl);
+        const objectUrl = URL.createObjectURL(selectedFile);
+        setPreviewUrl(objectUrl);
+        setFile(selectedFile);
+    };
+
+    const handleUpdate = async () => {
+        try {
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('description', description);
+            formData.append('price', price);
+            
+            // Если есть файл, отправляем его. Если введен внешний URL, конвертируем в Blob/File.
+            if (file instanceof File) {
+                formData.append('img', file);
+            } else if (img && (img.startsWith('http') || img.startsWith('data:'))) {
+                // Private Vercel Blob can't be fetched from the browser without auth,
+                // so we keep the URL string as-is (backend accepts img as string).
+                const isPrivateVercelBlob = img.includes('.private.blob.vercel-storage.com/');
+                if (img.startsWith('data:') || !isPrivateVercelBlob) {
+                    const imageFile = await convertUrlToFile(img);
+                    formData.append('img', imageFile);
+                } else {
+                    formData.append('img', img);
+                }
+            } else if (img) {
+                formData.append('img', img);
+            }
+
+            if (brand) formData.append('brandId', brand.id);
+            if (type) formData.append('typeId', type.id);
+            
+            const cleanInfo = info.map(i => ({ title: i.title, description: i.description }));
+            formData.append('info', JSON.stringify(cleanInfo));
+
+            await updateDevice(deviceId, formData);
+            if (previewUrl) URL.revokeObjectURL(previewUrl);
+            setPreviewUrl('');
             onHide();
             if (onUpdated) onUpdated();
-        }).catch(e => {
-            alert(e.response?.data?.message || 'Error updating device');
-        });
+        } catch (e) {
+            alert(e.response?.data?.message || e.message || 'Error updating device');
+        }
     };
 
     if (!show) return null;
@@ -127,20 +178,47 @@ const UpdateDevice = observer(({ show, onHide, deviceId, onUpdated }) => {
                                 </div>
 
                                 <div className="space-y-1">
+                                    <label className="text-[10px] uppercase text-white/50 tracking-widest">Price</label>
+                                    <input
+                                        type="number"
+                                        min="0"
+                                        step="1"
+                                        className="w-full bg-black border border-white/20 text-white p-2 text-xs focus:border-white outline-none"
+                                        value={price}
+                                        onChange={e => setPrice(e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="space-y-1">
                                     <label className="text-[10px] uppercase text-white/50 tracking-widest">Image URL</label>
                                     <input 
                                         type="text" 
                                         value={img}
-                                        onChange={e => { setImg(e.target.value); setFile(null); }} // Если пишем URL, сбрасываем файл
+                                        onChange={e => {
+                                            setImg(e.target.value);
+                                            setFile(null);
+                                            if (previewUrl) {
+                                                URL.revokeObjectURL(previewUrl);
+                                                setPreviewUrl('');
+                                            }
+                                        }} // Если пишем URL, сбрасываем файл
                                         className="w-full bg-black border border-white/20 text-white/70 p-2 text-xs focus:border-white outline-none"
+                                    />
+
+                                    <label className="text-[10px] uppercase text-white/50 tracking-widest mt-3 block">Upload Image</label>
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleFileSelect}
+                                        className="w-full bg-black border border-white/20 text-white/70 p-2 text-xs focus:border-white outline-none file:mr-2 file:border-0 file:bg-white file:text-black file:px-2 file:py-1 file:text-[10px] file:uppercase"
                                     />
                                     
                                     {/* PREVIEW BLOCK */}
-                                    {img && (
+                                    {getImageSrc() && (
                                         <div className="mt-2 border border-white/10 p-2 bg-white/5 flex flex-col items-center">
                                             <p className="text-[7px] uppercase text-white/30 self-start mb-1">Preview</p>
                                             <img 
-                                                src={img} 
+                                                src={getImageSrc()}
                                                 alt="preview" 
                                                 className="max-h-32 object-contain"
                                                 onError={(e) => e.target.style.display = 'none'}

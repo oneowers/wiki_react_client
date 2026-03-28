@@ -4,6 +4,7 @@ import { Context } from "../../index.js";
 import { fetchDevices, deleteDevice } from "../../http/deviceApi.js";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import UpdateDevice from "../../modals/UpdateDevice.js";
+import { getImgSrc } from "../../utils/getImgSrc.js";
 
 const DeviceListAdmin = observer(() => {
   const { device } = useContext(Context);
@@ -57,6 +58,7 @@ const DeviceListAdmin = observer(() => {
               <th scope="col" className="px-6 py-3">Node_ID</th>
               <th scope="col" className="px-6 py-3">Schematics</th>
               <th scope="col" className="px-6 py-3">Alias</th>
+              <th scope="col" className="px-6 py-3">Price</th>
               <th scope="col" className="px-6 py-3 hidden sm:table-cell">Brand_&_Type</th>
               <th scope="col" className="px-6 py-3 text-right">Actions</th>
             </tr>
@@ -70,7 +72,7 @@ const DeviceListAdmin = observer(() => {
                 <td className="px-6 py-4">
                   <div className="h-10 w-10 border border-white/20 bg-black overflow-hidden relative">
                     <img
-                        src={d.img ? (d.img.startsWith('http') ? d.img : process.env.REACT_APP_API_URL + d.img) : ''}
+                        src={getImgSrc(d.img)}
                         className="h-full w-full object-cover grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500"
                         alt={d.name}
                     />
@@ -78,6 +80,9 @@ const DeviceListAdmin = observer(() => {
                 </td>
                 <td className="px-6 py-4 text-white font-bold uppercase tracking-widest text-xs">
                   {d.name}
+                </td>
+                <td className="px-6 py-4 text-[10px] text-white/70 font-bold">
+                  {Number.isFinite(Number(d.price)) ? `${Number(d.price)} ₽` : "—"}
                 </td>
                 <td className="px-6 py-4 text-[9px] text-white/50 uppercase hidden sm:table-cell">
                   <div><span className="text-white/30">B/</span> {device.brands.find(b => b.id === d.brandId)?.name || d.brandId}</div>

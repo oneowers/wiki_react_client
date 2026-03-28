@@ -1,28 +1,43 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { Link } from "react-router-dom";
 import { Context } from "../index.js";
-import { fetchBrands, fetchDevices } from "../http/deviceApi.js";
+import { fetchBrands, fetchTypes, fetchDevices } from "../http/deviceApi.js";
 import { ABOUT_ROUTE } from "../utils/consts.js";
 import PreviewDeviceList from "../components/PreviewDeviceList.js";
 
+
 const Shop = observer(() => {
   const { device } = useContext(Context);
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [viewMode, setViewMode] = useState("grid");
+  const [selectedBrand, setSelectedBrand] = useState({});
+  const [selectedType, setSelectedType] = useState({});
+  const [priceMin, setPriceMin] = useState("");
+  const [priceMax, setPriceMax] = useState("");
 
   useEffect(() => {
     fetchBrands().then((data) => device.setBrands(data));
+    fetchTypes().then((data) => device.setTypes(data));
   }, []);
 
   useEffect(() => {
-    fetchDevices(
-      device.selectedType.id,
-      device.selectedBrand.id,
-      device.page,
-      device.limit
-    ).then((data) => {
-      device.setDevices(data);
-    });
-  }, [device.page, device.selectedType.id, device.selectedBrand.id]);
+    const typeId = selectedType.id || device.selectedType.id || null;
+    const brandId = selectedBrand.id || device.selectedBrand.id || null;
+
+    fetchDevices(typeId, brandId, device.page, device.limit)
+      .then((data) => {
+        device.setDevices(data);
+      })
+      .catch((err) => console.error("Ошибка загрузки устройств:", err));
+  }, [device.page, device.limit, selectedType, selectedBrand, device.selectedType.id, device.selectedBrand.id]);
+
+  const allDevices = device.devices?.rows || [];
+  const filteredDevices = allDevices.filter((item) => {
+    if (priceMin && Number(item.price) < Number(priceMin)) return false;
+    if (priceMax && Number(item.price) > Number(priceMax)) return false;
+    return true;
+  });
 
   return (
     <div className="min-h-screen bg-black text-white font-mono selection:bg-white selection:text-black overflow-x-hidden">
@@ -33,13 +48,84 @@ const Shop = observer(() => {
 
       <div className="flex flex-row mx-auto max-w-7xl mb-14 relative z-10">
         
-        {/* LEFT SIDEBAR (TypeBar) */}
-        <div className="basis-1/6 hidden lg:block border-r border-white/20 pt-6">
-          {/* <TypeBar /> */}
+
+
+        {/* RIGHT SIDEBAR FILTERS */}
+        <div className="basis-3/12 hidden lg:block ">
+          <div className="m-5 mt-6 p-4 border border-white/10 bg-white/5 h-full space-y-4">
+            <div className="text-sm font-bold uppercase tracking-widest">Фильтры</div>
+
+            <div className="space-y-2">
+              <label className="block text-xs text-white/60 uppercase">Brand</label>
+              <select
+                value={selectedBrand.id || ""}
+                onChange={(e) => {
+                  const found = device.brands.find((b) => String(b.id) === e.target.value);
+                  setSelectedBrand(found || {});
+                }}
+                className="w-full bg-black/40 border border-white/20 text-white p-2 text-xs rounded-none"
+              >
+                <option value="">All brands</option>
+                {device.brands.map((brand) => (
+                  <option key={brand.id} value={brand.id}>{brand.name}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-xs text-white/60 uppercase">Type</label>
+              <select
+                value={selectedType.id || ""}
+                onChange={(e) => {
+                  const found = device.types.find((t) => String(t.id) === e.target.value);
+                  setSelectedType(found || {});
+                }}
+                className="w-full bg-black/40 border border-white/20 text-white p-2 text-xs rounded-none"
+              >
+                <option value="">All types</option>
+                {device.types.map((type) => (
+                  <option key={type.id} value={type.id}>{type.name}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-xs text-white/60 uppercase">Цена</label>
+              <div className="grid grid-cols-2 gap-2">
+                <input
+                  type="number"
+                  value={priceMin}
+                  placeholder="от"
+                  onChange={(e) => setPriceMin(e.target.value)}
+                  className="w-full bg-black/40 border border-white/20 text-white p-2 text-xs rounded-none"
+                />
+                <input
+                  type="number"
+                  value={priceMax}
+                  placeholder="до"
+                  onChange={(e) => setPriceMax(e.target.value)}
+                  className="w-full bg-black/40 border border-white/20 text-white p-2 text-xs rounded-none"
+                />
+              </div>
+            </div>
+
+            <button
+              onClick={() => {
+                setSelectedBrand({});
+                setSelectedType({});
+                setPriceMin("");
+                setPriceMax("");
+              }}
+              className="w-full text-[10px] uppercase tracking-wider bg-white/10 hover:bg-white/20 py-2 rounded-none"
+            >
+              Сбросить фильтры
+            </button>
+          </div>
         </div>
 
+
         {/* MAIN CONTENT */}
-        <div className="basis-full lg:basis-3/6 px-4">
+        <div className="basis-full lg:basis-9/12 px-4">
           <div className="mt-6">
             
             {/* --- HACKER STYLE BANNER --- */}
@@ -91,32 +177,111 @@ const Shop = observer(() => {
 
             {/* --- DEVICE LIST AREA --- */}
             <div className="mt-10">
-              <div className="flex items-center gap-4 mb-6">
-                <h3 className="text-white font-bold tracking-widest uppercase text-sm">Hardware_Inventory</h3>
-                <div className="h-[1px] flex-grow bg-white/20" />
+              <div className="flex flex-col gap-3 mb-6">
+                <div className="flex items-center justify-between gap-3">
+                  <h3 className="text-white font-bold tracking-widest uppercase text-sm">Hardware_Inventory</h3>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setViewMode("grid")}
+                      className={`px-3 py-1 text-[10px] uppercase tracking-wider border ${
+                        viewMode === "grid" ? "border-emerald-400 text-emerald-400" : "border-white/30 text-white/60"
+                      } rounded-none-sm`}
+                    >
+                      Сетка
+                    </button>
+                    <button
+                      onClick={() => setViewMode("list")}
+                      className={`px-3 py-1 text-[10px] uppercase tracking-wider border ${
+                        viewMode === "list" ? "border-emerald-400 text-emerald-400" : "border-white/30 text-white/60"
+                      } rounded-none-sm`}
+                    >
+                      Список
+                    </button>
+                  </div>
+                </div>
+
+                <div className="lg:hidden flex items-center justify-between gap-2">
+                  <button
+                    onClick={() => setShowMobileFilters(true)}
+                    className="px-3 py-2 text-xs bg-white/10 hover:bg-white/20 rounded-none uppercase tracking-wider"
+                  >
+                    Фильтры
+                  </button>
+                  <span className="text-[10px] text-white/40 uppercase">Режим: {viewMode}</span>
+                </div>
               </div>
-              
-              <PreviewDeviceList />
+
+              <PreviewDeviceList devices={filteredDevices} viewMode={viewMode} />
             </div>
           </div>
         </div>
+      </div>
 
-        {/* RIGHT SIDEBAR */}
-        <div className="basis-2/6 hidden lg:block border-l border-white/20">
-          <div className="m-5 mt-6 p-4 border border-white/10 bg-white/5 h-full">
-             <div className="text-[10px] text-white/40 mb-4">TERMINAL_LOGS:</div>
-             <div className="space-y-2 font-mono text-[9px] text-white/60">
-                <p>&gt; Connection established...</p>
-                <p>&gt; Protocol 802.11 active</p>
-                <p className="text-white">&gt; 99.9% Uptime guaranteed</p>
-                <div className="w-full h-1 bg-white/10 mt-4 overflow-hidden">
-                  <div className="h-full bg-white w-1/3 animate-[loading_2s_infinite]" />
-                </div>
-             </div>
-             {/* <DeviceList /> */}
+      {showMobileFilters && (
+        <div className="fixed inset-0 z-50 bg-black/70 lg:hidden" onClick={() => setShowMobileFilters(false)}>
+          <div className="absolute inset-x-4 top-20 bg-black/90 border border-white/20 rounded-none p-4 space-y-3" onClick={(e)=>e.stopPropagation()}>
+            <div className="flex justify-between items-center">
+              <h4 className="text-sm font-bold uppercase tracking-wider">Мобильные фильтры</h4>
+              <button onClick={() => setShowMobileFilters(false)} className="text-xs px-2 py-1 bg-white/10 rounded-none">Закрыть</button>
+            </div>
+            <div className="text-xs text-white/60">Brand</div>
+            <select
+              value={selectedBrand.id || ""}
+              onChange={(e) => {
+                const found = device.brands.find((b) => String(b.id) === e.target.value);
+                setSelectedBrand(found || {});
+              }}
+              className="w-full bg-black/70 border border-white/20 text-white p-2 rounded-none"
+            >
+              <option value="">All brands</option>
+              {device.brands.map((brand) => (
+                <option key={brand.id} value={brand.id}>{brand.name}</option>
+              ))}
+            </select>
+            <div className="text-xs text-white/60">Type</div>
+            <select
+              value={selectedType.id || ""}
+              onChange={(e) => {
+                const found = device.types.find((t) => String(t.id) === e.target.value);
+                setSelectedType(found || {});
+              }}
+              className="w-full bg-black/70 border border-white/20 text-white p-2 rounded-none"
+            >
+              <option value="">All types</option>
+              {device.types.map((type) => (
+                <option key={type.id} value={type.id}>{type.name}</option>
+              ))}
+            </select>
+            <div className="grid grid-cols-2 gap-2">
+              <input
+                type="number"
+                value={priceMin}
+                placeholder="от"
+                onChange={(e) => setPriceMin(e.target.value)}
+                className="w-full bg-black/70 border border-white/20 text-white p-2 rounded-none"
+              />
+              <input
+                type="number"
+                value={priceMax}
+                placeholder="до"
+                onChange={(e) => setPriceMax(e.target.value)}
+                className="w-full bg-black/70 border border-white/20 text-white p-2 rounded-none"
+              />
+            </div>
+            <button
+              onClick={() => {
+                setSelectedBrand({});
+                setSelectedType({});
+                setPriceMin("");
+                setPriceMax("");
+              }}
+              className="w-full text-xs uppercase tracking-wider bg-white/10 hover:bg-white/20 py-2 rounded-none"
+            >
+              Сбросить
+            </button>
           </div>
         </div>
-      </div>
+      )}
 
       <style jsx>{`
         @keyframes scan {

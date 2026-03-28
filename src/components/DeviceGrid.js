@@ -5,6 +5,7 @@ import { DEVICE_ROUTE } from "../utils/consts.js";
 import { observer } from "mobx-react-lite";
 import { fetchDevices } from "../http/deviceApi.js";
 import DeviceModal from "./DeviceModal.js";
+import { getImgSrc } from "../utils/getImgSrc.js";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -39,7 +40,7 @@ const Shop = observer(() => {
           >
             <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none group-hover:opacity-75 lg:h-40 mb-4">
               <img
-                src={product.img ? (product.img.startsWith('http') ? product.img : process.env.REACT_APP_API_URL + product.img) : ''}
+                src={getImgSrc(product.img)}
                 className="h-full w-full object-cover object-center lg:h-full lg:w-full"
               />
             </div>
@@ -63,6 +64,9 @@ const Shop = observer(() => {
             </div>
             <p className="ml-1 mt-1 font-bold text-lg text-black">
               {product.name}
+            </p>
+            <p className="ml-1 mt-0.5 text-sm font-semibold text-black/70">
+              {Number.isFinite(Number(product.price)) ? `${Number(product.price)} ₽` : ""}
             </p>
           </div>
         ))}

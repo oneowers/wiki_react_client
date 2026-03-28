@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../index.js";
 import { useNavigate } from "react-router-dom";
-import { DEVICE_ROUTE } from "../utils/consts.js";
 import { observer } from "mobx-react-lite";
 import {
   ChatBubbleLeftIcon,
@@ -13,18 +12,18 @@ import {
   fetchDeviceComments,
 } from "../http/deviceApi.js";
 import DeviceModal from "./DeviceModal.js";
+import { getImgSrc } from "../utils/getImgSrc.js";
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
-
-const Shop = observer(() => {
-  const [comments, setComments] = useState({});
-  const [commentText, setCommentText] = useState("");
+const Shop = observer(({ devices: explicitDevices, viewMode = "grid" }) => {
+  const[comments, setComments] = useState({});
+  // Исправление UX: теперь у каждого устройства свой стейт для текста комментария
+  const [commentTexts, setCommentTexts] = useState({});
   const [loading, setLoading] = useState(true);
-  const { device, user } = useContext(Context); // Add 'user' here
+  const { device, user } = useContext(Context);
   const [selectedDeviceId, setSelectedDeviceId] = useState(null);
   const [modalShow, setModalShow] = useState(false);
+
+  const navigate = useNavigate();
 
   const openDeviceModal = (id) => {
     setSelectedDeviceId(id);
@@ -58,18 +57,16 @@ const Shop = observer(() => {
     return tempElement.textContent || tempElement.innerText || "";
   }
 
-  const navigate = useNavigate();
-
-  const sendComment = async (deviceId, text) => { // Add "text" here
+  const sendComment = async (deviceId, text) => {
     try {
-      await createDeviceComment(deviceId, text); // Pass "text" here
-      await fetchDeviceComments(deviceId).then((comments) => {
-        setComments((prevComments) => ({
-          ...prevComments,
-          [deviceId]: comments,
-        }));
-      });
-      setCommentText(""); // Clear the input
+      await createDeviceComment(deviceId, text);
+      const updatedComments = await fetchDeviceComments(deviceId);
+      setComments((prev) => ({
+        ...prev,
+        [deviceId]: updatedComments,
+      }));
+      // Очищаем конкретный инпут после отправки
+      setCommentTexts((prev) => ({ ...prev, [deviceId]: "" }));
     } catch (error) {
       console.error("Error sending comment:", error);
     }
@@ -77,154 +74,221 @@ const Shop = observer(() => {
 
   const handleFormSubmit = (event, productId) => {
     event.preventDefault();
-    if (commentText.trim() !== "") {
-      sendComment(productId, commentText.trim());
+    const text = commentTexts[productId] || "";
+    if (text.trim() !== "") {
+      sendComment(productId, text.trim());
     }
   };
-  
 
   const options = {
     day: "2-digit",
-    month: "short",
+    month: "2-digit",
+    year: "2-digit",
     hour: "2-digit",
     minute: "2-digit",
     hour12: false,
   };
 
+  const currentDevices = explicitDevices || (device.devices?.rows ||[]);
+  const isLoading = loading && !explicitDevices;
+
+  // Динамические классы для Сетки (до 5 колонок) и Списка (1 колонка)
+  const listWrapperClass =
+    viewMode === "grid"
+      ? "mt-10 grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 font-mono"
+      : "mt-10 flex flex-col gap-6 font-mono";
+
   return (
-    <div className="mt-10 grid grid-cols-1 gap-y-12 font-mono selection:bg-white selection:text-black">
-      {loading
-        ? Array(3)
+    <div className={listWrapperClass}>
+      {isLoading ? (
+        // Скелетон в хакерском стиле
+        Array(viewMode === "grid" ? 5 : 3)
           .fill()
           .map((_, index) => (
             <div
               key={index}
-              className="border border-white/10 p-6 bg-black animate-pulse flex flex-col gap-4"
+              className="border border-white/20 p-6 bg-black flex flex-col gap-4 relative overflow-hidden"
             >
-              <div className="h-40 bg-white/5 w-full" />
-              <div className="h-4 bg-white/20 w-1/4" />
-              <div className="h-10 bg-white/10 w-full" />
+              <div className="absolute inset-0 bg-[linear-gradient(transparent_50%,rgba(255,255,255,0.05)_50%)] bg-[length:100%_4px] pointer-events-none" />
+              <div className="bg-white text-black px-2 py-1 text-[10px] w-fit font-bold animate-pulse">
+                &gt; LOADING_DATA_BLOCK...
+              </div>
+              <div className="h-40 bg-white/10 w-full" />
+              <div className="h-4 bg-white/20 w-1/2 mt-4" />
+              <div className="h-10 bg-white/5 border border-white/10 w-full mt-auto" />
             </div>
           ))
-        : device.devices.count &&
-        device.devices.rows.map((product) => (
+      ) : currentDevices.length > 0 ? (
+        currentDevices.map((product) => (
           <div
             key={product.id}
-            className="group relative border border-white/20 hover:border-white transition-colors duration-500 bg-black overflow-hidden"
+            className={`group relative bg-black border border-white/30 hover:border-white transition-all duration-300 overflow-hidden flex ${
+              viewMode === "grid" ? "flex-col" : "flex-col md:flex-row"
+            }`}
           >
-            {/* --- HEADER BAR --- */}
-            <div className="flex justify-between items-center bg-white/5 border-b border-white/20 px-4 py-2">
+            {/* --- ТЕРМИНАЛЬНЫЙ ЗАГОЛОВОК --- */}
+            <div className="absolute top-0 left-0 w-full flex justify-between items-center bg-white text-black px-3 py-1 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-white animate-pulse" />
-                <span className="text-[10px] text-white/50 tracking-widest uppercase">Node_Protocol: v.4.0</span>
+                <CommandLineIcon className="h-3 w-3" />
+                <span className="text-[10px] font-bold uppercase tracking-widest">
+                  ROOT@NODE_ID:{product.id.toString().padStart(4, "0")}
+                </span>
               </div>
-              <span className="text-[10px] text-white/30 uppercase">ID: {product.id.toString().padStart(4, '0')}</span>
+              <span className="text-[10px] font-black uppercase">
+                STATUS: [ ONLINE ]
+              </span>
             </div>
 
-            <div className="flex flex-col lg:flex-row">
-              {/* Image Section */}
-              <div
-                onClick={() => openDeviceModal(product.id)}
-                className="relative w-full lg:w-1/3 h-48 lg:h-auto overflow-hidden cursor-pointer group"
-              >
-                <img
-                  src={product.img ? (product.img.startsWith('http') ? product.img : process.env.REACT_APP_API_URL + product.img) : ''}
-                  className="h-full w-full object-cover grayscale brightness-75 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
-                  alt={product.name}
-                />
-                <div className="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors" />
-                {/* Scanline Overlay on Image */}
-                <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%] z-10 opacity-20" />
-              </div>
+            {/* --- СЕКЦИЯ ИЗОБРАЖЕНИЯ --- */}
+            <div
+              onClick={() => openDeviceModal(product.id)}
+              className={`relative cursor-pointer overflow-hidden ${
+                viewMode === "grid"
+                  ? "w-full h-56 border-b border-white/20"
+                  : "w-full md:w-2/5 md:min-w-[320px] h-64 md:h-auto border-b md:border-b-0 md:border-r border-white/20"
+              }`}
+            >
+              <img
+                src={getImgSrc(product.img)}
+                className="h-full w-full object-cover grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
+                alt={product.name}
+              />
+              {/* Scanline эффект: строгий ЧБ */}
+              <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(0,0,0,0)_50%,rgba(0,0,0,0.4)_50%)] bg-[length:100%_4px] z-10" />
+              <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10" />
+            </div>
 
-              {/* Details Section */}
-              <div className="flex-1 p-5 flex flex-col justify-between">
-                <div className="flex justify-between items-start">
+            {/* --- СЕКЦИЯ ДАННЫХ И ЛОГОВ --- */}
+            <div className="flex-1 p-5 flex flex-col justify-between relative z-10 bg-black">
+              <div>
+                <div className="flex justify-between items-start mb-4">
                   <div>
-                    <span className="inline-block border border-white px-3 py-0.5 text-[10px] font-bold uppercase mb-2">
-                      {device.brands.find(b => b.id === product.brandId)?.name || "Generic_Node"}
+                    <span className="inline-block text-[10px] font-bold uppercase text-white/50 tracking-[0.2em] mb-1">
+                      {device.brands.find((b) => b.id === product.brandId)
+                        ?.name || "GENERIC_SYS"}
                     </span>
-                    <h3 className="text-xl font-black text-white uppercase tracking-tighter">
+                    <h3 className="text-xl md:text-2xl font-black text-white uppercase tracking-tighter leading-none">
                       {product.name}
                     </h3>
                   </div>
-
-                  <div className="flex gap-4 text-white/60">
-                    <div className="flex items-center gap-1">
-                      <EyeIcon className="h-3 w-3" />
-                      <span className="text-xs">{product.views || 0}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <ChatBubbleLeftIcon className="h-3 w-3" />
-                      <span className="text-xs">{comments[product.id]?.length || 0}</span>
+                  
+                  {/* Статистика */}
+                  <div className="flex flex-col gap-1 items-end">
+                    <div className="flex gap-2">
+                      <div className="flex items-center gap-1 bg-white/10 px-2 py-0.5 border border-white/20">
+                        <EyeIcon className="h-3 w-3 text-white" />
+                        <span className="text-[10px] text-white font-bold">{product.views || 0}</span>
+                      </div>
+                      <div className="flex items-center gap-1 bg-white/10 px-2 py-0.5 border border-white/20">
+                        <ChatBubbleLeftIcon className="h-3 w-3 text-white" />
+                        <span className="text-[10px] text-white font-bold">{comments[product.id]?.length || 0}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                <p className="mt-4 text-xs text-white/50 line-clamp-2 italic leading-relaxed">
+                <div className="text-xs font-bold text-white uppercase tracking-widest border-l-2 border-white pl-2 mb-4">
+                   VALUE:{" "}
+                  {Number.isFinite(Number(product.price))
+                    ? `${Number(product.price)} USD`
+                    : "UNKNOWN"}
+                </div>
+
+                {/* <p className="text-[11px] text-white/60 line-clamp-3 leading-relaxed mb-6 font-mono border border-white/10 p-2 bg-[#050505]">
+                  <span className="text-white/30 mr-2">DESC://</span>
                   {decodeHTML(product.description)}
-                </p>
+                </p> */}
+              </div>
 
-                {/* Comments Log */}
-                <div className="mt-6 border-t border-white/10 pt-4">
-                  <div className="max-h-32 overflow-y-auto space-y-3 custom-scrollbar">
-                    {comments[product.id]?.slice(0, 2).map((comment, index) => (
-                      <div className="text-[11px] leading-tight" key={index}>
-                        <span className="text-white/30 mr-2">[{new Date(comment.createdAt).toLocaleDateString("en-US", options)}]</span>
-                        <span className="text-white/80">&gt; {comment.text}</span>
+              {/* --- БЛОК КОММЕНТАРИЕВ (ТЕРМИНАЛ) --- */}
+              {/* <div className="mt-auto border border-white/20 bg-[#0a0a0a] relative">
+                <div className="absolute -top-2.5 left-2 bg-black px-1 text-[9px] text-white/50 font-bold tracking-widest uppercase">
+                  Sys_Logs
+                </div>
+                
+                <div
+                  className={`overflow-y-auto p-3 space-y-2 custom-scrollbar ${
+                    viewMode === "grid" ? "max-h-24" : "max-h-32"
+                  }`}
+                >
+                  {comments[product.id]?.length > 0 ? (
+                    comments[product.id].map((comment, index) => (
+                      <div className="text-[10px] leading-relaxed flex gap-2" key={index}>
+                        <span className="text-white/40 shrink-0">[{new Date(comment.createdAt).toLocaleDateString("ru-RU", options)}]
+                        </span>
+                        <span className="text-white break-words">
+                          <span className="text-white/50 mr-1">&gt;</span>
+                          {comment.text}
+                        </span>
                       </div>
-                    ))}
-                  </div>
+                    ))
+                  ) : (
+                    <div className="text-[10px] text-white/30 italic">
+                      [ NO_RECORDS_FOUND ]
+                    </div>
+                  )}
+                </div> */}
 
-                  {/* Input Field (Terminal Style) */}
+                {/* Строка ввода */}
+                {/* <div className="border-t border-white/20 bg-black">
                   {user.isAuth ? (
                     <form
                       onSubmit={(event) => handleFormSubmit(event, product.id)}
-                      className="mt-4 flex items-center bg-white/5 border border-white/10 px-3 focus-within:border-white transition-colors"
+                      className="flex items-center px-3 py-2"
                     >
-                      <span className="text-white/40 text-xs mr-2">$</span>
+                      <span className="text-white font-bold text-xs mr-2 animate-pulse">
+                        $&gt;
+                      </span>
                       <input
                         type="text"
-                        value={commentText}
+                        value={commentTexts[product.id] || ""}
                         placeholder="INPUT_COMMAND..."
-                        className="flex-1 bg-transparent text-xs text-white py-2 focus:outline-none placeholder:text-white/20"
-                        onChange={(e) => setCommentText(e.target.value)}
+                        className="flex-1 bg-transparent text-xs text-white focus:outline-none placeholder:text-white/20"
+                        onChange={(e) =>
+                          setCommentTexts((prev) => ({
+                            ...prev,
+                            [product.id]: e.target.value,
+                          }))
+                        }
                       />
-                      {commentText.length > 0 && (
+                      {(commentTexts[product.id]?.length || 0) > 0 && (
                         <button
                           type="submit"
-                          className="text-[10px] font-bold text-white hover:underline uppercase tracking-widest"
+                          className="text-[9px] bg-white text-black px-2 py-1 font-bold hover:bg-gray-300 transition-colors uppercase tracking-widest ml-2"
                         >
-                          Execute
+                          EXEC
                         </button>
                       )}
                     </form>
                   ) : (
-                    <div className="mt-4 flex items-center bg-red-950/10 border border-red-900/30 px-3 py-2 justify-between">
-                      <div className="flex items-center">
-                        <span className="text-red-500 text-xs mr-2 font-bold animate-pulse">!</span>
-                        <span className="text-[10px] text-red-500/70 uppercase tracking-tighter">
-                          Error: Unauthorized_Access_Detected
+                    <div className="flex items-center justify-between px-3 py-2 bg-white text-black">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-black">!</span>
+                        <span className="text-[10px] font-bold uppercase tracking-widest">
+                          ACCESS_DENIED
                         </span>
                       </div>
                       <button
-                        onClick={() => navigate('/login')} // Update route as needed
-                        className="text-[10px] bg-white text-black px-2 py-0.5 font-bold hover:bg-gray-200 transition-colors uppercase"
+                        onClick={() => navigate("/login")}
+                        className="text-[9px] border border-black px-2 py-0.5 font-bold hover:bg-black hover:text-white transition-colors uppercase"
                       >
-                        Login_to_Comment
+                        AUTH_REQ
                       </button>
                     </div>
                   )}
-                </div>
-              </div>
-            </div>
-
-            {/* Decorative Corner Label */}
-            <div className="absolute bottom-0 right-0 bg-white text-black px-1 text-[8px] font-bold">
-              PRCH_READY
+                </div> */}
+              {/* </div> */}
             </div>
           </div>
-        ))}
+        ))
+      ) : (
+        <div className="col-span-full border border-white/30 bg-black p-10 flex flex-col items-center justify-center gap-4">
+          <CommandLineIcon className="h-10 w-10 text-white/20" />
+          <div className="text-white/50 font-mono text-sm tracking-widest uppercase">
+            &gt; ERR: NO_NODES_FOUND_MATCHING_CRITERIA
+          </div>
+        </div>
+      )}
 
       <DeviceModal
         show={modalShow}
@@ -232,16 +296,20 @@ const Shop = observer(() => {
         deviceId={selectedDeviceId}
       />
 
-      {/* Internal CSS for scrollbar and styling */}
       <style jsx>{`
+        /* Строгий ЧБ скроллбар в стиле консоли */
         .custom-scrollbar::-webkit-scrollbar {
-          width: 2px;
+          width: 4px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-          background: transparent;
+          background: #000;
+          border-left: 1px solid rgba(255,255,255,0.1);
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(255, 255, 255, 0.2);
+          background: #fff;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(255,255,255,0.8);
         }
       `}</style>
     </div>
